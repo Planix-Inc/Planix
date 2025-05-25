@@ -1,0 +1,175 @@
+.pagina-landing {
+    font-family: sans-serif;
+    color: #1e1e1e;
+    background-color: #ffffff;
+    width: 100%;
+}
+
+.seccion-superior {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4rem 2rem;
+    background-color: #fff;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.texto-superior {
+    max-width: 500px;
+}
+
+.texto-superior h1 {
+    font-size: 2.8rem;
+    margin-bottom: 1rem;
+}
+
+.texto-superior p {
+    margin-bottom: 1.5rem;
+    color: #666;
+}
+
+.boton-amarillo {
+    background-color: #fba91c;
+    border: none;
+    color: white;
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.imagenes-superior {
+    position: absolute;
+    right: 40px;
+    /* O el valor que te permita ubicarlo como en la captura */
+    top: 160px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 60px;
+}
+
+.contenedor-imagen {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.imagen1 {
+    width: 200px;
+    height: 250px;
+    object-fit: cover;
+    border-radius: 50%;
+    z-index: 2;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-right: 600px;
+}
+
+.imagen2 {
+    width: 200px;
+    height: 250px;
+    object-fit: cover;
+    border-radius: 50%;
+    z-index: 2;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-right: 200px;
+}
+
+.linea-conexion {
+    position: absolute;
+    width: 80px;
+    height: 4px;
+    background-color: #f5a623;
+    z-index: 1;
+}
+
+.linea-desde-abajo {
+    top: 90%;
+    left: 50%;
+    transform: translateX(-130%) rotate(55deg);
+    transform-origin: top left;
+    width: 250px;
+    border: 5px solid #f5a623;
+}
+
+.linea-hacia-arriba {
+    top: -80%;
+    left: 30%;
+    transform: translateX(-50%) rotate(55deg);
+    transform-origin: bottom left;
+    width: 250px;
+    border: 5px solid #f5a623;
+}
+
+.seccion-por-que {
+    text-align: center;
+    padding: 4rem 2rem;
+    padding-top: 300px;
+}
+
+.seccion-por-que h2 {
+    color: #fba91c;
+    font-size: 2rem;
+    margin-bottom: 3rem;
+}
+
+.beneficios {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 2rem;
+}
+
+.beneficio {
+    max-width: 300px;
+}
+
+.beneficio h3 {
+    font-weight: bold;
+}
+
+.beneficio p {
+    color: #555;
+}
+
+.seccion-como {
+    padding: 4rem 2rem;
+    text-align: center;
+    background-color: #fdf6ee;
+}
+
+.seccion-como h2 {
+    color: #fba91c;
+    font-size: 2rem;
+    margin-bottom: 3rem;
+}
+
+.pasos {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 2rem;
+}
+
+.paso {
+    max-width: 220px;
+}
+
+.paso img {
+    width: 100px;
+    height: auto;
+    margin-bottom: 1rem;
+}
+
+.paso h4 {
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.paso p {
+    color: #555;
+    font-size: 0.95rem;
+}

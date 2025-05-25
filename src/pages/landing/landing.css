@@ -43,7 +43,6 @@
 .imagenes-superior {
     position: absolute;
     right: 40px;
-    /* O el valor que te permita ubicarlo como en la captura */
     top: 160px;
     display: flex;
     flex-direction: column;

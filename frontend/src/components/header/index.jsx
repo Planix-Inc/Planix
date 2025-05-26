@@ -8,7 +8,10 @@ function Header() {
         <header className="encabezado">
             <div className="contenido-encabezado">
                 <div className="logo">
+                    <Link to="/">
                     <img src={logo} alt="Logo Planix" />
+                    </Link>
+                    
                 </div>
                 <nav className="navegacion">
                     <Link to="/profesionales">Profesionales</Link>

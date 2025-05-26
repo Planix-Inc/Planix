@@ -1,5 +1,6 @@
 import './header.css';
 import logo from '../../assets/Logos/logo.png';
+import { Link } from "react-router-dom";
 
 function Header() {
     return (
@@ -9,10 +10,10 @@ function Header() {
                     <img src={logo} alt="Logo Planix" />
                 </div>
                 <nav className="navegacion">
-                    <a href="#">Profesionales</a>
-                    <a href="#">Proveedores</a>
-                    <a href="#">Proyectos</a>
-                    <a href="#">Constructoras</a>
+                    <Link to="./pages/profesionales/index.jsx">Profesionales</Link>
+                    <Link to="">Proveedores</Link>
+                    <Link to="">Proyectos</Link>
+                    <Link to="">Constructoras</Link>
                 </nav>
                 <div className="botones">
                     <button className="btn-iniciar">Iniciar sesión</button>

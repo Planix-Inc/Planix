@@ -1,5 +1,7 @@
 import './header.css';
 import logo from '../../assets/Logos/logo.png';
+import { Link } from "react-router-dom";
+
 
 function Header() {
     return (
@@ -9,10 +11,10 @@ function Header() {
                     <img src={logo} alt="Logo Planix" />
                 </div>
                 <nav className="navegacion">
-                    <a href="#">Profesionales</a>
-                    <a href="#">Profesionales</a>
-                    <a href="#">Profesionales</a>
-                    <a href="#">Profesionales</a>
+                    <Link to="/profesionales">Profesionales</Link>
+                    <Link to="/proveedores">Proveedores</Link>
+                    <Link to="/proyectos">Proyectos</Link>
+                    <Link to="/constructoras">Constructoras</Link>
                 </nav>
                 <div className="botones">
                     <button className="btn-iniciar">Iniciar sesión</button>
@@ -22,4 +24,6 @@ function Header() {
         </header>
     );
 }
+
+
 export default Header;

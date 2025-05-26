@@ -3,9 +3,18 @@ import './constructoras.css'
 
 const Constructoras = () => {
   return (
-    <div>
-      <h1>Constructoras Pagina</h1>
+    <div className="constructoras-container">
+    <div className="overlay">
+      <h1>Encontrá constructoras y conectá con ellos</h1>
+      <div className="search-box">
+        <input 
+          type="text" 
+          placeholder="Buscar constructoras para tus proyectos" 
+        />
+        <button className="filter-button">🔍</button>
+      </div>
     </div>
+  </div>
   );
 };
 

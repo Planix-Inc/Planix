@@ -35,11 +35,11 @@ const Proyectos = () => {
       </div>
     </div>
   </div>
-  <div className="seccion-profesionales">
+  <div className="seccion-proyectos">
   <h2>Proyectos</h2>
-  <div className="carrusel-profesionales">
+  <div className="carrusel-proyectos">
     {proyectos.map((proy) => (
-      <div key={proy.id} className="card-profesional">
+      <div key={proy.id} className="card-proyectos">
         <h3>Nombre Proyecto: </h3>
         <h4>{proy.nombre}</h4>
         <p>Dirección: {proy.direccion}</p>

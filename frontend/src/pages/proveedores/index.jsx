@@ -36,11 +36,11 @@ const Proveedores = () => {
       </div>
     </div>
   </div>
-  <div className="seccion-profesionales">
+  <div className="seccion-proveedores">
   <h2>Proveedor</h2>
-  <div className="carrusel-profesionales">
+  <div className="carrusel-proveedores">
     {proveedores.map((prov) => (
-      <div key={prov.id} className="card-profesional">
+      <div key={prov.id} className="card-proveedores">
         <h3>
           {prov.razonSocial}
         </h3>

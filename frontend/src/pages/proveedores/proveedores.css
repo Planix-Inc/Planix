@@ -43,25 +43,25 @@
   cursor: pointer;
 }
 
-.seccion-profesionales {
+.seccion-proveedores {
   padding: 20px;
   background-color: #f5f5f5;
 }
 
-.seccion-profesionales h2 {
+.seccion-proveedores h2 {
   margin-bottom: 15px;
   font-family: Arial, sans-serif;
   color: #333;
 }
 
-.carrusel-profesionales {
+.carrusel-proveedores {
   display: flex;
   overflow-x: auto;
   gap: 15px;
   padding-bottom: 10px;
 }
 
-.card-profesional {
+.card-proveedores {
   flex: 0 0 250px;
   background-color: #fff;
   border-radius: 10px;
@@ -75,18 +75,18 @@
   transition: transform 0.3s ease;
 }
 
-.card-profesional:active {
+.card-proveedores:active {
   cursor: grabbing;
   transform: scale(1.05);
 }
 
-.card-profesional h3 {
+.card-proveedores h3 {
   margin: 0 0 8px;
   font-size: 1.2rem;
   color: #005f73;
 }
 
-.card-profesional p {
+.card-proveedores p {
   margin: 4px 0;
   font-size: 0.9rem;
   line-height: 1.3;

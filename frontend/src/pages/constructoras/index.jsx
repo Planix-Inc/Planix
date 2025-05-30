@@ -35,11 +35,11 @@ const Constructoras = () => {
       </div>
     </div>
   </div>
-  <div className="seccion-profesionales">
+  <div className="seccion-constructoras">
   <h2>Constructoras</h2>
-  <div className="carrusel-profesionales">
+  <div className="carrusel-constructoras">
     {constructoras.map((cons) => (
-      <div key={cons.id} className="card-profesional">
+      <div key={cons.id} className="card-constructoras">
         <h3>
           {cons.razonSocial} 
         </h3>

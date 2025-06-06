@@ -1,16 +1,16 @@
-.profesionales-container {
+.contenedor-portada {
   background-image: url("../../assets/Profesionales/PortadaProfesionales.png");
   background-size: cover;
   background-position: center;
   height: 100vh;
-  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
 }
 
-.overlay {
-  background-color: rgba(0, 0, 0, 0.6);
+.capa-oscura {
+  background-color: rgba(0, 0, 0, 0.4);
   padding: 40px;
   border-radius: 12px;
   text-align: center;
@@ -19,13 +19,13 @@
   width: 100%;
 }
 
-.search-box {
+.buscador {
   display: flex;
-  margin-top: 20px;
   justify-content: center;
+  margin-top: 20px;
 }
 
-.search-box input {
+.buscador input {
   padding: 12px 20px;
   border-radius: 30px 0 0 30px;
   border: none;
@@ -33,7 +33,7 @@
   font-size: 16px;
 }
 
-.filter-button {
+.boton-buscar {
   padding: 12px 20px;
   border: none;
   background-color: #fcb900;
@@ -45,63 +45,63 @@
 
 .seccion-profesionales {
   padding: 40px;
-  background-color: #f9f9f9;
+  background-color: #f5f5f5;
 }
 
-.seccion-profesionales h2 {
-  margin-bottom: 20px;
-  font-family: Arial, sans-serif;
+.titulo-seccion {
+  font-size: 30px;
+  text-align: center;
   color: #333;
-  text-align: center;
+  margin-bottom: 30px;
 }
 
-.carrusel-profesionales .slick-slide {
-  display: flex;
-  justify-content: center;
-  padding: 10px;
+.carrusel-profesionales {
+  padding: 0 20px;
 }
 
-.card-profesional {
-  flex: none;
-  width: 90%;
-  max-width: 250px;
-  background-color: #fff;
-  border-radius: 15px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+.carrusel-profesionales .tarjeta-profesional {
+  background-color: white;
   padding: 20px;
+  border-radius: 15px;
   text-align: center;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  color: #222;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
   transition: transform 0.3s ease;
+  max-width: 250px;
+  margin: 0 auto;
 }
 
-.card-profesional:hover {
-  transform: translateY(-10px);
+.carrusel-profesionales .tarjeta-profesional:hover {
+  transform: translateY(-8px);
 }
 
-.card-image img {
-  width: 100px;
-  height: 100px;
+.imagen-profesional {
+  width: 120px;
+  height: 120px;
+  margin: 0 auto 15px auto;
   border-radius: 50%;
-  object-fit: cover;
-  margin-bottom: 15px;
+  overflow: hidden;
 }
 
-.card-profesional h3 {
-  margin: 0 0 8px;
+.imagen-profesional img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.nombre-profesional {
   font-size: 1.2rem;
   color: #005f73;
+  margin-bottom: 8px;
 }
 
-.card-profesional p {
-  margin: 4px 0;
+.texto-localidad {
   font-size: 0.9rem;
-  line-height: 1.3;
   color: #666;
+  margin-bottom: 12px;
 }
 
-.view-profile-button {
-  margin-top: 10px;
+.boton-ver-perfil {
   padding: 10px 20px;
   background-color: #fcb900;
   color: white;
@@ -112,6 +112,20 @@
   transition: background-color 0.3s ease;
 }
 
-.view-profile-button:hover {
+.boton-ver-perfil:hover {
   background-color: #e0a800;
+}
+
+
+.slick-prev,
+.slick-next {
+  width: 40px;
+  height: 40px;
+  z-index: 1;
+}
+
+.slick-prev:before,
+.slick-next:before {
+  font-size: 30px;
+  color: #005f73 !important;;
 }

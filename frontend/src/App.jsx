@@ -6,6 +6,7 @@ import Profesionales from './pages/profesionales/';
 import Proveedores from './pages/proveedores/';
 import Proyectos from './pages/proyectos/';
 import Constructoras from './pages/constructoras/';
+import Notfound from './pages/notFound/'
 
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
         <Route path="/proveedores" element={<Proveedores/>} />
         <Route path="/proyectos" element={<Proyectos/>} />
         <Route path="/constructoras" element={<Constructoras/>} />
+        <Route path="*" element={<Notfound/>}/>
       </Routes>
       <Footer />
     </Router>

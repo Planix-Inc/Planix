@@ -59,13 +59,12 @@
   padding: 0 20px;
 }
 
-
 .carrusel-profesionales .tarjeta-profesional {
   background-color: white;
   padding: 20px;
   border-radius: 15px;
   text-align: center;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease;
   max-width: 250px;
   margin: 0 auto;
@@ -79,14 +78,14 @@
   width: 120px;
   height: 120px;
   margin: 0 auto 15px auto;
-  border-radius: 50%;
-  overflow: hidden;
 }
 
 .imagen-profesional img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid #005f73;
 }
 
 .nombre-profesional {
@@ -116,7 +115,6 @@
   background-color: #e0a800;
 }
 
-
 .slick-prev,
 .slick-next {
   width: 40px;
@@ -127,5 +125,5 @@
 .slick-prev:before,
 .slick-next:before {
   font-size: 30px;
-  color: #005f73 !important;;
+  color: #005f73 !important;
 }

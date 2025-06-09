@@ -55,7 +55,8 @@ const Profesionales = () => {
             <h3 className="nombre-profesional">
               {prof.nombre} {prof.apellido}
             </h3>
-            <p className="texto-localidad">{prof.localidad}</p>
+            <p className="texto-localidad">📍 {prof.localidad} - ⭐ {prof.valoracion}</p>
+            
             <button className="boton-ver-perfil">Ver perfil</button>
           </div>
         ))}

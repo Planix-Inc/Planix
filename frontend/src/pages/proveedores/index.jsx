@@ -92,7 +92,7 @@ const Proveedores = () => {
                   <img src={prov.img} alt={prov.razonSocial} />
                 </div>
                 <h3 className="nombre-proveedor">{prov.razonSocial}</h3>
-                <p className="texto-localidad-proveedor">{prov.localidad}</p>
+                <p className="texto-localidad-proveedor">📍 {prov.localidad} - ⭐ {prov.valoracion}</p>
                 <button className="boton-ver-perfil-proveedor">
                   Ver perfil
                 </button>
@@ -111,7 +111,7 @@ const Proveedores = () => {
                 <img src={prod.Fotos}/>
               </div>
               <h3 className="nombre-proveedor">{prod.descripcion}</h3>
-              <p className="ver-precio">${prod.precio}</p>
+              <p className="ver-precio">${prod.precio} - ⭐ {prod.valoracion}</p>
               <button className="boton-ver-perfil-proveedor">
                   Ver Producto
                 </button>

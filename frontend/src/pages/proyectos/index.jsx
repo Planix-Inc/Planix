@@ -8,6 +8,7 @@ import "slick-carousel/slick/slick-theme.css";
 
 const Proyectos = () => {
   const [proyectos, setProyectos] = useState([]);
+  const [proyectosDestacados, setProyectosDestacados] = useState([]);
 
   useEffect(() => {
     const fetchProyectos = async () => {
@@ -23,8 +24,25 @@ const Proyectos = () => {
       }
     };
 
+    const fetchProyectosDestacados = async () => {
+      const { data: Usuario, error } = await supabase
+        .from("Proyectos")
+        .select("*")
+        .eq("destacado", true);
+        
+
+      if (error) {
+        console.error("Error al obtener proyectos:", error);
+      } else {
+        setProyectosDestacados(Usuario);
+      }
+    };
+
     fetchProyectos();
+    fetchProyectosDestacados();
   }, []);
+
+
 
   const configuracionCarrusel = {
     dots: false,
@@ -73,6 +91,22 @@ const Proyectos = () => {
   </div>
 
   <div className="seccion-proyectos">
+        <h2 className="titulo-seccion">Proyectos Destacados</h2>
+              <Slider {...configuracionCarrusel} className="carrusel-proyectos">
+                {proyectosDestacados.map((prof) => (
+                  <div key={prof.id} className="tarjeta-proyectos">
+                    <div className="imagen-proyectos">
+                      <img src={prof.img} alt={`${prof.nombre} ${prof.apellido}`} />
+                    </div>
+                    <h3 className="nombre-proyectos">
+                      {prof.nombre} {prof.apellido}
+                    </h3>
+                    <p className="texto-localidad">📍 {prof.direccion} - ⭐ {prof.valoracion}</p>
+                    <button className="boton-ver-perfil">Ver perfil</button>
+                  </div>
+                ))}
+              </Slider>
+
         <h2 className="titulo-seccion">Proyectos</h2>
         <Slider {...configuracionCarrusel} className="carrusel-proyectos">
           {proyectos.map((prof) => (
@@ -83,7 +117,7 @@ const Proyectos = () => {
               <h3 className="nombre-proyectos">
                 {prof.nombre} {prof.apellido}
               </h3>
-              <p className="texto-localidad">{prof.localidad}</p>
+              <p className="texto-localidad">📍 {prof.direccion} - ⭐ {prof.valoracion}</p>
               <button className="boton-ver-perfil">Ver perfil</button>
             </div>
           ))}

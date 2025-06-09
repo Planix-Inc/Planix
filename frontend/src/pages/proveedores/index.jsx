@@ -111,10 +111,15 @@ const Proveedores = () => {
                 <img src={prod.Fotos}/>
               </div>
               <h3 className="nombre-proveedor">{prod.descripcion}</h3>
-              <p className="boton-ver-perfil-proveedor">${prod.precio}</p>
+              <p className="ver-precio">${prod.precio}</p>
+              <button className="boton-ver-perfil-proveedor">
+                  Ver Producto
+                </button>
+              
             </div>
           ))}
         </Slider>
+        
       </div>
     </div>
   );

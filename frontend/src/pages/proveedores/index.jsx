@@ -4,6 +4,8 @@ import { supabase } from "../../data/supabaseClient";
 import "./proveedores.css";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import BotonInversion from "../../components/botonInversion"; 
+
 
 const Proveedores = () => {
   const [proveedores, setProveedores] = useState([]);
@@ -119,8 +121,9 @@ const Proveedores = () => {
             </div>
           ))}
         </Slider>
-        
+    
       </div>
+     <BotonInversion/>
     </div>
   );
 };

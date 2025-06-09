@@ -7,6 +7,7 @@ import "slick-carousel/slick/slick-theme.css";
 
 const Proveedores = () => {
   const [proveedores, setProveedores] = useState([]);
+  const [productos, setProductos] = useState([]);
 
   useEffect(() => {
     const fetchProveedores = async () => {
@@ -23,7 +24,22 @@ const Proveedores = () => {
       }
     };
 
+    const fetchProductos = async () => {
+      const { data: Productos, error } = await supabase
+        .from("Productos")
+        .select("*")
+        .eq("destacado", true);
+
+      if (error) {
+        console.error("Error al obtener productos destacados:", error);
+      } else {
+        setProductos(Productos);
+      }
+    };
+
+   
     fetchProveedores();
+    fetchProductos();
   }, []);
 
   const configuracionCarrusel = {
@@ -53,30 +69,49 @@ const Proveedores = () => {
 
   return (
     <div>
-      <div className="contenedor-portada-proveedores">
-        <div className="capa-oscura-proveedores">
-          <h1>Encontrá proveedores para tu proyecto</h1>
-          <div className="buscador-proveedores">
-            <input
-              type="text"
-              placeholder="Materiales, herramientas, equipamiento, etc"
-            />
-            <button className="boton-buscar-proveedores">🔍</button>
+      <div>
+        <div className="contenedor-portada-proveedores">
+          <div className="capa-oscura-proveedores">
+            <h1>Encontrá proveedores para tu proyecto</h1>
+            <div className="buscador-proveedores">
+              <input
+                type="text"
+                placeholder="Materiales, herramientas, equipamiento, etc"
+              />
+              <button className="boton-buscar-proveedores">🔍</button>
+            </div>
           </div>
+        </div>
+
+        <div className="seccion-proveedores">
+          <h2 className="titulo-seccion-proveedores">Proveedores Destacados</h2>
+          <Slider {...configuracionCarrusel} className="carrusel-proveedores">
+            {proveedores.map((prov) => (
+              <div key={prov.id} className="tarjeta-proveedor">
+                <div className="imagen-proveedor">
+                  <img src={prov.img} alt={prov.razonSocial} />
+                </div>
+                <h3 className="nombre-proveedor">{prov.razonSocial}</h3>
+                <p className="texto-localidad-proveedor">{prov.localidad}</p>
+                <button className="boton-ver-perfil-proveedor">
+                  Ver perfil
+                </button>
+              </div>
+            ))}
+          </Slider>
         </div>
       </div>
 
       <div className="seccion-proveedores">
-        <h2 className="titulo-seccion-proveedores">Proveedores Destacados</h2>
+        <h2 className="titulo-seccion-proveedores">Productos destacados</h2>
         <Slider {...configuracionCarrusel} className="carrusel-proveedores">
-          {proveedores.map((prov) => (
-            <div key={prov.id} className="tarjeta-proveedor">
+          {productos.map((prod) => (
+            <div key={prod.id} className="tarjeta-proveedor">
               <div className="imagen-proveedor">
-                <img src={prov.img} alt={prov.razonSocial} />
+                <img src={prod.Fotos}/>
               </div>
-              <h3 className="nombre-proveedor">{prov.razonSocial}</h3>
-              <p className="texto-localidad-proveedor">{prov.localidad}</p>
-              <button className="boton-ver-perfil-proveedor">Ver perfil</button>
+              <h3 className="nombre-proveedor">{prod.descripcion}</h3>
+              <p className="boton-ver-perfil-proveedor">${prod.precio}</p>
             </div>
           ))}
         </Slider>
@@ -84,5 +119,4 @@ const Proveedores = () => {
     </div>
   );
 };
-
 export default Proveedores;

@@ -89,6 +89,8 @@ const Proyectos = () => {
           ))}
         </Slider>
       </div>
+
+      
 </div>
   );
 };

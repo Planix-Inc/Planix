@@ -4,6 +4,7 @@ import Slider from "react-slick";
 import "../constructoras/constructoras.css";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import BotonInversion from "../../components/botonInversion";
 
 const Constructoras = () => {
   const [constructoras, setConstructoras] = useState([]);
@@ -89,6 +90,22 @@ const Constructoras = () => {
   </div>
 
   <div className="seccion-constructoras">
+  <h2 className="titulo-seccion">Constructoras</h2>
+        <Slider {...configuracionCarrusel} className="carrusel-constructoras">
+          {constructoras.map((prof) => (
+            <div key={prof.id} className="tarjeta-constructoras">
+              <div className="imagen-constructoras">
+                <img src={prof.img} alt={`${prof.nombre} ${prof.apellido}`} />
+              </div>
+              <h3 className="nombre-constructoras">
+                {prof.nombre} {prof.apellido}
+              </h3>
+              <p className="texto-localidad">📍 {prof.localidad} - ⭐ {prof.valoracion}</p>
+              <button className="boton-ver-perfil">Ver perfil</button>
+            </div>
+          ))}
+        </Slider>
+
   <h2 className="titulo-seccion">Constructoras Destacados</h2>
         <Slider {...configuracionCarrusel} className="carrusel-constructoras">
           {constructorasDestacado.map((prof) => (
@@ -104,23 +121,8 @@ const Constructoras = () => {
             </div>
           ))}
         </Slider>
-
-        <h2 className="titulo-seccion">Constructoras</h2>
-        <Slider {...configuracionCarrusel} className="carrusel-constructoras">
-          {constructoras.map((prof) => (
-            <div key={prof.id} className="tarjeta-constructoras">
-              <div className="imagen-constructoras">
-                <img src={prof.img} alt={`${prof.nombre} ${prof.apellido}`} />
-              </div>
-              <h3 className="nombre-constructoras">
-                {prof.nombre} {prof.apellido}
-              </h3>
-              <p className="texto-localidad">📍 {prof.localidad} - ⭐ {prof.valoracion}</p>
-              <button className="boton-ver-perfil">Ver perfil</button>
-            </div>
-          ))}
-        </Slider>
       </div>
+      <BotonInversion/>
 </div>
   );
 };

@@ -4,6 +4,8 @@ import { supabase } from "../../data/supabaseClient";
 import "../profesionales/profesionales.css";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { Link } from "react-router-dom";
+
 
 const Profesionales = () => {
   const [profesionales, setProfesionales] = useState([]);
@@ -12,7 +14,7 @@ const Profesionales = () => {
     const fetchProfesionales = async () => {
       const { data: Usuario, error } = await supabase
         .from("Usuario")
-        .select("*")
+        .select("*, tipoProfesional: idTipoProfesional (descripcion)")
         .eq("categoriausuarioId", 1);
 
       if (error) {
@@ -34,27 +36,31 @@ const Profesionales = () => {
     arrows: true,
     autoplay: true,
     autoplaySpeed: 2000,
-    responsive: [
-      {
-        breakpoint: 1024,
-        settings: {
-          slidesToShow: 3,
-        },
-      },
-      {
-        breakpoint: 768,
-        settings: {
-          slidesToShow: 2,
-        },
-      },
-      {
-        breakpoint: 480,
-        settings: {
-          slidesToShow: 1,
-        },
-      },
-    ],
   };
+
+  const arquitectos = profesionales.filter((p) => p.idTipoProfesional === 1);
+  const ingenieros = profesionales.filter((p) => p.idTipoProfesional === 2);
+  const disenadores = profesionales.filter((p) => p.idTipoProfesional === 3);
+
+  const mostrarTipoProfesional = (titulo, tipoProfesional) => (
+    <div className="seccion-profesionales">
+      <h2 className="titulo-seccion">{titulo}</h2>
+      <Slider {...configuracionCarrusel} className="carrusel-profesionales">
+        {tipoProfesional.map((prof) => (
+          <div key={prof.id} className="tarjeta-profesional">
+            <div className="imagen-profesional">
+              <img src={prof.img} alt={`${prof.nombre} ${prof.apellido}`} />
+            </div>
+            <h3 className="nombre-profesional">
+              {prof.nombre} {prof.apellido}
+            </h3>
+            <p className="texto-localidad">{prof.localidad}</p>
+            <button className="boton-ver-perfil">Ver perfil</button>
+          </div>
+        ))}
+      </Slider>
+    </div>
+  );
 
   return (
     <div>
@@ -70,23 +76,20 @@ const Profesionales = () => {
           </div>
         </div>
       </div>
-
-      <div className="seccion-profesionales">
-        <h2 className="titulo-seccion">Profesionales</h2>
-        <Slider {...configuracionCarrusel} className="carrusel-profesionales">
-          {profesionales.map((prof) => (
-            <div key={prof.id} className="tarjeta-profesional">
-              <div className="imagen-profesional">
-                <img src={prof.img} alt={`${prof.nombre} ${prof.apellido}`} />
-              </div>
-              <h3 className="nombre-profesional">
-                {prof.nombre} {prof.apellido}
-              </h3>
-              <p className="texto-localidad">{prof.localidad}</p>
-              <button className="boton-ver-perfil">Ver perfil</button>
-            </div>
-          ))}
-        </Slider>
+      {mostrarTipoProfesional("Arquitectos", arquitectos)}
+      {mostrarTipoProfesional("Ingenieros", ingenieros)}
+      {mostrarTipoProfesional("Diseñadores", disenadores)}
+      <div className="seccion-inversion">
+        <h2 className="titulo-inversion">
+          ¿Tenés una idea y buscás una inversión?
+        </h2>
+        <p className="subtitulo-inversion">
+          Subí tu idea y empezá hoy mismo a colaborar <br />
+          con profesionales en el área
+        </p>
+        <Link to="/proyectos" className="boton-inversion">
+          Ir ya ➤
+        </Link>
       </div>
     </div>
   );

@@ -13,10 +13,11 @@ const Proveedores = () => {
       const { data: Usuario, error } = await supabase
         .from("Usuario")
         .select("*")
-        .eq("categoriausuarioId", 2);
+        .eq("categoriausuarioId", 2)
+        .eq("destacado", true);
 
       if (error) {
-        console.error("Error al obtener proveedores:", error);
+        console.error("Error al obtener proveedores destacados:", error);
       } else {
         setProveedores(Usuario);
       }
@@ -66,7 +67,7 @@ const Proveedores = () => {
       </div>
 
       <div className="seccion-proveedores">
-        <h2 className="titulo-seccion-proveedores">Proveedores</h2>
+        <h2 className="titulo-seccion-proveedores">Proveedores Destacados</h2>
         <Slider {...configuracionCarrusel} className="carrusel-proveedores">
           {proveedores.map((prov) => (
             <div key={prov.id} className="tarjeta-proveedor">

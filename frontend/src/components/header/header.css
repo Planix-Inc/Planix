@@ -22,9 +22,25 @@
 }
 
 .navegacion {
+    position: relative;
+}
+
+.subrayado {
+    position: absolute;
+    bottom: 0;
+    height: 2px;
+    background-color: #949090;
+    transition: all 0.3s ease;
+    pointer-events: none;
+}
+
+.nav-wrapper {
+    position: relative;
     display: flex;
     gap: 20px;
+    align-items: center;
 }
+
 
 .navegacion a {
     color: white;

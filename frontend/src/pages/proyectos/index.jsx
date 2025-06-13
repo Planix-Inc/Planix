@@ -42,8 +42,6 @@ const Proyectos = () => {
     fetchProyectosDestacados();
   }, []);
 
-
-
   const configuracionCarrusel = {
     dots: false,
     infinite: true,
@@ -102,7 +100,7 @@ const Proyectos = () => {
                       {prof.nombre} {prof.apellido}
                     </h3>
                     <p className="texto-localidad">📍 {prof.direccion} - ⭐ {prof.valoracion}</p>
-                    <button className="boton-ver-perfil">Ver perfil</button>
+                    <button className="boton-ver-perfil">Ver proyecto</button>
                   </div>
                 ))}
               </Slider>
@@ -118,7 +116,7 @@ const Proyectos = () => {
                 {prof.nombre} {prof.apellido}
               </h3>
               <p className="texto-localidad">📍 {prof.direccion} - ⭐ {prof.valoracion}</p>
-              <button className="boton-ver-perfil">Ver perfil</button>
+              <button className="boton-ver-perfil">Ver proyecto</button>
             </div>
           ))}
         </Slider>

@@ -3,37 +3,37 @@ import './header.css';
 import logo from '../../assets/Logos/logo.png';
 import { Link, useLocation } from "react-router-dom";
 
-function Header() {
-    const location = useLocation();
-    const currentPath = location.pathname;
-    const navRef = useRef(null);
-    const underlineRef = useRef(null);
-    const [activeIndex, setActiveIndex] = useState(0);
+function Encabezado() {
+    const ubicacion = useLocation();
+    const rutaActual = ubicacion.pathname;
+    const referenciaNavegacion = useRef(null);
+    const referenciaSubrayado = useRef(null);
+    const [indiceActivo, setIndiceActivo] = useState(0);
 
-    const routes = [
-        { path: '/profesionales', label: 'Profesionales' },
-        { path: '/proveedores', label: 'Proveedores' },
-        { path: '/proyectos', label: 'Proyectos' },
-        { path: '/constructoras', label: 'Constructoras' }
+    const rutas = [
+        { ruta: '/profesionales', etiqueta: 'Profesionales' },
+        { ruta: '/proveedores', etiqueta: 'Proveedores' },
+        { ruta: '/proyectos', etiqueta: 'Proyectos' },
+        { ruta: '/constructoras', etiqueta: 'Constructoras' }
     ];
 
     useEffect(() => {
-        const index = routes.findIndex(route => currentPath.startsWith(route.path));
-        setActiveIndex(index >= 0 ? index : 0);
-    }, [currentPath]);
+        const indice = rutas.findIndex(r => rutaActual.startsWith(r.ruta));
+        setIndiceActivo(indice >= 0 ? indice : -1);
+    }, [rutaActual]);
 
     useEffect(() => {
-        const nav = navRef.current;
-        const underline = underlineRef.current;
-        if (nav && underline) {
-            const activeLink = nav.children[activeIndex];
-            if (activeLink) {
-                const { offsetLeft, offsetWidth } = activeLink;
-                underline.style.left = `${offsetLeft}px`;
-                underline.style.width = `${offsetWidth}px`;
+        const navegacion = referenciaNavegacion.current;
+        const subrayado = referenciaSubrayado.current;
+        if (navegacion && subrayado && indiceActivo >= 0) {
+            const enlaceActivo = navegacion.children[indiceActivo];
+            if (enlaceActivo) {
+                const { offsetLeft, offsetWidth } = enlaceActivo;
+                subrayado.style.left = `${offsetLeft}px`;
+                subrayado.style.width = `${offsetWidth}px`;
             }
         }
-    }, [activeIndex]);
+    }, [indiceActivo]);
 
     return (
         <header className="encabezado">
@@ -44,17 +44,19 @@ function Header() {
                     </Link>
                 </div>
                 <nav className="navegacion">
-                    <div className="nav-wrapper" ref={navRef}>
-                        {routes.map((route, index) => (
+                    <div className="contenedor-navegacion" ref={referenciaNavegacion}>
+                        {rutas.map((ruta, indice) => (
                             <Link
-                                key={route.path}
-                                to={route.path}
-                                className={currentPath.startsWith(route.path) ? 'active' : ''}
+                                key={ruta.indice}
+                                to={ruta.ruta}
+                                className={rutaActual.startsWith(ruta.ruta) ? 'activo' : ''}
                             >
-                                {route.label}
+                                {ruta.etiqueta}
                             </Link>
                         ))}
-                        <span className="subrayado" ref={underlineRef}></span>
+                        {rutaActual !== '/' && (
+                            <span className="subrayado" ref={referenciaSubrayado}></span>
+                        )}
                     </div>
                 </nav>
                 <div className="botones">
@@ -66,4 +68,4 @@ function Header() {
     );
 }
 
-export default Header;
+export default Encabezado;

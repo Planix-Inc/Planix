@@ -42,6 +42,7 @@ const Profesionales = () => {
   const arquitectos = profesionales.filter((p) => p.idTipoProfesional === 1);
   const ingenieros = profesionales.filter((p) => p.idTipoProfesional === 2);
   const disenadores = profesionales.filter((p) => p.idTipoProfesional === 3);
+  const directoresdeobra = profesionales.filter((p) => p.idTipoProfesional === 4);
 
   const mostrarTipoProfesional = (titulo, tipoProfesional) => (
     <div className="seccion-profesionales">
@@ -81,6 +82,8 @@ const Profesionales = () => {
       {mostrarTipoProfesional("Arquitectos", arquitectos)}
       {mostrarTipoProfesional("Ingenieros", ingenieros)}
       {mostrarTipoProfesional("Diseñadores", disenadores)}
+      {mostrarTipoProfesional("Director de Obra", directoresdeobra)}
+      
       <div>
       <BotonInversion/>
       </div>

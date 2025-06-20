@@ -1,0 +1,25 @@
+.bienvenida-container {
+  background-image: url('../../assets/PostLogin/FondoPostLogin.jpeg');
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  flex-direction: column;
+}
+
+.bienvenida-container h1 {
+  color: #222222; 
+  font-weight: bold;
+  text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.3); 
+}
+
+.bienvenida-container p {
+  color: #555555; 
+  font-weight: 600;
+  font-size: 20px;
+    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.3); 
+}
+
+

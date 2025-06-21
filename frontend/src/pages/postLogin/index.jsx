@@ -5,6 +5,7 @@ import { supabase } from "../../data/supabaseClient";
 import "../proveedores/proveedores.css";
 import "../proyectos/proyectos.css";
 import BotonInversion from "../../components/botonInversion"; 
+import "./postLogin.css"; 
 
 const PostLogin = () => {
   const location = useLocation();

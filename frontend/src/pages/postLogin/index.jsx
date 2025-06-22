@@ -52,6 +52,7 @@ const PostLogin = () => {
 
   return (
     <>
+    
       <div className="bienvenida-container">
         <h1>¡Bienvenido, {usuario}!</h1>
         {usuario === "Profesional" && (

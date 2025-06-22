@@ -1,9 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import logo from '../../assets/Logos/logo.png';
-import './header.css';
+import React, { useEffect, useRef, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+import logo from "../../assets/Logos/logo.png";
+import "./header.css";
 
-function Encabezado({ abrirLogin, usuario }) {
+function Encabezado({ abrirLogin, usuarioActivo, setUsuarioActivo }) {
   const ubicacion = useLocation();
   const rutaActual = ubicacion.pathname;
   const referenciaNavegacion = useRef(null);
@@ -11,10 +11,10 @@ function Encabezado({ abrirLogin, usuario }) {
   const [indiceActivo, setIndiceActivo] = useState(0);
 
   const rutas = [
-    { ruta: '/profesionales', etiqueta: 'Profesionales' },
-    { ruta: '/proveedores', etiqueta: 'Proveedores' },
-    { ruta: '/proyectos', etiqueta: 'Proyectos' },
-    { ruta: '/constructoras', etiqueta: 'Constructoras' },
+    { ruta: "/profesionales", etiqueta: "Profesionales" },
+    { ruta: "/proveedores", etiqueta: "Proveedores" },
+    { ruta: "/proyectos", etiqueta: "Proyectos" },
+    { ruta: "/constructoras", etiqueta: "Constructoras" },
   ];
 
   useEffect(() => {
@@ -33,9 +33,13 @@ function Encabezado({ abrirLogin, usuario }) {
         subrayado.style.width = `${offsetWidth}px`;
       }
     } else if (subrayado) {
-      subrayado.style.width = '0';
+      subrayado.style.width = "0";
     }
   }, [indiceActivo]);
+
+  const cerrarSesion = () => {
+    setUsuarioActivo(null);
+  };
 
   return (
     <header className="encabezado">
@@ -45,38 +49,42 @@ function Encabezado({ abrirLogin, usuario }) {
             <img src={logo} alt="Logo Planix" />
           </Link>
         </div>
+
         <nav className="navegacion">
           <div className="contenedor-navegacion" ref={referenciaNavegacion}>
             {rutas.map((ruta, indice) => (
               <Link
                 key={ruta.ruta}
                 to={ruta.ruta}
-                className={rutaActual.startsWith(ruta.ruta) ? 'activo' : ''}
+                className={rutaActual.startsWith(ruta.ruta) ? "activo" : ""}
               >
                 {ruta.etiqueta}
               </Link>
             ))}
-            {rutaActual !== '/' && <span className="subrayado" ref={referenciaSubrayado}></span>}
+            {rutaActual !== "/" && (
+              <span className="subrayado" ref={referenciaSubrayado}></span>
+            )}
           </div>
         </nav>
+
         <div className="botones">
-          {usuario ? (
-            <div className="perfil-usuario">
-              <img
-                src={usuario.img}
-                alt="Foto de perfil"
-                className="foto-perfil"
-                style={{ width: 40, height: 40, borderRadius: '50%' }}
-              />
+          {usuarioActivo ? (
+            <div className="usuario-logueado">
+              <span className="mensaje-bienvenida">Hola, {usuarioActivo}</span>
+              <button className="btn-cerrar-sesion" onClick={cerrarSesion}>
+                Cerrar sesión
+              </button>
             </div>
           ) : (
             <>
-              <button className="btn-iniciar" onClick={abrirLogin}>Iniciar sesión</button>
+              <button className="btn-iniciar" onClick={abrirLogin}>
+                Iniciar sesión
+              </button>
               <button className="btn-registrarse">Registrarse</button>
             </>
           )}
         </div>
-    </div>
+      </div>
     </header>
   );
 }

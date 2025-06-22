@@ -9,7 +9,7 @@ import Proveedores from "./pages/proveedores/";
 import Proyectos from "./pages/proyectos/";
 import Constructoras from "./pages/constructoras/";
 import Notfound from "./pages/notFound/";
-import PostLogin from './pages/postLogin/';
+import PostLogin from "./pages/postLogin/";
 
 function App() {
   const [usuarioActivo, setUsuarioActivo] = useState(null);
@@ -20,7 +20,11 @@ function App() {
 
   return (
     <Router>
-      <Header abrirLogin={abrirModal} />
+      <Header
+        usuarioActivo={usuarioActivo}
+        setUsuarioActivo={setUsuarioActivo}
+        abrirLogin={abrirModal}
+      />
       {mostrarModal && (
         <Login setUsuarioActivo={setUsuarioActivo} cerrarModal={cerrarModal} />
       )}

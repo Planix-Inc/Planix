@@ -1,14 +1,15 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import logo from "../../assets/Logos/logo.png";
 import "./header.css";
 
-function Encabezado({ abrirLogin, usuarioActivo, setUsuarioActivo }) {
+function Encabezado({ usuarioActivo, setUsuarioActivo }) {
   const ubicacion = useLocation();
   const rutaActual = ubicacion.pathname;
   const referenciaNavegacion = useRef(null);
   const referenciaSubrayado = useRef(null);
   const [indiceActivo, setIndiceActivo] = useState(0);
+  const navigate = useNavigate();
 
   const rutas = [
     { ruta: "/profesionales", etiqueta: "Profesionales" },
@@ -39,6 +40,10 @@ function Encabezado({ abrirLogin, usuarioActivo, setUsuarioActivo }) {
 
   const cerrarSesion = () => {
     setUsuarioActivo(null);
+  };
+
+  const handleIniciarSesion = () => {
+    navigate("/login");
   };
 
   return (
@@ -77,7 +82,7 @@ function Encabezado({ abrirLogin, usuarioActivo, setUsuarioActivo }) {
             </div>
           ) : (
             <>
-              <button className="btn-iniciar" onClick={abrirLogin}>
+              <button className="btn-iniciar" onClick={handleIniciarSesion}>
                 Iniciar sesión
               </button>
               <button className="btn-registrarse">Registrarse</button>

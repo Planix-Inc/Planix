@@ -10,7 +10,6 @@ import "./postLogin.css";
 const PostLogin = () => {
   const location = useLocation();
   const usuario = location.state?.usuario;
-
   const [proveedores, setProveedores] = useState([]);
   const [proyectosDestacados, setProyectosDestacados] = useState([]);
 
@@ -52,26 +51,6 @@ const PostLogin = () => {
 
   return (
     <>
-    
-      <div className="bienvenida-container">
-        <h1>¡Bienvenido, {usuario}!</h1>
-        {usuario === "Profesional" && (
-          <p>Te mostramos proyectos para trabajar como profesional.</p>
-        )}
-        {usuario === "Inversionista" && (
-          <p>Revisá ideas para invertir en el mundo de la construcción.</p>
-        )}
-        {usuario === "Proveedor" && (
-          <p>Acá podés publicar tus productos y llegar a más clientes.</p>
-        )}
-        {usuario === "Constructora" && (
-          <p>Sumate a licitaciones activas y conectá con profesionales.</p>
-        )}
-        {usuario === "Usuario" && (
-          <p>Explorá todo lo que ofrece la plataforma y descubrí nuevos proyectos.</p>
-        )}
-        </div>
-
         <div className="seccion-proyectos">
           <h2 className="titulo-seccion">Proyectos destacados</h2>
           <Slider {...configuracionCarrusel} className="carrusel-proyectos">

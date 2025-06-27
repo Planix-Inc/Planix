@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import Header from "./components/header/";
-import Login from "./components/login/";
 import LoginPage from "./pages/login/";
 import Footer from "./components/footer/";
 import Landing from "./pages/landing/";
@@ -15,6 +14,13 @@ import PostLogin from "./pages/postLogin/";
 function App() {
   const [usuarioActivo, setUsuarioActivo] = useState(null);
 
+  useEffect(() => {
+    const usuarioGuardado = localStorage.getItem("usuarioLogueado");
+    if (usuarioGuardado) {
+      setUsuarioActivo(JSON.parse(usuarioGuardado));
+    }
+  }, []);
+
   const LocationWrapper = () => {
     const location = useLocation();
     const hideHeaderFooter = location.pathname === "/login";
@@ -22,10 +28,7 @@ function App() {
     return (
       <>
         {!hideHeaderFooter && (
-          <Header
-            usuarioActivo={usuarioActivo}
-            setUsuarioActivo={setUsuarioActivo}
-          />
+          <Header usuarioActivo={usuarioActivo} setUsuarioActivo={setUsuarioActivo} />
         )}
         <Routes>
           <Route path="/" element={<Landing />} />
@@ -33,8 +36,14 @@ function App() {
           <Route path="/proveedores" element={<Proveedores />} />
           <Route path="/proyectos" element={<Proyectos />} />
           <Route path="/constructoras" element={<Constructoras />} />
-          <Route path="/postLogin" element={<PostLogin />} />
-          <Route path="/login" element={<LoginPage />} />
+          <Route
+            path="/postLogin"
+            element={<PostLogin usuarioActivo={usuarioActivo} />}
+          />
+          <Route
+            path="/login"
+            element={<LoginPage setUsuarioActivo={setUsuarioActivo} />}
+          />
           <Route path="*" element={<Notfound />} />
         </Routes>
         {!hideHeaderFooter && <Footer />}

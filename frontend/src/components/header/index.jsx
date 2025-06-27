@@ -40,6 +40,8 @@ function Encabezado({ usuarioActivo, setUsuarioActivo }) {
 
   const cerrarSesion = () => {
     setUsuarioActivo(null);
+    localStorage.removeItem("usuarioLogueado");
+    navigate("/");
   };
 
   const handleIniciarSesion = () => {
@@ -75,7 +77,9 @@ function Encabezado({ usuarioActivo, setUsuarioActivo }) {
         <div className="botones">
           {usuarioActivo ? (
             <div className="usuario-logueado">
-              <span className="mensaje-bienvenida">Hola, {usuarioActivo}</span>
+              <div className="fotoPerfil">
+                <img src={usuarioActivo.img} alt="" />
+              </div>
               <button className="btn-cerrar-sesion" onClick={cerrarSesion}>
                 Cerrar sesión
               </button>

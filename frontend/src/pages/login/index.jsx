@@ -1,30 +1,44 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { supabase } from "../../data/supabaseClient.js";
 import logo from "../../assets/Logos/PlanixImagotipo.png";
 import "./login.css";
 
-const Login = () => {
+const Login = ({ setUsuarioActivo }) => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Email:", email);
-    console.log("Password:", password);
+
+    const { data, error } = await supabase
+      .from("Usuario")
+      .select("*")
+      .eq("Email", email)
+      .eq("contraseña", password)
+      .single();
+
+    if (error || !data) {
+      alert("Email o contraseña incorrectos");
+      console.error("Login fallido:", error?.message || "No encontrado");
+    } else {
+      localStorage.setItem("usuarioLogueado", JSON.stringify(data));
+      setUsuarioActivo(data); // Actualizo el estado global
+      navigate("/postLogin", { state: { usuario: data } });
+    }
   };
 
   return (
     <div className="login-container">
       <div className="left-side">
-        <img src={logo} alt="Planix Logo" className="planix-logo" />
+        <Link to={"/"}>
+          <img src={logo} alt="Planix Logo" className="planix-logo" />
+        </Link>
         <div className="overlay">
           <div className="text-content">
             <p>Construí tu mundo, Conectá con quienes lo hacen posible.</p>
-            <a href="https://planix.com.ar" target="_blank" rel="noopener noreferrer">
-              Visita nuestra web
-            </a>
             <div className="dots">
               <span className="dot active"></span>
               <span className="dot"></span>
@@ -32,9 +46,11 @@ const Login = () => {
           </div>
         </div>
       </div>
+
       <div className="right-side">
-      <h2 className="logh2">Bienvenido</h2>
         <form className="login-form" onSubmit={handleSubmit}>
+          <h2>Bienvenido</h2>
+
           <label htmlFor="email">Email</label>
           <input
             id="email"
@@ -44,11 +60,9 @@ const Login = () => {
             onChange={(e) => setEmail(e.target.value)}
             required
           />
+
           <label htmlFor="password" className="password-label">
             Contraseña
-            <Link to="#" className="forgot-password">
-              ¿Has olvidado tu contraseña?
-            </Link>
           </label>
           <div className="password-input-wrapper">
             <input
@@ -68,10 +82,17 @@ const Login = () => {
               {showPassword ? "🙈" : "👁️"}
             </button>
           </div>
+
+          <Link to="#" className="forgot-password">
+            ¿Has olvidado tu contraseña?
+          </Link>
+
           <button type="submit" className="btn-login">
             Iniciar Sesión
           </button>
-          <div className="or-text">o inicia sesion con</div>
+
+          <div className="or-text">o inicia sesión con</div>
+
           <div className="social-buttons">
             <button type="button" className="btn-facebook">
               <i className="fab fa-facebook-f"></i> Facebook
@@ -80,8 +101,9 @@ const Login = () => {
               <i className="fab fa-google"></i> Google
             </button>
           </div>
+
           <div className="register-text">
-            ¿Todavía no tenes una cuenta? <Link to="/register">Crea una ahora</Link>
+            ¿Todavía no tenés una cuenta? <Link to="/rol">Crea una ahora</Link>
           </div>
         </form>
       </div>

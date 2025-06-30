@@ -31,7 +31,7 @@ const Profesionales = () => {
   }, []);
 
   const handleClick = (id) => {
-    navigate('/verPerfil/${id}');
+    navigate(`/verPerfil/${id}`);
   };
   
 

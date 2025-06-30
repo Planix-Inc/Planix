@@ -89,7 +89,7 @@ function Encabezado({ usuarioActivo, setUsuarioActivo }) {
               <button className="btn-iniciar" onClick={handleIniciarSesion}>
                 Iniciar sesión
               </button>
-              <button className="btn-registrarse">Registrarse</button>
+              <button className="btn-registrarse" onClick={() => navigate('/registro')}>Registrarse</button>
             </>
           )}
         </div>

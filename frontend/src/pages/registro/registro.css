@@ -1,0 +1,214 @@
+.registro-container {
+  display: flex;
+  height: 100vh;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Left side */
+.registro-left {
+  flex: 1;
+  position: relative;
+  background: url('../../assets/login/Reunion.jpg') center center/cover no-repeat;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 40px 30px 60px 30px;
+}
+
+.registro-logo {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 120px;
+    height: auto;
+    z-index: 10;
+}
+
+.registro-left-content {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.registro-quote {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.registro-subtext {
+  font-size: 0.8rem;
+  opacity: 0.7;
+  margin-bottom: 20px;
+}
+
+.registro-dots {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.4);
+  cursor: pointer;
+}
+
+.dot.active {
+  background-color: white;
+}
+
+/* Right side */
+.registro-right {
+  flex: 1;
+  background-color: #121212;
+  color: white;
+  padding: 60px 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.registro-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.registro-subtitle {
+  font-size: 0.9rem;
+  opacity: 0.7;
+  margin-bottom: 20px;
+}
+
+.registro-social-buttons {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.social-btn {
+  background-color: #2c2c2c;
+  border: none;
+  border-radius: 5px;
+  width: 40px;
+  height: 40px;
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
+}
+
+.social-btn.google:hover {
+  background-color: #db4437;
+}
+
+.social-btn.facebook:hover {
+  background-color: #3b5998;
+}
+
+.registro-divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 20px;
+  color: #666;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.registro-divider::before,
+.registro-divider::after {
+  content: "";
+  flex: 1;
+  border-bottom: 1px solid #444;
+  margin: 0 10px;
+}
+
+.registro-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.registro-name-row {
+  display: flex;
+  gap: 15px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.85rem;
+  flex: 1;
+}
+
+.form-group label {
+  margin-bottom: 5px;
+  font-weight: 600;
+}
+
+.form-group input {
+  background-color: #1e1e1e;
+  border: 1px solid #333;
+  border-radius: 5px;
+  padding: 10px;
+  color: #ccc;
+  font-size: 0.9rem;
+  transition: border-color 0.3s ease;
+}
+
+.form-group input::placeholder {
+  color: #555;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #3a7bfd;
+  background-color: #222;
+}
+
+.full-width {
+  flex: none;
+  width: 100%;
+}
+
+.registro-submit-btn {
+  margin-top: 20px;
+  background: linear-gradient(90deg, #3a7bfd 0%, #1e3cff 100%);
+  border: none;
+  border-radius: 8px;
+  padding: 12px 0;
+  color: white;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.registro-submit-btn:hover {
+  background: linear-gradient(90deg, #1e3cff 0%, #3a7bfd 100%);
+}
+
+.registro-login-link {
+  margin-top: 15px;
+  font-size: 0.85rem;
+  color: #888;
+  text-align: center;
+}
+
+.registro-login-link a {
+  color: #3a7bfd;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.registro-login-link a:hover {
+  text-decoration: underline;
+}

@@ -10,6 +10,7 @@ import Proyectos from "./pages/proyectos/";
 import Constructoras from "./pages/constructoras/";
 import Notfound from "./pages/notFound/";
 import PostLogin from "./pages/postLogin/";
+import Registro  from "./pages/registro";
 
 function App() {
   const [usuarioActivo, setUsuarioActivo] = useState(null);
@@ -23,7 +24,7 @@ function App() {
 
   const LocationWrapper = () => {
     const location = useLocation();
-    const hideHeaderFooter = location.pathname === "/login";
+    const hideHeaderFooter = location.pathname === "/login" || location.pathname === "/registro";
 
     return (
       <>
@@ -45,6 +46,8 @@ function App() {
             element={<LoginPage setUsuarioActivo={setUsuarioActivo} />}
           />
           <Route path="*" element={<Notfound />} />
+          <Route path="/registro" element={<Registro />} />
+          
         </Routes>
         {!hideHeaderFooter && <Footer />}
       </>

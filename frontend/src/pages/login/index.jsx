@@ -17,7 +17,7 @@ const Login = ({ setUsuarioActivo }) => {
       .from("Usuario")
       .select("*")
       .eq("Email", email)
-      .eq("contraseña", password)
+      .eq("Contraseña", password)
       .single();
 
     if (error || !data) {
@@ -103,7 +103,7 @@ const Login = ({ setUsuarioActivo }) => {
           </div>
 
           <div className="register-text">
-            ¿Todavía no tenés una cuenta? <Link to="/rol">Crea una ahora</Link>
+            ¿Todavía no tenés una cuenta? <Link to="/registro">Crea una ahora</Link>
           </div>
         </form>
       </div>

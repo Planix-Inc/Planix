@@ -11,6 +11,7 @@ import Constructoras from "./pages/constructoras/";
 import Notfound from "./pages/notFound/";
 import PostLogin from "./pages/postLogin/";
 import Registro  from "./pages/registro";
+import VerPerfil from "./pages/profesionales/verPerfil.jsx";
 
 function App() {
   const [usuarioActivo, setUsuarioActivo] = useState(null);
@@ -34,6 +35,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Landing />} />
           <Route path="/profesionales" element={<Profesionales />} />
+          <Route path="/profesionales/verPerfil/:id" element={<VerPerfil />} />
           <Route path="/proveedores" element={<Proveedores />} />
           <Route path="/proyectos" element={<Proyectos />} />
           <Route path="/constructoras" element={<Constructoras />} />
@@ -47,7 +49,7 @@ function App() {
           />
           <Route path="*" element={<Notfound />} />
           <Route path="/registro" element={<Registro />} />
-          
+          <Route path="/verPerfil/:id" element={<VerPerfil />} />
         </Routes>
         {!hideHeaderFooter && <Footer />}
       </>

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
 import Slider from "react-slick";
 import { supabase } from "../../data/supabaseClient";
 import "../profesionales/profesionales.css";
@@ -9,6 +10,7 @@ import BotonInversion from "../../components/botonInversion";
 
 
 const Profesionales = () => {
+  const navigate = useNavigate();
   const [profesionales, setProfesionales] = useState([]);
 
   useEffect(() => {
@@ -27,6 +29,11 @@ const Profesionales = () => {
 
     fetchProfesionales();
   }, []);
+
+  const handleClick = (id) => {
+    navigate('/verPerfil/${id}');
+  };
+  
 
   const configuracionCarrusel = {
     dots: false,
@@ -56,9 +63,17 @@ const Profesionales = () => {
             <h3 className="nombre-profesional">
               {prof.nombre} {prof.apellido}
             </h3>
-            <p className="texto-localidad">📍 {prof.localidad} - ⭐ {prof.valoracion}</p>
-            
-            <button className="boton-ver-perfil">Ver perfil</button>
+            <p className="texto-localidad">
+              📍 {prof.localidad} - ⭐ {prof.valoracion}
+            </p>
+
+            <button
+  className="boton-ver-perfil"
+  onClick={() => handleClick(prof.id)}
+>
+  Ver perfil
+</button>
+
           </div>
         ))}
       </Slider>
@@ -75,7 +90,11 @@ const Profesionales = () => {
               type="text"
               placeholder="Arquitecto, plomero, diseño de interior, albañil, etc"
             />
-            <button className="boton-buscar"><svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="25" height="25" viewBox="0 0 50 50"><path d="M 21 3 C 11.601563 3 4 10.601563 4 20 C 4 29.398438 11.601563 37 21 37 C 24.355469 37 27.460938 36.015625 30.09375 34.34375 L 42.375 46.625 L 46.625 42.375 L 34.5 30.28125 C 36.679688 27.421875 38 23.878906 38 20 C 38 10.601563 30.398438 3 21 3 Z M 21 7 C 28.199219 7 34 12.800781 34 20 C 34 27.199219 28.199219 33 21 33 C 13.800781 33 8 27.199219 8 20 C 8 12.800781 13.800781 7 21 7 Z"></path></svg> </button>
+            <button className="boton-buscar">
+              <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 50 50">
+                <path d="M 21 3 C 11.601563 3 4 10.601563 4 20 C 4 29.398438 11.601563 37 21 37 C 24.355469 37 27.460938 36.015625 30.09375 34.34375 L 42.375 46.625 L 46.625 42.375 L 34.5 30.28125 C 36.679688 27.421875 38 23.878906 38 20 C 38 10.601563 30.398438 3 21 3 Z M 21 7 C 28.199219 7 34 12.800781 34 20 C 34 27.199219 28.199219 33 21 33 C 13.800781 33 8 27.199219 8 20 C 8 12.800781 13.800781 7 21 7 Z"></path>
+              </svg>
+            </button>
           </div>
         </div>
       </div>
@@ -83,12 +102,13 @@ const Profesionales = () => {
       {mostrarTipoProfesional("Ingenieros", ingenieros)}
       {mostrarTipoProfesional("Diseñadores", disenadores)}
       {mostrarTipoProfesional("Director de Obra", directoresdeobra)}
-      
+
       <div>
-      <BotonInversion/>
+        <BotonInversion />
       </div>
     </div>
   );
 };
 
 export default Profesionales;
+

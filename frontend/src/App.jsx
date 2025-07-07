@@ -11,7 +11,7 @@ import Constructoras from "./pages/constructoras/";
 import Notfound from "./pages/notFound/";
 import PostLogin from "./pages/postLogin/";
 import Registro  from "./pages/registro";
-import VerPerfil from "./pages/profesionales/verPerfil.jsx";
+import VerPerfil from "./pages/profesionales/verPerfil/index.jsx";
 
 function App() {
   const [usuarioActivo, setUsuarioActivo] = useState(null);

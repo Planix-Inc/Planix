@@ -69,8 +69,7 @@ const Profesionales = () => {
 
             <button
   className="boton-ver-perfil"
-  onClick={() => handleClick(prof.id)}
->
+  onClick={() => handleClick(prof.id)}>
   Ver perfil
 </button>
 

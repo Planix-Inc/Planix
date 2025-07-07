@@ -39,7 +39,7 @@ const VerPerfil = () => {
     <div className="perfil-container">
       <img src={perfil.img} height="200"/>
       <h1>{perfil.nombre} {perfil.apellido}</h1>
-      <p>Email: {perfil.email}</p>
+      <p>Email: {perfil.Email}</p>
       <p>Localidad: {perfil.localidad}</p>
       <p>Tipo Profesional: {perfil.tipoProfesional.descripcion}</p>
       <p>Valoración: {perfil.valoracion}</p>

@@ -5,10 +5,12 @@ import "../constructoras/constructoras.css";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import BotonInversion from "../../components/botonInversion";
+import { useNavigate } from "react-router-dom";
 
 const Constructoras = () => {
   const [constructoras, setConstructoras] = useState([]);
   const [constructorasDestacado, setConstructorasDestacado] = useState([]);
+  const Navigate=useNavigate()
 
   useEffect(() => {
     const fetchConstructoras = async () => {
@@ -41,6 +43,10 @@ const Constructoras = () => {
     fetchConstructoras();
     fetchConstructorasDestacados();
   }, []);
+  
+  const handleClick = (id) => {
+    Navigate(`/verPerfil/${id}`);
+  };
 
   const configuracionCarrusel = {
     dots: false,
@@ -111,7 +117,7 @@ const Constructoras = () => {
               <p className="texto-localidad">
                 📍 {prof.localidad} - ⭐ {prof.valoracion}
               </p>
-              <button className="boton-ver-perfil">Ver perfil</button>
+              <button className="boton-ver-perfil" onClick={()=>handleClick(prof.id)}>Ver perfil</button>
             </div>
           ))}
         </Slider>

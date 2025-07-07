@@ -12,6 +12,7 @@ import Notfound from "./pages/notFound/";
 import PostLogin from "./pages/postLogin/";
 import Registro  from "./pages/registro";
 import VerPerfil from "./pages/profesionales/verPerfil.jsx";
+import verPerfil from "./pages/constructoras/verPerfil.jsx"
 
 function App() {
   const [usuarioActivo, setUsuarioActivo] = useState(null);
@@ -39,6 +40,7 @@ function App() {
           <Route path="/proveedores" element={<Proveedores />} />
           <Route path="/proyectos" element={<Proyectos />} />
           <Route path="/constructoras" element={<Constructoras />} />
+          <Route path="/constructoras/verPerfil/:id" element={<verPerfil/>}></Route>
           <Route
             path="/postLogin"
             element={<PostLogin usuarioActivo={usuarioActivo} />}

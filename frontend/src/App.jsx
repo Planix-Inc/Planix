@@ -11,7 +11,8 @@ import Constructoras from "./pages/constructoras/";
 import Notfound from "./pages/notFound/";
 import PostLogin from "./pages/postLogin/";
 import Registro  from "./pages/registro";
-import VerPerfil from "./pages/profesionales/verPerfil.jsx";
+import VerPerfilProfesionales from "./pages/profesionales/verPerfil.jsx";
+import VerPerfilProveedores from "./pages/proveedores/verPerfil.jsx";
 
 function App() {
   const [usuarioActivo, setUsuarioActivo] = useState(null);
@@ -35,8 +36,9 @@ function App() {
         <Routes>
           <Route path="/" element={<Landing />} />
           <Route path="/profesionales" element={<Profesionales />} />
-          <Route path="/profesionales/verPerfil/:id" element={<VerPerfil />} />
+          <Route path="/profesionales/verPerfil/:id" element={<VerPerfilProfesionales />} />
           <Route path="/proveedores" element={<Proveedores />} />
+          <Route path="/proveedores/verPerfil/:id" element={<VerPerfilProveedores />} />
           <Route path="/proyectos" element={<Proyectos />} />
           <Route path="/constructoras" element={<Constructoras />} />
           <Route
@@ -49,7 +51,6 @@ function App() {
           />
           <Route path="*" element={<Notfound />} />
           <Route path="/registro" element={<Registro />} />
-          <Route path="/verPerfil/:id" element={<VerPerfil />} />
         </Routes>
         {!hideHeaderFooter && <Footer />}
       </>

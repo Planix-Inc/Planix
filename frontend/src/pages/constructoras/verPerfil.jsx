@@ -1,3 +1,7 @@
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { supabase } from "../../data/supabaseClient";
+
 const VerPerfil=()=>{
     const { id } = useParams();
     const [perfilEmpresas, setPerfilEmpresas] = useState(null);

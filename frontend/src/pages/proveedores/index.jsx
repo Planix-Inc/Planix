@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Slider from "react-slick";
 import { supabase } from "../../data/supabaseClient";
 import "./proveedores.css";
@@ -7,6 +8,7 @@ import "slick-carousel/slick/slick-theme.css";
 import BotonInversion from "../../components/botonInversion";
 
 const Proveedores = () => {
+  const navigate = useNavigate();
   const [proveedores, setProveedores] = useState([]);
   const [productos, setProductos] = useState([]);
 
@@ -67,6 +69,10 @@ const Proveedores = () => {
     ],
   };
 
+  const handleClick = (id) => {
+    navigate(`/proveedores/verPerfil/${id}`);
+  };
+
   return (
     <div>
       <div>
@@ -106,7 +112,9 @@ const Proveedores = () => {
                 <p className="texto-localidad-proveedor">
                   📍 {prov.localidad} - ⭐ {prov.valoracion}
                 </p>
-                <button className="boton-ver-perfil-proveedor">
+                <button
+                  className="boton-ver-perfil-proveedor"
+                  onClick={() => handleClick(prov.id)}>
                   Ver perfil
                 </button>
               </div>

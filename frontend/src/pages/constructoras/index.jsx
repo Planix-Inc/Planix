@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 const Constructoras = () => {
   const [constructoras, setConstructoras] = useState([]);
   const [constructorasDestacado, setConstructorasDestacado] = useState([]);
-  const Navigate=useNavigate()
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchConstructoras = async () => {
@@ -45,7 +45,7 @@ const Constructoras = () => {
   }, []);
   
   const handleClick = (id) => {
-    Navigate(`/verPerfil/${id}`);
+    navigate(`/constructoras/verPerfil/${id}`);
   };
 
   const configuracionCarrusel = {

@@ -31,7 +31,7 @@ const Profesionales = () => {
   }, []);
 
   const handleClick = (id) => {
-    navigate(`/verPerfil/${id}`);
+    navigate(`/profesionales/verPerfil/${id}`);
   };
   
 
@@ -67,11 +67,7 @@ const Profesionales = () => {
               📍 {prof.localidad} - ⭐ {prof.valoracion}
             </p>
 
-            <button
-  className="boton-ver-perfil"
-  onClick={() => handleClick(prof.id)}>
-  Ver perfil
-</button>
+<button className="boton-ver-perfil" onClick={() => handleClick(prof.id)}>Ver perfil</button>
 
           </div>
         ))}

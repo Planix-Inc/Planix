@@ -11,7 +11,7 @@ import Constructoras from "./pages/constructoras/";
 import Notfound from "./pages/notFound/";
 import PostLogin from "./pages/postLogin/";
 import Registro  from "./pages/registro";
-import VerPerfilProfesionales from "./pages/profesionales/verPerfil.jsx";
+import VerPerfilProfesionales from "./pages/profesionales/verPerfil/index.jsx";
 import VerPerfilProveedores from "./pages/proveedores/verPerfil.jsx";
 
 function App() {

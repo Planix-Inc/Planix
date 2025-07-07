@@ -46,7 +46,6 @@ const VerPerfil = () => {
       <p>Fecha de Nacimiento:{perfil.FechaNacimiento}</p>
       <p>Direccion:{perfil.direccion}</p>
       <p>Email:{perfil.Email}</p>
-      {/* Add more profile details as needed */}
     </div>
   );
 };

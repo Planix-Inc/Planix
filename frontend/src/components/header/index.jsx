@@ -48,6 +48,11 @@ function Encabezado({ usuarioActivo, setUsuarioActivo }) {
     navigate("/login");
   };
 
+  const handleVerPerfil = () => {
+    navigate(`/verPerfil/${usuarioActivo.id}`);
+  };
+  
+
   return (
     <header className="encabezado">
       <div className="contenido-encabezado">
@@ -77,7 +82,7 @@ function Encabezado({ usuarioActivo, setUsuarioActivo }) {
         <div className="botones">
           {usuarioActivo ? (
             <div className="usuario-logueado">
-              <div className="fotoPerfil">
+              <div className="fotoPerfil" onClick={handleVerPerfil}>
                 <img src={usuarioActivo.img} alt="" />
               </div>
               <button className="btn-cerrar-sesion" onClick={cerrarSesion}>

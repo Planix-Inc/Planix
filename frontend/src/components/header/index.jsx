@@ -49,10 +49,24 @@ function Encabezado({ usuarioActivo, setUsuarioActivo }) {
   };
 
   const handleVerPerfil = () => {
-    navigate(`/verPerfil/${usuarioActivo.id}`);
+    if (!usuarioActivo) return;
+  
+    switch (usuarioActivo.categoriausuarioId) {
+      case 1:   
+        navigate(`/profesionales/verPerfil/${usuarioActivo.id}`);
+        break;
+      case 2: 
+        navigate(`/proveedores/verPerfil/${usuarioActivo.id}`);
+        break;
+      case 3: 
+        navigate(`/constructoras/verPerfil/${usuarioActivo.id}`);
+        break;
+      default:
+        console.error("Categoría desconocida");
+        break;
+    }
   };
   
-
   return (
     <header className="encabezado">
       <div className="contenido-encabezado">

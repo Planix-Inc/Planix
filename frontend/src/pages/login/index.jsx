@@ -15,7 +15,7 @@ const Login = ({ setUsuarioActivo }) => {
 
     const { data, error } = await supabase
       .from("Usuario")
-      .select("*")
+      .select("id, nombre, apellido, img, Email, categoriausuarioId, razonSocial")
       .eq("Email", email)
       .eq("Contraseña", password)
       .single();

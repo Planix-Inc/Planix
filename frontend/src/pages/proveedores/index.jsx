@@ -73,6 +73,14 @@ const Proveedores = () => {
     navigate(`/proveedores/verPerfil/${id}`);
   };
 
+  const handleClick3 = (id) => {
+    navigate(`/proveedores/verProductos/${id}`);
+  };
+
+  const handleClick2 = () => {
+    navigate('/proveedores/verTodos');
+  }
+
   return (
     <div>
       <div>
@@ -120,7 +128,7 @@ const Proveedores = () => {
               </div>
             ))}
           </Slider>
-          <button className="boton-vertodos">Ver Todos</button>
+          <button className="boton-vertodos" onClick={handleClick2}>Ver Todos</button>
         </div>
       </div>
 
@@ -135,7 +143,9 @@ const Proveedores = () => {
         <p className="valoracion-producto">
           ${prod.precio} - ⭐ {prod.valoracion}
         </p>
-        <button className="boton-ver-producto">Ver Producto</button>
+        <button className="boton-ver-producto"
+        onClick={() => handleClick3(prod.id)}>
+        Ver Producto</button>
       </div>
     ))}  
   </div>

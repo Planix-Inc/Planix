@@ -5,16 +5,21 @@ import LoginPage from "./pages/login/";
 import Footer from "./components/footer/";
 import Landing from "./pages/landing/";
 import Profesionales from "./pages/profesionales/";
-import Proveedores from "./pages/proveedores/";
+import Proveedores from "./pages/proveedores/index.jsx";
 import Proyectos from "./pages/proyectos/";
 import Constructoras from "./pages/constructoras/";
 import Notfound from "./pages/notFound/";
 import PostLogin from "./pages/postLogin/";
 import Registro  from "./pages/registro";
 import VerPerfilProfesionales from "./pages/profesionales/verPerfil/index.jsx";
-import VerPerfilProveedores from "./pages/proveedores/verPerfil.jsx";
+import VerPerfilProveedores from "./pages/proveedores/verPerfil/index.jsx";
 import VerPerfilConstructoras from "./pages/constructoras/verPerfil.jsx";
 import VerPerfilProyectos from "./pages/proyectos/verPerfil.jsx"
+
+
+import VerProductosProveedores from "./pages/proveedores/verProducto/verProductos";
+
+
 
 function App() {
   const [usuarioActivo, setUsuarioActivo] = useState(null);
@@ -41,10 +46,12 @@ function App() {
           <Route path="/profesionales/verPerfil/:id" element={<VerPerfilProfesionales />} />
           <Route path="/proveedores" element={<Proveedores />} />
           <Route path="/proveedores/verPerfil/:id" element={<VerPerfilProveedores />} />
+          <Route path="/proveedores/verProductos/:id" element={<VerProductosProveedores/>} />
           <Route path="/proyectos" element={<Proyectos />} />
           <Route path="/constructoras" element={<Constructoras />} />
           <Route path="/constructoras/verPerfil/:id" element={<VerPerfilConstructoras/>}></Route>
           <Route path="/proyectos/verPerfil/:id" element={<VerPerfilProyectos/>}></Route>
+       
           <Route
             path="/postLogin"
             element={<PostLogin usuarioActivo={usuarioActivo} />}

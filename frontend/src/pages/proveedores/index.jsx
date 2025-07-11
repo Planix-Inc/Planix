@@ -73,6 +73,11 @@ const Proveedores = () => {
     navigate(`/proveedores/verPerfil/${id}`);
   };
 
+
+  const handleClick2 = () => {
+    navigate('/proveedores/verTodos');
+  }
+
   return (
     <div>
       <div>
@@ -120,7 +125,7 @@ const Proveedores = () => {
               </div>
             ))}
           </Slider>
-          <button className="boton-vertodos">Ver Todos</button>
+          <button className="boton-vertodos" onClick={handleClick2}>Ver Todos</button>
         </div>
       </div>
 

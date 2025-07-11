@@ -13,7 +13,9 @@ import PostLogin from "./pages/postLogin/";
 import Registro  from "./pages/registro";
 import VerPerfilProfesionales from "./pages/profesionales/verPerfil/index.jsx";
 import VerPerfilProveedores from "./pages/proveedores/verPerfil.jsx";
+import VerProductosProveedores from "./pages/proveedores/verProductos.jsx";
 import VerPerfilConstructoras from "./pages/constructoras/verPerfil.jsx";
+
 
 
 function App() {
@@ -41,9 +43,10 @@ function App() {
           <Route path="/profesionales/verPerfil/:id" element={<VerPerfilProfesionales />} />
           <Route path="/proveedores" element={<Proveedores />} />
           <Route path="/proveedores/verPerfil/:id" element={<VerPerfilProveedores />} />
+          <Route path="/proveedores/verProductos/:id" element={<VerProductosProveedores/>} />
           <Route path="/proyectos" element={<Proyectos />} />
           <Route path="/constructoras" element={<Constructoras />} />
-          <Route path="/constructoras/verPerfil/:id" element={<VerPerfilConstructoras/>}></Route>
+          <Route path="/constructoras/verPerfil/:id" element={<VerPerfilConstructoras/>}/>
           <Route
             path="/postLogin"
             element={<PostLogin usuarioActivo={usuarioActivo} />}

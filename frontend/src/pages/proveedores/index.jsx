@@ -73,6 +73,11 @@ const Proveedores = () => {
     navigate(`/proveedores/verPerfil/${id}`);
   };
 
+  
+  const handleClick2 = (id) => {
+    navigate(`/proveedores/verProductos/${id}`);
+  };
+
   return (
     <div>
       <div>
@@ -135,7 +140,9 @@ const Proveedores = () => {
         <p className="valoracion-producto">
           ${prod.precio} - ⭐ {prod.valoracion}
         </p>
-        <button className="boton-ver-producto">Ver Producto</button>
+        <button className="boton-ver-producto"
+        onClick={() => handleClick2(prod.id)}
+        >Ver Producto</button>
       </div>
     ))}  
   </div>

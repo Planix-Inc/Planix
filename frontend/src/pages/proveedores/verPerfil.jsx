@@ -93,7 +93,7 @@ const VerPerfil = () => {
         )}
       </div>
 
-      {/* Si querés agregar reseñas, tendrás que crear la relación primero */}
+     
     </div>
   );
 };

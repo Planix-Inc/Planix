@@ -11,10 +11,10 @@ import Constructoras from "./pages/constructoras/";
 import Notfound from "./pages/notFound/";
 import PostLogin from "./pages/postLogin/";
 import Registro  from "./pages/registro";
-import VerPerfilProfesionales from "./pages/profesionales/verPerfil/index.jsx";
-import VerPerfilProveedores from "./pages/proveedores/verPerfil.jsx";
-import VerProductosProveedores from "./pages/proveedores/verProductos.jsx";
-import VerPerfilConstructoras from "./pages/constructoras/verPerfil.jsx";
+import VerPerfilProfesionales from "./pages/profesionales/verPerfil/";
+import VerPerfilProveedores from "./pages/proveedores/verPerfil/";
+import VerPerfilConstructoras from "./pages/constructoras/";
+import VerProductosProveedores from "./pages/proveedores/verProducto/verProductos";
 
 
 

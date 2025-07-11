@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { supabase } from "../../data/supabaseClient";
-import "./verP.css";
+import { supabase } from "../../../data/supabaseClient";
+import "../verProducto/verProducto.css";
 
 const VerProducto = () => {
   const { id } = useParams();

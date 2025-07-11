@@ -14,7 +14,7 @@ import Registro  from "./pages/registro";
 import VerPerfilProfesionales from "./pages/profesionales/verPerfil/index.jsx";
 import VerPerfilProveedores from "./pages/proveedores/verPerfil.jsx";
 import VerPerfilConstructoras from "./pages/constructoras/verPerfil.jsx";
-
+import VerPerfilProyectos from "./pages/proyectos/verPerfil.jsx"
 
 function App() {
   const [usuarioActivo, setUsuarioActivo] = useState(null);
@@ -44,6 +44,7 @@ function App() {
           <Route path="/proyectos" element={<Proyectos />} />
           <Route path="/constructoras" element={<Constructoras />} />
           <Route path="/constructoras/verPerfil/:id" element={<VerPerfilConstructoras/>}></Route>
+          <Route path="/proyectos/verPerfil/:id" element={<VerPerfilProyectos/>}></Route>
           <Route
             path="/postLogin"
             element={<PostLogin usuarioActivo={usuarioActivo} />}

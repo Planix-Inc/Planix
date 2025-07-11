@@ -4,11 +4,14 @@ import "../proyectos/proyectos.css";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { useNavigate } from "react-router-dom";
+
 
 
 const Proyectos = () => {
   const [proyectos, setProyectos] = useState([]);
   const [proyectosDestacados, setProyectosDestacados] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProyectos = async () => {
@@ -42,6 +45,9 @@ const Proyectos = () => {
     fetchProyectosDestacados();
   }, []);
 
+  const handleClick=(id)=>{
+    navigate(`/proyectos/verPerfil/${id}`)
+  }
   const configuracionCarrusel = {
     dots: false,
     infinite: true,
@@ -100,7 +106,7 @@ const Proyectos = () => {
                       {prof.nombre} {prof.apellido}
                     </h3>
                     <p className="texto-localidad">📍 {prof.direccion} - ⭐ {prof.valoracion}</p>
-                    <button className="boton-ver-perfil">Ver proyecto</button>
+                    <button className="boton-ver-perfil" onClick={()=>handleClick(prof.id)}>Ver proyecto</button>
                   </div>
                 ))}
               </Slider>
@@ -116,16 +122,12 @@ const Proyectos = () => {
                 {prof.nombre} {prof.apellido}
               </h3>
               <p className="texto-localidad">📍 {prof.direccion} - ⭐ {prof.valoracion}</p>
-              <button className="boton-ver-perfil">Ver proyecto</button>
+              <button className="boton-ver-perfil" onClick={()=>handleClick(prof.id)}>Ver proyecto</button>
             </div>
           ))}
         </Slider>
       </div>
-
-      
 </div>
   );
 };
-
-
 export default Proyectos;

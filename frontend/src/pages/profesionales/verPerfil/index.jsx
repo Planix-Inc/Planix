@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "../../../data/supabaseClient.js";
 import "../profesionales.css";
 import "./verPerfil.css";
@@ -8,6 +8,7 @@ import usuario2 from "../../../assets/VerPerfil/usuario2ReseñaSim.jpg";
 
 const VerPerfil = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [perfil, setPerfil] = useState(null);
   const [proyectos, setProyectos] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -18,6 +19,7 @@ const VerPerfil = () => {
         .from("Usuario")
         .select("*, tipoProfesional: idTipoProfesional (descripcion)")
         .eq("id", id)
+        .eq("categoriausuarioId", 1) // Solo profesionales
         .single();
 
       if (error) {
@@ -28,15 +30,29 @@ const VerPerfil = () => {
     };
 
     const fetchProyectos = async () => {
-      const { data, error } = await supabase
-        .from("Proyectos")
-        .select("*")
-        .eq("usuarioId", id);
+      const { data: participaciones, error: participacionesError } = await supabase
+        .from("participacionproyecto")
+        .select("proyectoid")
+        .eq("usuarioid", id);
 
-      if (error) {
-        console.error("Error al obtener proyectos:", error);
-      } else {
-        setProyectos(data || []);
+      if (participacionesError) {
+        console.error("Error al obtener participaciones:", participacionesError);
+        return;
+      }
+
+      const proyectoIds = participaciones.map((p) => p.proyectoid);
+
+      if (proyectoIds.length > 0) {
+        const { data: proyectosData, error: proyectosError } = await supabase
+          .from("Proyectos")
+          .select("id, nombre, direccion, img, valoracion")
+          .in("id", proyectoIds);
+
+        if (proyectosError) {
+          console.error("Error al obtener proyectos:", proyectosError);
+        } else {
+          setProyectos(proyectosData);
+        }
       }
     };
 
@@ -48,6 +64,18 @@ const VerPerfil = () => {
 
     fetchData();
   }, [id]);
+
+  const renderStars = (rating) => {
+    const stars = [];
+    for (let i = 1; i <= 5; i++) {
+      stars.push(
+        <span key={i} className="estrella" style={{ color: i <= rating ? "#ffc107" : "#e4e5e9" }}>
+          ★
+        </span>
+      );
+    }
+    return stars;
+  };
 
   if (loading) return <div>Cargando perfil...</div>;
   if (!perfil) return <div>Perfil no encontrado.</div>;
@@ -81,6 +109,10 @@ const VerPerfil = () => {
                 <img src={proyecto.img} alt={proyecto.nombre} />
                 <h4>{proyecto.nombre}</h4>
                 <p>{proyecto.direccion}</p>
+                <p>{renderStars(Math.round(proyecto.valoracion || 0))}</p>
+                <button className="boton-ver-proyecto" onClick={() => navigate(`/proyectos/verPerfil/${proyecto.id}`)}>
+                  Ver
+                </button>
               </div>
             ))
           ) : (
@@ -89,7 +121,6 @@ const VerPerfil = () => {
         </div>
       </div>
 
-      {/* RESEÑAS SIMULADAS. FALTA CONECTAR CON BASE DE DATOS.*/}
       <div className="reseñas-section">
         <h2>Reseñas</h2>
 

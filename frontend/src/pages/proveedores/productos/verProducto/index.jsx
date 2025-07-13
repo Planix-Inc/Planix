@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { supabase } from "../../../data/supabaseClient";
-import "../verProducto/verProducto.css";
+import { supabase } from "../../../../data/supabaseClient";
+import "./verProducto.css";
 
 const VerProducto = () => {
   const { id } = useParams();
@@ -34,7 +34,7 @@ const VerProducto = () => {
     const stars = [];
     for (let i = 1; i <= 5; i++) {
       stars.push(
-        <span key={i} style={{ color: i <= rating ? "#ffc107" : "#e4e5e9" }}>
+        <span key={i} className="estrella" style={{ color: i <= rating ? "#ffc107" : "#e4e5e9" }}>
           ★
         </span>
       );

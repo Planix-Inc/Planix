@@ -133,7 +133,7 @@ const Constructoras = () => {
               <p className="texto-localidad">
                 📍 {prof.localidad} - ⭐ {prof.valoracion}
               </p>
-              <button className="boton-ver-perfil">Ver perfil</button>
+              <button className="boton-ver-perfil" onClick={()=>handleClick(prof.id)}>Ver perfil</button>
             </div>
           ))}
         </Slider>

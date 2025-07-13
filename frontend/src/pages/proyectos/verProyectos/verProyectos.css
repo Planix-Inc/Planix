@@ -1,0 +1,112 @@
+.contenedor-ver-proyecto {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-family: 'Segoe UI', sans-serif;
+  color: #333;
+}
+
+.img-proyecto {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  object-fit: cover;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.info-proyecto {
+  margin-bottom: 2rem;
+}
+
+.info-proyecto h2 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.info-proyecto p {
+  font-size: 1rem;
+  color: #555;
+}
+
+.valoracion-proyecto {
+  margin: 0.8rem 0;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.descripcion {
+  margin-top: 1rem;
+  font-size: 1rem;
+  color: #444;
+  line-height: 1.6;
+}
+
+.titulo-participantes {
+  font-size: 1.5rem;
+  margin-top: 3rem;
+  margin-bottom: 1.5rem;
+  font-weight: bold;
+  color: #222;
+}
+
+.grid-participantes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+}
+
+.card-participante {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  text-align: center;
+  transition: transform 0.2s ease;
+}
+
+.card-participante:hover {
+  transform: translateY(-5px);
+}
+
+.img-participante {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-bottom: 0.8rem;
+  border: 2px solid #f0f0f0;
+  background-color: #f8f8f8;
+}
+
+.tipo-participante {
+  font-weight: 600;
+  font-size: 1rem;
+  margin: 0.3rem 0;
+  color: #333;
+}
+
+.card-participante p {
+  margin: 0.2rem 0;
+  color: #555;
+  font-size: 0.95rem;
+  word-break: break-word;
+}
+
+.boton-ver-participante {
+  margin-top: 0.8rem;
+  background-color: #f6c944;
+  border: none;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  color: #222;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.boton-ver-participante:hover {
+  background-color: #e4b835;
+}

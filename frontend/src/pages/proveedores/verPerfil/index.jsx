@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom"; // ← AÑADIDO
 import { supabase } from "../../../data/supabaseClient.js";
 import "../proveedores.css";
 import "../verPerfil/verPerfil.css";
@@ -8,6 +8,7 @@ import usuario2 from "../../../assets/VerPerfil/usuario2ReseñaSim.jpg";
 
 const VerPerfil = () => {
   const { id } = useParams();
+  const navigate = useNavigate(); // ← AÑADIDO
   const [perfil, setPerfil] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -28,7 +29,7 @@ const VerPerfil = () => {
         `
         )
         .eq("id", id)
-        .eq("categoriausuarioId", 2) // solo proveedores
+        .eq("categoriausuarioId", 2)
         .single();
 
       if (error) {
@@ -89,6 +90,12 @@ const VerPerfil = () => {
                 <h4>{producto.descripcion}</h4>
                 <p>Precio: ${producto.precio}</p>
                 <p>{renderStars(Math.round(producto.valoracion || 0))}</p>
+                <button
+                  className="ver-producto-btn"
+                  onClick={() => navigate(`/proveedores/verProductos/${producto.id}`)}
+                >
+                  Ver producto
+                </button>
               </div>
             ))
           ) : (

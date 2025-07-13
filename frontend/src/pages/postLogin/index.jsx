@@ -4,8 +4,9 @@ import Slider from "react-slick";
 import { supabase } from "../../data/supabaseClient";
 import "../proveedores/proveedores.css";
 import "../proyectos/proyectos.css";
-import BotonInversion from "../../components/botonInversion"; 
-import "./postLogin.css"; 
+import BotonInversion from "../../components/botonInversion";
+import "./postLogin.css";
+import imagenBienvenida from "../../assets/PostLogin/bienvenida.jpg";
 
 const PostLogin = () => {
   const location = useLocation();
@@ -51,44 +52,56 @@ const PostLogin = () => {
 
   return (
     <>
-        <div className="seccion-proyectos">
-          <h2 className="titulo-seccion">Proyectos destacados</h2>
-          <Slider {...configuracionCarrusel} className="carrusel-proyectos">
-            {proyectosDestacados.map((proy) => (
-              <div key={proy.id} className="tarjeta-proyectos">
-                <div className="imagen-proyectos">
-                  <img src={proy.img} alt={proy.nombre} />
-                </div>
-                <h3 className="nombre-proyectos">{proy.nombre}</h3>
-                <p className="texto-localidad">
-                  📍 {proy.direccion} - ⭐ {proy.valoracion}
-                </p>
-                <button className="boton-ver-perfil">Ver proyecto</button>
-              </div>
-            ))}
-          </Slider>
+      <div className="banner-bienvenida">
+        <img src={imagenBienvenida} alt="Bienvenida" className="img-banner" />
+        <div className="texto-bienvenida">
+          <h1>¡Bienvenido, {usuario?.nombre || usuario?.razonSocial || "Usuario"}!</h1>
+          <p>
+            Tu espacio de construcción inteligente te espera.
+            <br />
+            Accedé a tus proyectos y novedades recientes.
+          </p>
         </div>
+      </div>
 
-        <div className="seccion-proveedores">
-          <h2 className="titulo-seccion-proveedores">Proveedores destacados</h2>
-          <Slider {...configuracionCarrusel} className="carrusel-proveedores">
-            {proveedores.map((prov) => (
-              <div key={prov.id} className="tarjeta-proveedor">
-                <div className="imagen-proveedor">
-                  <img src={prov.img} alt={prov.razonSocial} />
-                </div>
-                <h3 className="nombre-proveedor">{prov.razonSocial}</h3>
-                <p className="texto-localidad-proveedor">
-                  📍 {prov.localidad} - ⭐ {prov.valoracion}
-                </p>
-                <button className="boton-ver-perfil-proveedor">Ver perfil</button>
+      <div className="seccion-proyectos">
+        <h2 className="titulo-seccion">Proyectos destacados</h2>
+        <Slider {...configuracionCarrusel} className="carrusel-proyectos">
+          {proyectosDestacados.map((proy) => (
+            <div key={proy.id} className="tarjeta-proyectos">
+              <div className="imagen-proyectos">
+                <img src={proy.img} alt={proy.nombre} />
               </div>
-            ))}
-          </Slider>
-        </div>
-    <div>
-      <BotonInversion/>
-    </div>
+              <h3 className="nombre-proyectos">{proy.nombre}</h3>
+              <p className="texto-localidad">
+                📍 {proy.direccion} - ⭐ {proy.valoracion}
+              </p>
+              <button className="boton-ver-perfil">Ver proyecto</button>
+            </div>
+          ))}
+        </Slider>
+      </div>
+
+      <div className="seccion-proveedores">
+        <h2 className="titulo-seccion-proveedores">Proveedores destacados</h2>
+        <Slider {...configuracionCarrusel} className="carrusel-proveedores">
+          {proveedores.map((prov) => (
+            <div key={prov.id} className="tarjeta-proveedor">
+              <div className="imagen-proveedor">
+                <img src={prov.img} alt={prov.razonSocial} />
+              </div>
+              <h3 className="nombre-proveedor">{prov.razonSocial}</h3>
+              <p className="texto-localidad-proveedor">
+                📍 {prov.localidad} - ⭐ {prov.valoracion}
+              </p>
+              <button className="boton-ver-perfil-proveedor">Ver perfil</button>
+            </div>
+          ))}
+        </Slider>
+      </div>
+      <div>
+        <BotonInversion />
+      </div>
     </>
   );
 };

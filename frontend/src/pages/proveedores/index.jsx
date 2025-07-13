@@ -73,12 +73,16 @@ const Proveedores = () => {
     navigate(`/proveedores/verPerfil/${id}`);
   };
 
+  const handleClick2 = () => {
+    navigate('/proveedores/verTodos');
+  }
+
   const handleClick3 = (id) => {
     navigate(`/proveedores/verProductos/${id}`);
   };
 
-  const handleClick2 = () => {
-    navigate('/proveedores/verTodos');
+  const handleClick4 = () => {
+    navigate('/productos/verTodos');
   }
 
   return (
@@ -149,7 +153,9 @@ const Proveedores = () => {
       </div>
     ))}  
   </div>
-  <button className="boton-vertodos">Ver Todos</button>
+  <button className="boton-vertodos"
+  onClick={handleClick4}>
+  Ver Todos</button>
 </div>
 <BotonInversion />
 </div>

@@ -36,16 +36,23 @@
 }
 
 .navegacion a {
-    color: white;
-    text-decoration: none;
-    font-weight: bold;
-    font-family: 'Segoe UI', sans-serif;
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  font-family: 'Segoe UI', sans-serif;
+  transition: color 0.2s, border-bottom 0.2s;
+}
+
+.navegacion a:hover {
+  color: #474644;
+  border-bottom: 2px solid #474644;
+  padding-bottom: 2px;
 }
 
 .navegacion a.activo {
-    color: #949090;
+    color: #474644;
     font-weight: bold;
-    border-bottom: 2px solid #949090;
+    border-bottom: 2px solid #474644;
     padding-bottom: 2px;
 }
 
@@ -53,7 +60,7 @@
     position: absolute;
     bottom: -2px;
     height: 2px;
-    background-color: #949090;
+    background-color: #474644;
     transition: all 0.3s ease;
     pointer-events: none;
     border-radius: 4px;

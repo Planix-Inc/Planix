@@ -106,6 +106,10 @@
   cursor: pointer;
   transition: background-color 0.2s ease;
 }
+.BotonInvertir {
+  display: block;
+  margin: 0 auto;
+}
 
 .boton-ver-participante:hover {
   background-color: #e4b835;

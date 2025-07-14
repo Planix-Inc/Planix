@@ -85,7 +85,6 @@ const VerProyectos = () => {
   return (
     <div className="contenedor-ver-proyecto">
       <img className="img-proyecto" src={proyecto.img} alt={proyecto.nombre} />
-
       <div className="info-proyecto">
         <h2>{proyecto.nombre}</h2>
         <p>{proyecto.direccion}</p>
@@ -132,6 +131,10 @@ const VerProyectos = () => {
             </button>
           </div>
         ))}
+      </div>
+      <div>
+      <h2>Desea invertir en el proyecto</h2>
+      <button className="BotonInvertir">Invertir</button>
       </div>
     </div>
   );

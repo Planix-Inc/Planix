@@ -1,4 +1,4 @@
-.registro-container {
+ .registro-container {
   display: flex;
   height: 100vh;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -181,7 +181,7 @@
 
 .registro-submit-btn {
   margin-top: 20px;
-  background: linear-gradient(90deg, #3a7bfd 0%, #1e3cff 100%);
+  background: linear-gradient(90deg, orange 100%);
   border: none;
   border-radius: 8px;
   padding: 12px 0;
@@ -190,10 +190,6 @@
   font-size: 1rem;
   cursor: pointer;
   transition: background 0.3s ease;
-}
-
-.registro-submit-btn:hover {
-  background: linear-gradient(90deg, #1e3cff 0%, #3a7bfd 100%);
 }
 
 .registro-login-link {
@@ -246,7 +242,7 @@
 }
 
 .registro-categoria-btn:hover {
-  border-color: #3a7bfd;
+  border-color: orange;
   box-shadow: 0 0 12px #3a7bfd44;
   transform: translateY(-4px) scale(1.07);
 }
@@ -300,7 +296,7 @@
 
 
 .fondo-animado {
-  background: linear-gradient(120deg, #121212 60%, #3a7bfd 100%);
+  background: linear-gradient(120deg, #121212 60%, orange 100%);
   animation: fondoMove 6s infinite alternate;
 }
 @keyframes fondoMove {

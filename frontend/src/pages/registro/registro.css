@@ -75,6 +75,7 @@
   font-size: 1.5rem;
   font-weight: 600;
   margin-bottom: 8px;
+  color: #ffffff
 }
 
 .registro-subtitle {
@@ -296,7 +297,7 @@
 
 
 .fondo-animado {
-  background: linear-gradient(120deg, #121212 60%, orange 100%);
+  background: linear-gradient(120deg, #121212 75%, orange 100%);
   animation: fondoMove 6s infinite alternate;
 }
 @keyframes fondoMove {

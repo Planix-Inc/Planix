@@ -1,4 +1,4 @@
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Slider from "react-slick";
 import { supabase } from "../../data/supabaseClient";
@@ -8,11 +8,13 @@ import BotonInversion from "../../components/botonInversion";
 import "./postLogin.css";
 import imagenBienvenida from "../../assets/PostLogin/bienvenida.jpg";
 
+
 const PostLogin = () => {
   const location = useLocation();
   const usuario = location.state?.usuario;
   const [proveedores, setProveedores] = useState([]);
   const [proyectosDestacados, setProyectosDestacados] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -50,6 +52,14 @@ const PostLogin = () => {
     ],
   };
 
+  const handleClick = (id) => {
+    navigate(`../proveedores/verPerfil/${id}`);
+  };
+
+  const handleClick2 = (id) => {
+    navigate(`../proyectos/verPerfil/${id}`);
+  };
+
   return (
     <>
       <div className="banner-bienvenida">
@@ -76,7 +86,7 @@ const PostLogin = () => {
               <p className="texto-localidad">
                 📍 {proy.direccion} - ⭐ {proy.valoracion}
               </p>
-              <button className="boton-ver-perfil">Ver proyecto</button>
+              <button className="boton-ver-perfil" onClick={()=>handleClick2(proy.id)}>Ver proyecto</button>
             </div>
           ))}
         </Slider>
@@ -94,7 +104,7 @@ const PostLogin = () => {
               <p className="texto-localidad-proveedor">
                 📍 {prov.localidad} - ⭐ {prov.valoracion}
               </p>
-              <button className="boton-ver-perfil-proveedor">Ver perfil</button>
+              <button className="boton-ver-perfil-proveedor" onClick={() => handleClick(prov.id)}> Ver perfil </button>
             </div>
           ))}
         </Slider>

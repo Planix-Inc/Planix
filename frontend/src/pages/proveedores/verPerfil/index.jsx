@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom"; // ← AÑADIDO
+import { useParams, useNavigate } from "react-router-dom"; 
 import { supabase } from "../../../data/supabaseClient.js";
 import "../proveedores.css";
 import "../verPerfil/verPerfil.css";
@@ -8,7 +8,7 @@ import usuario2 from "../../../assets/VerPerfil/usuario2ReseñaSim.jpg";
 
 const VerPerfil = () => {
   const { id } = useParams();
-  const navigate = useNavigate(); // ← AÑADIDO
+  const navigate = useNavigate();
   const [perfil, setPerfil] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -43,6 +43,10 @@ const VerPerfil = () => {
     fetchPerfil();
   }, [id]);
 
+  const handleClick = () => {
+    navigate(`/proveedores/editarPerfil/${id}`);
+  };  
+
   if (loading) return <div>Cargando perfil...</div>;
   if (!perfil) return <div>Perfil no encontrado.</div>;
 
@@ -67,7 +71,7 @@ const VerPerfil = () => {
             <h1>{perfil.razonSocial}</h1>
             <p className="profesion">Proveedor</p>
             <p className="perfil-contacto">📧 {perfil.Email || "-"}</p>
-            <p className="perfil-contacto">📍 {perfil.direccion || "Dirección no especificada"}</p>
+            <p className="perfil-contacto">📍 {perfil.localidad}, {perfil.direccion || "Dirección no especificada"}</p>
             <p className="perfil-contacto">📱 {perfil.NumeroTelefono || "-"}</p>
           </div>
         </div>
@@ -78,6 +82,10 @@ const VerPerfil = () => {
           </div>
           <small>Marcar como favorito ❤️</small>
         </div>
+      </div>
+
+      <div className="btn-editarPerfil">
+        <button onClick={handleClick}>Editar perfil</button>
       </div>
 
       <div className="proyectos-section">

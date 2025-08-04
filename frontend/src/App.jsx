@@ -19,8 +19,9 @@ import VerPerfilConstructoras from "./pages/constructoras/verConstructora/";
 import VerPerfilProyectos from "./pages/proyectos/verProyectos/";
 import VerProductosProveedores from "./pages/proveedores/productos/verProducto";
 import VerTodosProductos from "./pages/proveedores/productos/verTodos/";
-
-
+import VerInversion from "./pages/proyectos/verInversion/"
+import Cancel from "./pages/proyectos/verProyectos/"
+import Submit from "./pages/proyectos/verProyectos/"
 
 
 function App() {
@@ -56,7 +57,10 @@ function App() {
           <Route path="/constructoras" element={<Constructoras />} />
           <Route path="/constructoras/verPerfil/:id" element={<VerPerfilConstructoras/>}></Route>
           <Route path="/proyectos/verPerfil/:id" element={<VerPerfilProyectos/>}></Route>
-       
+          <Route path ="/proyectos/verInversion/:id" element={<VerInversion/>}></Route>
+          <Route path ="/proyectos/verProyectos/:id" element={<Cancel/>}></Route>
+          <Route path ="/proyectos/verProyectos/:id" element={<Submit/>}></Route>
+          
           <Route
             path="/postLogin"
             element={<PostLogin usuarioActivo={usuarioActivo} />}

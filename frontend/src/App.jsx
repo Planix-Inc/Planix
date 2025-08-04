@@ -12,6 +12,8 @@ import Notfound from "./pages/notFound/";
 import PostLogin from "./pages/postLogin/";
 import Registro  from "./pages/registro";
 import EditarPerfilProf from "./pages/profesionales/editarPerfil/"
+import EditarPerfilProv from "./pages/proveedores/editarPerfil/"
+import EditarPerfilCons from "./pages/constructoras/editarPerfil/"
 import VerPerfilProfesionales from "./pages/profesionales/verPerfil/";
 import VerPerfilProveedores from "./pages/proveedores/verPerfil/";
 import VerTodosProveedores from "./pages/proveedores/verTodos";
@@ -50,6 +52,8 @@ function App() {
           <Route path="/proveedores" element={<Proveedores />} />
           <Route path="/proveedores/verPerfil/:id" element={<VerPerfilProveedores />} />
           <Route path="/profesionales/editarPerfil/:id" element={<EditarPerfilProf />} />
+          <Route path="/proveedores/editarPerfil/:id" element={<EditarPerfilProv />} />
+          <Route path="/constructoras/editarPerfil/:id" element={<EditarPerfilCons />} />
           <Route path="/proveedores/verTodos" element={<VerTodosProveedores />} />
           <Route path="/proveedores/verProductos/:id" element={<VerProductosProveedores/>} />
           <Route path="/productos/verTodos" element={<VerTodosProductos />} />
@@ -57,10 +61,7 @@ function App() {
           <Route path="/constructoras" element={<Constructoras />} />
           <Route path="/constructoras/verPerfil/:id" element={<VerPerfilConstructoras/>}></Route>
           <Route path="/proyectos/verPerfil/:id" element={<VerPerfilProyectos/>}></Route>
-          <Route path ="/proyectos/verInversion/:id" element={<VerInversion/>}></Route>
-          <Route path ="/proyectos/verProyectos/:id" element={<Cancel/>}></Route>
-          <Route path ="/proyectos/verProyectos/:id" element={<Submit/>}></Route>
-          
+       
           <Route
             path="/postLogin"
             element={<PostLogin usuarioActivo={usuarioActivo} />}

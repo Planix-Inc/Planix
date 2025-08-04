@@ -134,7 +134,12 @@ const VerProyectos = () => {
       </div>
       <div>
       <h2>Desea invertir en el proyecto</h2>
-      <button className="BotonInvertir">Invertir</button>
+      <button 
+        className="BotonInvertir" 
+        onClick={() => navigate(`/proyectos/verProyectos/verInversion/${id}`)}
+      >
+        Invertir
+      </button>
       </div>
     </div>
   );

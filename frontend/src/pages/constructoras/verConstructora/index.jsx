@@ -61,6 +61,10 @@ const VerConstructora = () => {
     fetchPerfilYProyectos();
   }, [id]);
 
+  const handleClick = () => {
+    navigate(`/constructoras/editarPerfil/${id}`);
+  };  
+
   const renderStars = (rating) => {
     const stars = [];
     for (let i = 1; i <= 5; i++) {
@@ -89,7 +93,7 @@ const VerConstructora = () => {
             <h1>{perfil.razonSocial}</h1>
             <p className="profesion">Constructora</p>
             <p className="perfil-contacto">📧 {perfil.Email || "-"}</p>
-            <p className="perfil-contacto">📍 {perfil.direccion || "Dirección no especificada"}</p>
+            <p className="perfil-contacto">📍 {perfil.localidad}, {perfil.direccion || "Dirección no especificada"}</p>
             <p className="perfil-contacto">📱 {perfil.NumeroTelefono || "-"}</p>
           </div>
         </div>
@@ -100,6 +104,10 @@ const VerConstructora = () => {
           </div>
           <small>Marcar como favorita ❤️</small>
         </div>
+      </div>
+
+      <div className="btn-editarPerfil">
+        <button onClick={handleClick}>Editar perfil</button>
       </div>
 
       <div className="proyectos-section">

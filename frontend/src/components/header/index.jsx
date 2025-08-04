@@ -50,15 +50,15 @@ function Encabezado({ usuarioActivo, setUsuarioActivo }) {
 
   const handleVerPerfil = () => {
     if (!usuarioActivo) return;
-  
+
     switch (usuarioActivo.categoriausuarioId) {
-      case 1:   
+      case 1:
         navigate(`/profesionales/verPerfil/${usuarioActivo.id}`);
         break;
-      case 2: 
+      case 2:
         navigate(`/proveedores/verPerfil/${usuarioActivo.id}`);
         break;
-      case 3: 
+      case 3:
         navigate(`/constructoras/verPerfil/${usuarioActivo.id}`);
         break;
       default:
@@ -66,7 +66,7 @@ function Encabezado({ usuarioActivo, setUsuarioActivo }) {
         break;
     }
   };
-  
+
   return (
     <header className="encabezado">
       <div className="contenido-encabezado">
@@ -96,8 +96,14 @@ function Encabezado({ usuarioActivo, setUsuarioActivo }) {
         <div className="botones">
           {usuarioActivo ? (
             <div className="usuario-logueado">
+              {/* Foto de perfil */}
               <div className="fotoPerfil" onClick={handleVerPerfil}>
-                <img src={usuarioActivo.img} alt="" />
+                {/* Foto de perfil actualizada */}
+                <img
+                  src={usuarioActivo.img}
+                  alt="Foto de perfil"
+                  className="img-avatar"
+                />
               </div>
               <button className="btn-cerrar-sesion" onClick={cerrarSesion}>
                 Cerrar sesión
@@ -108,7 +114,9 @@ function Encabezado({ usuarioActivo, setUsuarioActivo }) {
               <button className="btn-iniciar" onClick={handleIniciarSesion}>
                 Iniciar sesión
               </button>
-              <button className="btn-registrarse" onClick={() => navigate('/registro')}>Registrarse</button>
+              <button className="btn-registrarse" onClick={() => navigate('/registro')}>
+                Registrarse
+              </button>
             </>
           )}
         </div>

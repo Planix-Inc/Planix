@@ -11,6 +11,7 @@ import Constructoras from "./pages/constructoras/";
 import Notfound from "./pages/notFound/";
 import PostLogin from "./pages/postLogin/";
 import Registro  from "./pages/registro";
+import EditarPerfilProf from "./pages/profesionales/editarPerfil/"
 import VerPerfilProfesionales from "./pages/profesionales/verPerfil/";
 import VerPerfilProveedores from "./pages/proveedores/verPerfil/";
 import VerTodosProveedores from "./pages/proveedores/verTodos";
@@ -47,6 +48,7 @@ function App() {
           <Route path="/profesionales/verPerfil/:id" element={<VerPerfilProfesionales />} />
           <Route path="/proveedores" element={<Proveedores />} />
           <Route path="/proveedores/verPerfil/:id" element={<VerPerfilProveedores />} />
+          <Route path="/profesionales/editarPerfil/:id" element={<EditarPerfilProf />} />
           <Route path="/proveedores/verTodos" element={<VerTodosProveedores />} />
           <Route path="/proveedores/verProductos/:id" element={<VerProductosProveedores/>} />
           <Route path="/productos/verTodos" element={<VerTodosProductos />} />

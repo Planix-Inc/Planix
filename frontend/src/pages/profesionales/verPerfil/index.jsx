@@ -77,6 +77,11 @@ const VerPerfil = () => {
     return stars;
   };
 
+  const handleClick = () => {
+    navigate(`/profesionales/editarPerfil/${id}`);
+  };
+  
+
   if (loading) return <div>Cargando perfil...</div>;
   if (!perfil) return <div>Perfil no encontrado.</div>;
 
@@ -98,6 +103,10 @@ const VerPerfil = () => {
           <div className="estrella">⭐ {perfil.valoracion?.toFixed(1) || "4.3"}</div>
           <small>Marcar como favorito ❤️</small>
         </div>
+      </div>
+
+      <div className="btn-editarPerfil">
+        <button onClick={handleClick}>Editar perfil</button>
       </div>
 
       <div className="proyectos-section">

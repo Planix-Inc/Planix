@@ -4,7 +4,7 @@ import "../proyectos/proyectos.css";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 
 
@@ -127,6 +127,19 @@ const Proyectos = () => {
           ))}
         </Slider>
       </div>
+
+      <div className="seccion-inversion">
+    <h2 className="titulo-inversion">
+      ¿Queres crear tu propio proyecto? Empeza ahora mismo
+    </h2>
+    <p className="subtitulo-inversion">
+      Subí tu idea y empezá hoy mismo a colaborar <br />
+      con profesionales en el área
+    </p>
+    <Link to="/proyectos/subirProyecto" className="boton-inversion">
+      Ir ya ➤
+    </Link>
+  </div>
 </div>
   );
 };

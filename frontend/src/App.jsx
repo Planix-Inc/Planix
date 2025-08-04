@@ -7,6 +7,7 @@ import Landing from "./pages/landing/";
 import Profesionales from "./pages/profesionales/";
 import Proveedores from "./pages/proveedores/";
 import Proyectos from "./pages/proyectos/";
+import SubirProyecto from "./pages/proyectos/subirProyecto/";
 import Constructoras from "./pages/constructoras/";
 import Notfound from "./pages/notFound/";
 import PostLogin from "./pages/postLogin/";
@@ -56,6 +57,7 @@ function App() {
           <Route path="/constructoras" element={<Constructoras />} />
           <Route path="/constructoras/verPerfil/:id" element={<VerPerfilConstructoras/>}></Route>
           <Route path="/proyectos/verPerfil/:id" element={<VerPerfilProyectos/>}></Route>
+          <Route path="/proyectos/subirProyecto" element={<SubirProyecto />} />
        
           <Route
             path="/postLogin"

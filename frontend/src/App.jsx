@@ -25,7 +25,7 @@ import VerTodosProductos from "./pages/proveedores/productos/verTodos/";
 import VerInversion from "./pages/proyectos/verInversion/"
 import Cancel from "./pages/proyectos/verProyectos/"
 import Submit from "./pages/proyectos/verProyectos/"
-
+import Postularse from "./pages/profesionales/postularse/"
 
 function App() {
   const [usuarioActivo, setUsuarioActivo] = useState(null);
@@ -63,7 +63,7 @@ function App() {
           <Route path="/constructoras/verPerfil/:id" element={<VerPerfilConstructoras/>}></Route>
           <Route path="/proyectos/verPerfil/:id" element={<VerPerfilProyectos/>}></Route>
           <Route path="/proyectos/subirProyecto" element={<SubirProyecto />} />
-       
+          <Route path="/profesionales/postularse" element={<Postularse />} />
           <Route
             path="/postLogin"
             element={<PostLogin usuarioActivo={usuarioActivo} />}

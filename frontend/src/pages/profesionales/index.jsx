@@ -75,7 +75,7 @@ const Profesionales = () => {
     </div>
   );
 
-  return (
+    return (
     <div>
       <div className="contenedor-portada">
         <div className="capa-oscura">
@@ -98,8 +98,17 @@ const Profesionales = () => {
       {mostrarTipoProfesional("Diseñadores", disenadores)}
       {mostrarTipoProfesional("Director de Obra", directoresdeobra)}
 
-      <div>
-        <BotonInversion />
+      <div className="seccion-inversion">
+        <h2 className="titulo-inversion">
+          ¿Queres ser parte de un proyecto? Postulate ahora mismo
+        </h2>
+        <p className="subtitulo-inversion">
+          Sumate y empezá hoy mismo a colaborar <br />
+          con profesionales en el área
+        </p>
+        <Link to="/profesionales/postularse" className="boton-inversion">
+          Ir ya ➤
+        </Link>
       </div>
     </div>
   );

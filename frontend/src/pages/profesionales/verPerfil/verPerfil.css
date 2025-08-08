@@ -16,6 +16,17 @@
   padding-bottom: 40px;
 }
 
+.editarPerfil {
+  width: 10%;
+  padding: 10px;
+  background-color: orange;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
 .perfil-info {
   display: flex;
   align-items: flex-start;

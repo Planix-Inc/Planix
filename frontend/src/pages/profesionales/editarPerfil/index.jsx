@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "../../../data/supabaseClient";
+import './EditarPerfil.css';
 
 const EditarPerfil = ({ usuarioActivo, setUsuarioActivo }) => {
   const { id } = useParams();
@@ -36,6 +37,10 @@ const EditarPerfil = ({ usuarioActivo, setUsuarioActivo }) => {
   const handleChange = (e) => {
     setPerfil({ ...perfil, [e.target.name]: e.target.value });
   };
+
+  const handleClick = () => {
+    navigate(`/profesionales/verPerfil/${id}`);
+  };  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -74,6 +79,8 @@ const EditarPerfil = ({ usuarioActivo, setUsuarioActivo }) => {
   };
 
   return (
+    
+    <div className="card">
     <form onSubmit={handleSubmit}>
       <h2>Editar Perfil</h2>
 
@@ -104,8 +111,12 @@ const EditarPerfil = ({ usuarioActivo, setUsuarioActivo }) => {
         placeholder="Ingresa la URL de la foto"
       />
 
-      <button type="submit">Guardar cambios</button>
+    <button className="guardar" type="submit" onClick={handleClick}>Guardar cambios</button>
+    
     </form>
+    <button className="cancelar" type="submit" onClick={handleClick}>Cancelar</button>
+    </div>
+    
   );
 };
 

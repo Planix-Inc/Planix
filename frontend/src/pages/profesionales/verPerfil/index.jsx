@@ -106,7 +106,7 @@ const VerPerfil = () => {
       </div>
 
       <div className="btn-editarPerfil">
-        <button onClick={handleClick}>Editar perfil</button>
+        <button onClick={handleClick} className="editarPerfil">Editar perfil</button>
       </div>
 
       <div className="proyectos-section">

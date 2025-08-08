@@ -63,7 +63,13 @@ function App() {
           <Route path="/constructoras/verPerfil/:id" element={<VerPerfilConstructoras/>}></Route>
           <Route path="/proyectos/verPerfil/:id" element={<VerPerfilProyectos/>}></Route>
           <Route path="/proyectos/subirProyecto" element={<SubirProyecto />} />
+
           <Route path="/profesionales/postularse" element={<Postularse />} />
+
+          <Route path="/proyectos/verInversion/:id" element={<VerInversion/>}></Route>
+          <Route path="/proyectos" element={<Cancel/>}></Route>
+          <Route path="/proyectos" element={<Submit/>}></Route>
+
           <Route
             path="/postLogin"
             element={<PostLogin usuarioActivo={usuarioActivo} />}

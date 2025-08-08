@@ -13,7 +13,7 @@ const VerInversion = () => {
     cuit: "",
     DireccionFiscal: "",
     IngresosAnuales: "",
-    telefono: "",
+    NumeroTelefono: "",
     montoInversion: "",
     moneda: "Peso Ars"
   });
@@ -65,7 +65,7 @@ const VerInversion = () => {
           cuit: formData.cuit,
           DireccionFiscal: formData.DireccionFiscal,
           IngresosAnuales: formData.IngresosAnuales,
-          telefono: formData.telefono,
+          NumeroTelefono: formData.NumeroTelefono,
           // montoInversion and moneda removed as per user request
           // Add user id or other identifier if needed here
         }, { onConflict: 'id' }); // Assuming 'id' is primary key
@@ -75,7 +75,7 @@ const VerInversion = () => {
         alert(`Error al procesar la inversión: ${error.message || JSON.stringify(error)}`);
       } else {
         alert("Inversión registrada exitosamente");
-        navigate(`/proyectos/verProyectos/${id}`);
+        navigate(`/proyectos`);
       }
     } catch (error) {
       console.error("Error:", error);
@@ -147,9 +147,9 @@ const VerInversion = () => {
         <div className="form-group">
           <label>Teléfono</label>
           <input 
-            type="tel"
-            name="telefono"
-            value={formData.telefono}
+            type="text"
+            name="NumeroTelefono"
+            value={formData.NumeroTelefono}
             onChange={handleChange}
             required
           />
@@ -186,7 +186,7 @@ const VerInversion = () => {
         </div>
         
         <div className="form-buttons">
-          <button type="button" className="Cancelar" onClick={handleCancel}>
+          <button type="button" className="Cancelar" onClick={()=>navigate(`/proyectos/`)}>
             Cancelar
           </button>
           <button type="submit" className="Listo">

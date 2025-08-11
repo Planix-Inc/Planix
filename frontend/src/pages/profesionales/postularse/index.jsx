@@ -9,17 +9,23 @@ const Postularse = () => {
   const [loading, setLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [userPostulations, setUserPostulations] = useState(new Set());
-  const [currentUser, setCurrentUser] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
+
+  // Obtener usuario desde localStorage (parseado)
+  const getUsuarioLogueado = () => {
+    const usuarioStr = localStorage.getItem("usuarioLogueado");
+    if (!usuarioStr) return null;
+    try {
+      return JSON.parse(usuarioStr);
+    } catch {
+      return null;
+    }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Obtener usuario actual
-        const { data: { user } } = await supabase.auth.getUser();
-        setCurrentUser(user);
-
         // Obtener proyectos
         const { data: proyectosData, error: proyectosError } = await supabase
           .from("Proyectos")
@@ -32,12 +38,15 @@ const Postularse = () => {
           setProyectosFiltrados(proyectosData || []);
         }
 
-        // Si hay usuario logueado, obtener sus postulaciones
-        if (user) {
+        // Obtener usuario desde localStorage
+        const usuario = getUsuarioLogueado();
+
+        if (usuario) {
+          // Obtener sus postulaciones
           const { data: postulaciones, error: postulacionesError } = await supabase
             .from("participacionproyecto")
             .select("proyectoid")
-            .eq("usuarioid", user.id);
+            .eq("usuarioid", usuario.id);
 
           if (!postulacionesError && postulaciones) {
             const postulacionesSet = new Set(postulaciones.map(p => p.proyectoid));
@@ -55,14 +64,14 @@ const Postularse = () => {
   // Función para filtrar proyectos por ubicación
   const handleSearch = (searchValue) => {
     setSearchTerm(searchValue);
-    
+
     if (!searchValue.trim()) {
       setProyectosFiltrados(proyectos);
       return;
     }
 
-    const filtered = proyectos.filter(proyecto => 
-      proyecto.direccion && 
+    const filtered = proyectos.filter(proyecto =>
+      proyecto.direccion &&
       proyecto.direccion.toLowerCase().includes(searchValue.toLowerCase())
     );
     setProyectosFiltrados(filtered);
@@ -70,23 +79,22 @@ const Postularse = () => {
 
   const handlePostularse = async (proyectoId) => {
     setLoading(true);
-    
-    try {
-      // Obtener el usuario actual (asumiendo que tienes autenticación)
-      const { data: { user } } = await supabase.auth.getUser();
-      
-      if (!user) {
-        alert("Debes estar logueado para postularte");
-        setLoading(false);
-        return;
-      }
 
+    const usuarioLogueado = getUsuarioLogueado();
+
+    if (!usuarioLogueado) {
+      alert("Debes estar logueado para postularte");
+      setLoading(false);
+      return;
+    }
+
+    try {
       // Verificar si ya está postulado
       const { data: existingPostulation, error: checkError } = await supabase
         .from("participacionproyecto")
         .select("*")
         .eq("proyectoid", proyectoId)
-        .eq("usuarioid", user.id)
+        .eq("usuarioid", usuarioLogueado.id)
         .single();
 
       if (checkError && checkError.code !== 'PGRST116') {
@@ -102,13 +110,13 @@ const Postularse = () => {
         return;
       }
 
-      // Crear la postulación en la base de datos
+      // Crear la postulación
       const { error } = await supabase
         .from("participacionproyecto")
         .insert([
           {
             proyectoid: proyectoId,
-            usuarioid: user.id
+            usuarioid: usuarioLogueado.id
           }
         ]);
 
@@ -116,7 +124,6 @@ const Postularse = () => {
         console.error("Error al postularse:", error);
         alert("Error al postularse. Intenta nuevamente.");
       } else {
-        // Actualizar el estado local
         setUserPostulations(prev => new Set([...prev, proyectoId]));
         setShowSuccess(true);
         setTimeout(() => {
@@ -139,9 +146,9 @@ const Postularse = () => {
           <h1>Postularse a Proyectos</h1>
           <p>Encuentra proyectos que se ajusten a tu perfil y postúlate</p>
           <div className="search-box">
-            <input 
-              type="text" 
-              placeholder="Buscar por ubicación o barrio..." 
+            <input
+              type="text"
+              placeholder="Buscar por ubicación o barrio..."
               value={searchTerm}
               onChange={(e) => handleSearch(e.target.value)}
             />
@@ -168,9 +175,9 @@ const Postularse = () => {
         {proyectosFiltrados.map((proyecto) => (
           <div key={proyecto.id} className="proyecto-card">
             <div className="proyecto-imagen">
-              <img 
-                src={proyecto.img || "https://via.placeholder.com/120x120?text=Proyecto"} 
-                alt={proyecto.nombre || "Proyecto"} 
+              <img
+                src={proyecto.img || "https://via.placeholder.com/120x120?text=Proyecto"}
+                alt={proyecto.nombre || "Proyecto"}
               />
             </div>
             <h3 className="proyecto-titulo">
@@ -213,7 +220,7 @@ const Postularse = () => {
             {searchTerm ? "No se encontraron proyectos" : "No hay proyectos disponibles"}
           </h3>
           <p>
-            {searchTerm 
+            {searchTerm
               ? `No hay proyectos en "${searchTerm}". Intenta con otra ubicación.`
               : "En este momento no hay proyectos para mostrar."
             }

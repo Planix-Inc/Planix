@@ -11,6 +11,8 @@ const VerPerfil = () => {
   const navigate = useNavigate();
   const [perfil, setPerfil] = useState(null);
   const [loading, setLoading] = useState(true);
+  const usuarioActivo = JSON.parse(localStorage.getItem("usuarioLogueado"));
+  const usuarioActivoId = usuarioActivo.id;
 
   useEffect(() => {
     const fetchPerfil = async () => {
@@ -83,10 +85,14 @@ const VerPerfil = () => {
           <small>Marcar como favorito ❤️</small>
         </div>
       </div>
-
-      <div className="btn-editarPerfil">
-        <button className="editarPerfil" onClick={handleClick}>Editar perfil</button>
-      </div>
+      {console.log(usuarioActivoId)}
+      {usuarioActivoId.id == id && (
+        <div className="btn-editarPerfil">
+          <button className="editarPerfil" onClick={handleClick}>
+            Editar perfil
+          </button>
+        </div>
+      )}
 
       <div className="proyectos-section">
         <h2>Productos disponibles</h2>

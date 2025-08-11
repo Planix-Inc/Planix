@@ -9,6 +9,7 @@ const VerProyectos = () => {
   const [participantes, setParticipantes] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const usuarioActivoId = localStorage.getItem("usuarioLogueado");
 
   useEffect(() => {
     const fetchData = async () => {

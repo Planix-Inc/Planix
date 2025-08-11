@@ -65,7 +65,6 @@ const Postularse = () => {
       proyecto.direccion && 
       proyecto.direccion.toLowerCase().includes(searchValue.toLowerCase())
     );
-    
     setProyectosFiltrados(filtered);
   };
 

@@ -12,6 +12,8 @@ const VerPerfil = () => {
   const [perfil, setPerfil] = useState(null);
   const [proyectos, setProyectos] = useState([]);
   const [loading, setLoading] = useState(true);
+  const usuarioActivo = JSON.parse(localStorage.getItem("usuarioLogueado"));
+  const usuarioActivoId = usuarioActivo.id;
 
   useEffect(() => {
     const fetchPerfil = async () => {
@@ -105,9 +107,13 @@ const VerPerfil = () => {
         </div>
       </div>
 
-      <div className="btn-editarPerfil">
-        <button onClick={handleClick} className="editarPerfil">Editar perfil</button>
-      </div>
+      {usuarioActivoId == id && (
+        <div className="btn-editarPerfil">
+          <button className="editarPerfil" onClick={handleClick}>
+            Editar perfil
+          </button>
+        </div>
+      )}
 
       <div className="proyectos-section">
         <h2>Mis proyectos</h2>

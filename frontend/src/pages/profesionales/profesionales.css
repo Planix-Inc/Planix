@@ -61,15 +61,7 @@
   font-size: 16px;
 }
 
-.boton-buscar {
-  padding: 12px 20px;
-  border: none;
-  background-color: #fcb900;
-  color: white;
-  font-weight: bold;
-  border-radius: 0 30px 30px 0;
-  cursor: pointer;
-}
+
 
 .seccion-profesionales {
   padding: 40px;

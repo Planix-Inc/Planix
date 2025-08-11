@@ -90,17 +90,17 @@
 }
 
 .Listo {
-  background-color: #0056ff;
+  background-color: #c47f17;
 }
 
 .Listo:hover {
-  background-color: #003bb5;
+  background-color: #c47f17;
 }
 
 .Cancelar {
-  background-color: #f5a623;
+  background-color: #d83b13;
 }
 
 .Cancelar:hover {
-  background-color: #c47f17;
+  background-color: #d83b13;
 }

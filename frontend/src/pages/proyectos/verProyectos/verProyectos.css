@@ -109,6 +109,8 @@
 .BotonInvertir {
   display: block;
   margin: 0 auto;
+  background-color: #007bff;
+  color: white;
 }
 
 .boton-ver-participante:hover {

@@ -33,9 +33,11 @@
     transition: transform 0.2s ease, box-shadow 0.2s ease;
   }
   
-  .boton-inversion:hover {
+.boton-inversion:hover {
+    border-color: #000000;
+    color: #bb8b06;
     transform: translateY(-2px);
-    box-shadow: 0 6px 15px rgba(255, 140, 0, 0.4);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
   }
   
   

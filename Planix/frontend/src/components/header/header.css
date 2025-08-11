@@ -1,0 +1,126 @@
+.encabezado {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    background-color: #f8b32d;
+    display: flex;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
+
+.contenido-encabezado {
+    width: 100%;
+    padding: 0 20px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: nowrap; 
+}
+
+.logo img {
+    height: 40px;
+}
+
+.navegacion {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    position: relative;
+}
+
+.contenedor-navegacion {
+    display: flex;
+    gap: 40px;
+    align-items: center;
+    position: relative;
+}
+
+.navegacion a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  font-family: 'Segoe UI', sans-serif;
+  transition: color 0.2s, border-bottom 0.2s;
+}
+
+.navegacion a:hover {
+  color: #474644;
+  border-bottom: 2px solid #474644;
+  padding-bottom: 2px;
+}
+
+.navegacion a.activo {
+    color: #474644;
+    font-weight: bold;
+    border-bottom: 2px solid #474644;
+    padding-bottom: 2px;
+}
+
+.subrayado {
+    position: absolute;
+    bottom: -2px;
+    height: 2px;
+    background-color: #474644;
+    transition: all 0.3s ease;
+    pointer-events: none;
+    border-radius: 4px;
+}
+
+.botones {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-iniciar,
+.btn-registrarse {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.btn-iniciar {
+    background-color: white;
+    color: #f8b32d;
+}
+
+.btn-registrarse {
+    background-color: white;
+    color: #f8b32d;
+}
+
+.btn-cerrar-sesion {
+    background-color: white;
+    color: #f8b32d;
+    border: none;
+    padding: 0.4rem 0.8rem;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s ease;
+}
+
+.usuario-logueado {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.fotoPerfil img {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid #32415d;
+}
+
+.mensaje-bienvenida {
+    font-weight: bold;
+    color: #32415d;
+    margin-right: 0.8rem;
+}

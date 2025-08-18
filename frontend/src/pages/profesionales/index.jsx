@@ -13,6 +13,7 @@ import BotonBuscar from "../../components/BotonBuscar";
 const Profesionales = () => {
   const navigate = useNavigate();
   const [profesionales, setProfesionales] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     const fetchProfesionales = async () => {
@@ -47,10 +48,25 @@ const Profesionales = () => {
     autoplaySpeed: 2000,
   };
 
-  const arquitectos = profesionales.filter((p) => p.idTipoProfesional === 1);
-  const ingenieros = profesionales.filter((p) => p.idTipoProfesional === 2);
-  const disenadores = profesionales.filter((p) => p.idTipoProfesional === 3);
-  const directoresdeobra = profesionales.filter((p) => p.idTipoProfesional === 4);
+  const normalize = (text) =>
+    (text || "")
+      .toString()
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "");
+
+  const filteredProfesionales = profesionales.filter((prof) => {
+    if (!searchTerm) return true;
+    const fullName = `${prof.nombre || ""} ${prof.apellido || ""}`;
+    return normalize(fullName).includes(normalize(searchTerm));
+  });
+
+  const hayBusqueda = searchTerm.trim() !== "";
+
+  const arquitectos = filteredProfesionales.filter((p) => p.idTipoProfesional === 1);
+  const ingenieros = filteredProfesionales.filter((p) => p.idTipoProfesional === 2);
+  const disenadores = filteredProfesionales.filter((p) => p.idTipoProfesional === 3);
+  const directoresdeobra = filteredProfesionales.filter((p) => p.idTipoProfesional === 4);
 
   const mostrarTipoProfesional = (titulo, tipoProfesional) => (
     <div className="seccion-profesionales">
@@ -84,16 +100,24 @@ const Profesionales = () => {
           <div className="buscador">
             <input
               type="text"
-              placeholder="Arquitecto, plomero, diseño de interior, albañil, etc"
+              placeholder="Buscar por nombre o apellido"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
             />
-            <BotonBuscar/>
+            <BotonBuscar onClick={() => { /* la búsqueda ocurre al tipear */ }} />
           </div>
         </div>
       </div>
-      {mostrarTipoProfesional("Arquitectos", arquitectos)}
-      {mostrarTipoProfesional("Ingenieros", ingenieros)}
-      {mostrarTipoProfesional("Diseñadores", disenadores)}
-      {mostrarTipoProfesional("Director de Obra", directoresdeobra)}
+      {hayBusqueda ? (
+        mostrarTipoProfesional("Resultados", filteredProfesionales)
+      ) : (
+        <>
+          {mostrarTipoProfesional("Arquitectos", arquitectos)}
+          {mostrarTipoProfesional("Ingenieros", ingenieros)}
+          {mostrarTipoProfesional("Diseñadores", disenadores)}
+          {mostrarTipoProfesional("Director de Obra", directoresdeobra)}
+        </>
+      )}
 
       <div className="seccion-inversion">
         <h2 className="titulo-inversion">

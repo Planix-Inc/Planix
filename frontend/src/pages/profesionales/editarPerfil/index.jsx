@@ -61,7 +61,6 @@ const EditarPerfil = ({ usuarioActivo, setUsuarioActivo }) => {
     if (error) {
       console.error("Error al actualizar perfil:", error);
     } else {
-      // Actualizar el estado global de usuarioActivo
       setUsuarioActivo({
         ...usuarioActivo,
         nombre: perfil.nombre,
@@ -70,8 +69,11 @@ const EditarPerfil = ({ usuarioActivo, setUsuarioActivo }) => {
         NumeroTelefono: perfil.NumeroTelefono,
         localidad: perfil.localidad,
         Pais: perfil.Pais,
-        img: perfil.img, // Aquí se actualiza la foto
+        img: perfil.img,
       });
+
+      setUsuarioActivo(usuarioActivo);
+      localStorage.setItem("usuarioLogueado", JSON.stringify(usuarioActivo));
 
       alert("Perfil actualizado con éxito");
       navigate(`/profesionales/verPerfil/${id}`);
@@ -114,7 +116,7 @@ const EditarPerfil = ({ usuarioActivo, setUsuarioActivo }) => {
     <button className="guardar" type="submit" onClick={handleClick}>Guardar cambios</button>
     
     </form>
-    <button className="cancelar" type="submit" onClick={handleClick}>Cancelar</button>
+    {/* <button className="cancelar" type="submit" onClick={handleClick}>Cancelar</button> */}
     </div>
     
   );

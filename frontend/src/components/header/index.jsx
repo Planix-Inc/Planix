@@ -100,7 +100,7 @@ function Encabezado({ usuarioActivo, setUsuarioActivo }) {
               <div className="fotoPerfil" onClick={handleVerPerfil}>
                 {/* Foto de perfil actualizada */}
                 <img
-                  src={usuarioActivo.img}
+                  src={`${usuarioActivo.img}?t=${new Date().getTime()}`}
                   alt="Foto de perfil"
                   className="img-avatar"
                 />

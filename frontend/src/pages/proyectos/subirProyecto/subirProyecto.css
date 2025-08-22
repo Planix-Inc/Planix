@@ -1,5 +1,5 @@
 .subirProyecto-container {
-    height: 50vh;
+    height: 55vh;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 50px;
     background-color: #fff3f3;
@@ -10,10 +10,10 @@
     margin: 30px;
   }
   .subirProyecto-title {
-    font-size: 1.5rem;
-    font-weight: 600;
+    font-size: 2.5rem;
+    font-weight: 650;
     margin-bottom: 8px;
-    color:orange
+    color:rgb(255, 166, 0)
   }
   
   .subirProyecto-subtitle {

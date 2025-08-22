@@ -3,13 +3,16 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import logo from "../../assets/Logos/logo.png";
 import "./header.css";
 
-function Encabezado({ usuarioActivo, setUsuarioActivo }) {
+function Encabezado({  }) {
   const ubicacion = useLocation();
   const rutaActual = ubicacion.pathname;
   const referenciaNavegacion = useRef(null);
   const referenciaSubrayado = useRef(null);
   const [indiceActivo, setIndiceActivo] = useState(0);
   const navigate = useNavigate();
+  const usuarioActivo = JSON.parse(localStorage.getItem("usuarioLogueado"));
+  const usuarioActivoId = usuarioActivo.id;
+  const usuarioActivoImg = usuarioActivo.img;
 
   const rutas = [
     { ruta: "/profesionales", etiqueta: "Profesionales" },
@@ -53,19 +56,21 @@ function Encabezado({ usuarioActivo, setUsuarioActivo }) {
 
     switch (usuarioActivo.categoriausuarioId) {
       case 1:
-        navigate(`/profesionales/verPerfil/${usuarioActivo.id}`);
+        navigate(`/profesionales/verPerfil/${usuarioActivoId}`);
         break;
       case 2:
-        navigate(`/proveedores/verPerfil/${usuarioActivo.id}`);
+        navigate(`/proveedores/verPerfil/${usuarioActivoId}`);
         break;
       case 3:
-        navigate(`/constructoras/verPerfil/${usuarioActivo.id}`);
+        navigate(`/constructoras/verPerfil/${usuarioActivoId}`);
         break;
       default:
         console.error("Categoría desconocida");
         break;
     }
   };
+
+console.log(usuarioActivo)
 
   return (
     <header className="encabezado">
@@ -100,7 +105,7 @@ function Encabezado({ usuarioActivo, setUsuarioActivo }) {
               <div className="fotoPerfil" onClick={handleVerPerfil}>
                 {/* Foto de perfil actualizada */}
                 <img
-                  src={`${usuarioActivo.img}?t=${new Date().getTime()}`}
+                  src={usuarioActivoImg}
                   alt="Foto de perfil"
                   className="img-avatar"
                 />

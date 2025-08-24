@@ -26,6 +26,7 @@ import VerInversion from "./pages/proyectos/verInversion/"
 import Cancel from "./pages/proyectos/verProyectos/"
 import Submit from "./pages/proyectos/verProyectos/"
 import Postularse from "./pages/profesionales/postularse/"
+import Chatbot from './components/Chatbot';
 
 function App() {
   const [usuarioActivo, setUsuarioActivo] = useState(null);
@@ -87,9 +88,13 @@ function App() {
   };
 
   return (
-    <Router>
-      <LocationWrapper />
-    </Router>
+    <div>
+      <Router>
+        <LocationWrapper />
+        <Chatbot />
+      </Router>
+      
+    </div>
   );
 }
 

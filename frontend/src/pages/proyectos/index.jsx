@@ -11,6 +11,7 @@ import BotonBuscar from "../../components/BotonBuscar";
 const Proyectos = () => {
   const [proyectos, setProyectos] = useState([]);
   const [proyectosDestacados, setProyectosDestacados] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -48,6 +49,44 @@ const Proyectos = () => {
   const handleClick=(id)=>{
     navigate(`/proyectos/verPerfil/${id}`)
   }
+
+  // Función para normalizar texto (quitar acentos y convertir a minúsculas)
+  const normalize = (text) => {
+    return text
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "");
+  };
+
+  // Función para manejar la búsqueda
+  const handleSearch = (searchValue) => {
+    setSearchTerm(searchValue);
+  };
+
+  // Función para filtrar proyectos
+  const filterProyectos = (proyectosList) => {
+    if (!searchTerm.trim()) return proyectosList;
+    
+    return proyectosList.filter((proyecto) => {
+      const searchText = normalize(searchTerm);
+      const nombre = normalize(proyecto.nombre || "");
+      const apellido = normalize(proyecto.apellido || "");
+      const direccion = normalize(proyecto.direccion || "");
+      const descripcion = normalize(proyecto.descripcion || "");
+      
+      return (
+        nombre.includes(searchText) ||
+        apellido.includes(searchText) ||
+        direccion.includes(searchText) ||
+        descripcion.includes(searchText) ||
+        `${nombre} ${apellido}`.includes(searchText)
+      );
+    });
+  };
+
+  const filteredProyectos = filterProyectos(proyectos);
+  const filteredProyectosDestacados = filterProyectos(proyectosDestacados);
+  const hayBusqueda = searchTerm.trim() !== "";
   const configuracionCarrusel = {
     dots: false,
     infinite: true,
@@ -88,32 +127,38 @@ const Proyectos = () => {
         <input 
           type="text" 
           placeholder="Buscá proyectos" 
+          value={searchTerm}
+          onChange={(e) => handleSearch(e.target.value)}
         />
-        <BotonBuscar/>
+        <BotonBuscar onClick={() => handleSearch(searchTerm)}/>
       </div>
     </div>
   </div>
 
   <div className="seccion-proyectos">
-        <h2 className="titulo-seccion">Proyectos Destacados</h2>
-              <Slider {...configuracionCarrusel} className="carrusel-proyectos">
-                {proyectosDestacados.map((prof) => (
-                  <div key={prof.id} className="tarjeta-proyectos">
-                    <div className="imagen-proyectos">
-                      <img src={prof.img} alt={`${prof.nombre} ${prof.apellido}`} />
-                    </div>
-                    <h3 className="nombre-proyectos">
-                      {prof.nombre} {prof.apellido}
-                    </h3>
-                    <p className="texto-localidad">📍 {prof.direccion} - ⭐ {prof.valoracion}</p>
-                    <button className="boton-ver-perfil" onClick={()=>handleClick(prof.id)}>Ver proyecto</button>
+        {!hayBusqueda && (
+          <>
+            <h2 className="titulo-seccion">Proyectos Destacados</h2>
+            <Slider {...configuracionCarrusel} className="carrusel-proyectos">
+              {filteredProyectosDestacados.map((prof) => (
+                <div key={prof.id} className="tarjeta-proyectos">
+                  <div className="imagen-proyectos">
+                    <img src={prof.img} alt={`${prof.nombre} ${prof.apellido}`} />
                   </div>
-                ))}
-              </Slider>
+                  <h3 className="nombre-proyectos">
+                    {prof.nombre} {prof.apellido}
+                  </h3>
+                  <p className="texto-localidad">📍 {prof.direccion} - ⭐ {prof.valoracion}</p>
+                  <button className="boton-ver-perfil" onClick={()=>handleClick(prof.id)}>Ver proyecto</button>
+                </div>
+              ))}
+            </Slider>
+          </>
+        )}
 
-        <h2 className="titulo-seccion">Proyectos</h2>
+        <h2 className="titulo-seccion">{hayBusqueda ? "Resultados de búsqueda" : "Proyectos"}</h2>
         <Slider {...configuracionCarrusel} className="carrusel-proyectos">
-          {proyectos.map((prof) => (
+          {filteredProyectos.map((prof) => (
             <div key={prof.id} className="tarjeta-proyectos">
               <div className="imagen-proyectos">
                 <img src={prof.img} alt={`${prof.nombre} ${prof.apellido}`} />

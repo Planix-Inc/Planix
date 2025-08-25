@@ -3,16 +3,18 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import logo from "../../assets/Logos/logo.png";
 import "./header.css";
 
-function Encabezado({  }) {
+function Encabezado({ usuarioActivo, setUsuarioActivo }) {
   const ubicacion = useLocation();
   const rutaActual = ubicacion.pathname;
   const referenciaNavegacion = useRef(null);
   const referenciaSubrayado = useRef(null);
   const [indiceActivo, setIndiceActivo] = useState(0);
   const navigate = useNavigate();
-  const usuarioActivo = JSON.parse(localStorage.getItem("usuarioLogueado"));
-  const usuarioActivoId = usuarioActivo.id;
-  const usuarioActivoImg = usuarioActivo.img;
+
+  // Revisar si hay usuario logueado
+  const usuario = usuarioActivo || JSON.parse(localStorage.getItem("usuarioLogueado"));
+  const usuarioId = usuario?.id;
+  const usuarioImg = usuario?.img;
 
   const rutas = [
     { ruta: "/profesionales", etiqueta: "Profesionales" },
@@ -52,25 +54,29 @@ function Encabezado({  }) {
   };
 
   const handleVerPerfil = () => {
-    if (!usuarioActivo) return;
+    if (!usuario) return;
 
-    switch (usuarioActivo.categoriausuarioId) {
+    
+    const categoria = Number(usuario.categoriaUsuarioId || usuario.categoriausuarioId);
+
+    switch (categoria) {
       case 1:
-        navigate(`/profesionales/verPerfil/${usuarioActivoId}`);
+        navigate(`/profesionales/verPerfil/${usuarioId}`);
         break;
       case 2:
-        navigate(`/proveedores/verPerfil/${usuarioActivoId}`);
+        navigate(`/proveedores/verPerfil/${usuarioId}`);
         break;
       case 3:
-        navigate(`/constructoras/verPerfil/${usuarioActivoId}`);
+        navigate(`/constructoras/verPerfil/${usuarioId}`);
+        break;
+      case 4:
+        navigate(`/inversionistas/verPerfil/${usuarioId}`);
         break;
       default:
-        console.error("Categoría desconocida");
+        console.error("Categoría desconocida:", usuario);
         break;
     }
   };
-
-console.log(usuarioActivo)
 
   return (
     <header className="encabezado">
@@ -99,16 +105,10 @@ console.log(usuarioActivo)
         </nav>
 
         <div className="botones">
-          {usuarioActivo ? (
+          {usuario ? (
             <div className="usuario-logueado">
-              {/* Foto de perfil */}
               <div className="fotoPerfil" onClick={handleVerPerfil}>
-                {/* Foto de perfil actualizada */}
-                <img
-                  src={usuarioActivoImg}
-                  alt="Foto de perfil"
-                  className="img-avatar"
-                />
+                <img src={usuarioImg} alt="Foto de perfil" className="img-avatar" />
               </div>
               <button className="btn-cerrar-sesion" onClick={cerrarSesion}>
                 Cerrar sesión
@@ -119,7 +119,7 @@ console.log(usuarioActivo)
               <button className="btn-iniciar" onClick={handleIniciarSesion}>
                 Iniciar sesión
               </button>
-              <button className="btn-registrarse" onClick={() => navigate('/registro')}>
+              <button className="btn-registrarse" onClick={() => navigate("/registro")}>
                 Registrarse
               </button>
             </>

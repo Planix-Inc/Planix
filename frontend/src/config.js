@@ -33,7 +33,7 @@ La plataforma conecta a todos los actores del mundo de la construcción. El men�
 
 *   **Proyectos:**
     *   **Qué es:** El corazón de Planix. Aquí los usuarios pueden publicar sus necesidades de construcción.
-    *   **Cómo guiar:** "Puedes explorar todos los proyectos de construcción disponibles en la sección 'Proyectos'. Si quieres crear el tuyo, busca el botón 'Subir Proyecto'."
+    *   **Cómo guiar:** "Puedes explorar todos los proyectos de construcción disponibles en la sección 'Proyectos'. Si quieres crear el tuyo, busca el botón 'Ir Ya en la seccion de abajo'."
     *   **Acciones:** Ver la lista de proyectos, ver detalles de un proyecto, y para usuarios registrados, subir un nuevo proyecto.
 
 *   **Proveedores:**
@@ -65,7 +65,7 @@ Ahora, responde la siguiente pregunta del usuario ciñéndote estrictamente a es
         // FAQs actualizadas según la estructura real
         faqs: {
             "como crear cuenta": "Para crear una cuenta en Planix: 1) Haz clic en 'Registrarse' en la esquina superior derecha, 2) Completa el formulario con tus datos, 3) ¡Listo! Ya puedes empezar a usar Planix.",
-            "como subir un proyecto": "Para crear un nuevo proyecto: 1) Inicia sesión, 2) Ve a la sección 'Proyectos', 3) Haz clic en el botón para 'Subir Proyecto', 4) Completa la información solicitada y guárdalo.",
+            "como subir un proyecto": "Para crear un nuevo proyecto: 1) Inicia sesión, 2) Ve a la sección 'Proyectos', 3) Haz clic en el botón para 'Ir ya en la seccion de abajo del todo', 4) Completa la información solicitada y guárdalo.",
             "como busco un arquitecto": "Para encontrar un arquitecto: 1) Ve a la sección 'Profesionales', 2) Utiliza la barra de búsqueda o los filtros para encontrar perfiles de arquitectos, 3) Haz clic en un perfil para ver más detalles.",
             "donde veo las constructoras": "Puedes ver todas las empresas constructoras disponibles en la sección 'Constructoras', accesible desde el menú de navegación principal.",
             "que son los proveedores": "Los 'Proveedores' son empresas que venden materiales y productos para la construcción. Puedes explorar sus perfiles y catálogos en su sección correspondiente.",

@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import './chatbot.css';
-import { CONFIG } from '../../config'; // Importamos la configuración
+import { CONFIG } from '../../config';
 
 const Chatbot = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([
-    // Usamos el mensaje inicial de la configuración
     { from: 'bot', text: CONFIG.chatbot.initialMessage }
   ]);
   const [input, setInput] = useState('');
@@ -14,14 +13,15 @@ const Chatbot = () => {
     setIsOpen(!isOpen);
   };
 
-  const handleSend = async () => {
-    if (input.trim() === '') return;
+  const handleSend = async (customInput) => {
+    const value = typeof customInput === 'string' ? customInput : input;
+    if (value.trim() === '') return;
 
-    const userMessage = { from: 'user', text: input };
+    const userMessage = { from: 'user', text: value };
     setMessages(prevMessages => [...prevMessages, userMessage]);
-    
-    const lowerCaseInput = input.toLowerCase().trim();
     setInput('');
+
+    const lowerCaseInput = value.toLowerCase().trim();
 
     // 1. Comprobar si es una FAQ
     const faqAnswer = CONFIG.chatbot.faqs[lowerCaseInput];
@@ -38,10 +38,9 @@ const Chatbot = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        // Enviamos el mensaje y el systemPrompt
         body: JSON.stringify({ 
-            message: input,
-            systemPrompt: CONFIG.chatbot.systemPrompt
+          message: value,
+          systemPrompt: CONFIG.chatbot.systemPrompt
         }),
       });
 
@@ -59,14 +58,13 @@ const Chatbot = () => {
         if (done) {
           return;
         }
-        
         const chunk = decoder.decode(value, { stream: true });
         botMessage.text += chunk;
 
         setMessages(prevMessages => {
-            const newMessages = [...prevMessages];
-            newMessages[newMessages.length - 1] = { ...botMessage };
-            return newMessages;
+          const newMessages = [...prevMessages];
+          newMessages[newMessages.length - 1] = { ...botMessage };
+          return newMessages;
         });
 
         return reader.read().then(processText);
@@ -74,12 +72,26 @@ const Chatbot = () => {
 
     } catch (error) {
       console.error('Error sending message:', error);
-      // Usamos una respuesta de fallback
       const fallback = CONFIG.chatbot.fallbackResponses[2];
       const errorMessage = { from: 'bot', text: fallback };
       setMessages(prevMessages => [...prevMessages, errorMessage]);
     }
   };
+
+  // Renderizado de globitos de FAQ
+  const renderFaqBubbles = () => (
+    <div className="faq-bubbles">
+      {Object.keys(CONFIG.chatbot.faqs).map((faq, idx) => (
+        <button
+          key={idx}
+          className="faq-bubble"
+          onClick={() => handleSend(faq)}
+        >
+          {faq.charAt(0).toUpperCase() + faq.slice(1)}
+        </button>
+      ))}
+    </div>
+  );
 
   return (
     <div className="chatbot-container">
@@ -90,25 +102,26 @@ const Chatbot = () => {
         <div className="chatbot-window">
           <div className="chatbot-header">
             <img src="/src/assets/Logos/logo.png" alt="Logo" className="chatbot-logo" />
-            {/* Usamos el nombre del chatbot de la configuración */}
             <span>{CONFIG.chatbot.name}</span>
           </div>
           <div className="chatbot-messages">
+            
             {messages.map((msg, index) => (
               <div key={index} className={`message ${msg.from}`}>
                 {msg.text}
               </div>
             ))}
+            {renderFaqBubbles()}
           </div>
           <div className="chatbot-input">
             <input
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              onKeyPress ={(e) => e.key === 'Enter' && handleSend()}
+              onKeyPress={(e) => e.key === 'Enter' && handleSend()}
               placeholder="Escribe aquí..."
             />
-            <button onClick={handleSend}>Enviar</button>
+            <button onClick={() => handleSend()}>Enviar</button>
           </div>
         </div>
       )}

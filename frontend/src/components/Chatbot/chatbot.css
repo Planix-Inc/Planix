@@ -117,3 +117,27 @@
 .chatbot-input button:hover {
   background-color: #f5a623;
 }
+
+.faq-bubbles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 10px;
+  justify-content: flex-start;
+}
+
+.faq-bubble {
+  background: #f5a623;
+  color: white;
+  border: none;
+  border-radius: 18px;
+  padding: 7px 14px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.2s;
+  margin-bottom: 3px;
+}
+
+.faq-bubble:hover {
+  background: #d48a1a;
+}

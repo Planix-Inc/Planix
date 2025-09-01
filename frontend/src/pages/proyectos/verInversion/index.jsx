@@ -9,7 +9,6 @@ const VerInversion = () => {
   const [proyecto, setProyecto] = useState(null);
   const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({
-    ClaveFiscal: "",
     cuit: "",
     DireccionFiscal: "",
     IngresosAnuales: "",
@@ -61,7 +60,6 @@ const VerInversion = () => {
       const { data, error } = await supabase
         .from("Usuario")
         .upsert({
-          ClaveFiscal: formData.ClaveFiscal,
           cuit: formData.cuit,
           DireccionFiscal: formData.DireccionFiscal,
           IngresosAnuales: formData.IngresosAnuales,
@@ -100,16 +98,6 @@ const VerInversion = () => {
       )}
       
       <form onSubmit={handleSubmit} className="formulario-inversion">
-        <div className="form-group">
-          <label>Clave fiscal</label>
-          <input 
-            type="text" 
-            name="ClaveFiscal"
-            value={formData.ClaveFiscal}
-            onChange={handleChange}
-            required
-          />
-        </div>
         
         <div className="form-group">
           <label>CUIT/CUIL</label>
@@ -134,17 +122,6 @@ const VerInversion = () => {
         </div>
         
         <div className="form-group">
-          <label>Ingresos anuales</label>
-          <input 
-            type="text" 
-            name="IngresosAnuales"
-            value={formData.IngresosAnuales}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        
-        <div className="form-group">
           <label>Teléfono</label>
           <input 
             type="text"
@@ -155,6 +132,32 @@ const VerInversion = () => {
           />
         </div>
         
+        <div className="form-group">
+          <label>Ingresos anuales</label>
+          <input 
+            type="text" 
+            name="IngresosAnuales"
+            value={formData.IngresosAnuales}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        
+        
+        <div className="form-group">
+          <label>Moneda</label>
+          <select 
+            name="moneda"
+            value={formData.moneda}
+            onChange={handleChange}
+            required
+          >
+            <option value="Peso Ars">Peso Ars</option>
+            <option value="Dolar U$S">Dolar U$S</option>
+          </select>
+        </div>
+
+
         <div className="form-group">
           <label>Monto estimado a invertir</label>
           <select 
@@ -172,18 +175,6 @@ const VerInversion = () => {
           </select>
         </div>
         
-        <div className="form-group">
-          <label>Moneda</label>
-          <select 
-            name="moneda"
-            value={formData.moneda}
-            onChange={handleChange}
-            required
-          >
-            <option value="Peso Ars">Peso Ars</option>
-            <option value="Dolar U$S">Dolar U$S</option>
-          </select>
-        </div>
         
         <div className="form-buttons">
           <button type="button" className="Cancelar" onClick={()=>navigate(`/proyectos/`)}>

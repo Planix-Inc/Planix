@@ -10,4 +10,4 @@ function BotonBuscar({ onClick }) {
   )
 }
 
-export default BotonBuscar;
+export default BotonBuscar; 

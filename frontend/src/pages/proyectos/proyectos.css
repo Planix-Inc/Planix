@@ -164,7 +164,63 @@
   }
 
   .grid-proyectos .tarjeta-proyectos {
-    max-width: 250px;
-    width: 100%;
+   
+    background-color: white;
+    padding: 20px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+    width: 220px;
+
+    margin: 0 auto;
+  }
+  
+  .filters-bar {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin: 20px 0;
+  }
+  
+  .filter-chip {
+    position: relative;
+  }
+  
+  .chip-btn {
+    background-color: #0d1b2a;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 25px;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+  }
+  
+  .chip-btn:hover {
+    background-color: #1b263b;
+  }
+  
+  .dropdown {
+    position: absolute;
+    top: 110%;
+    left: 0;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    min-width: 160px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    z-index: 10;
+  }
+  
+  .dropdown-item {
+    padding: 10px;
+    cursor: pointer;
+  }
+  
+  .dropdown-item:hover,
+  .dropdown-item.active {
+    background: #fcb900;
+    color: white;
   }
   

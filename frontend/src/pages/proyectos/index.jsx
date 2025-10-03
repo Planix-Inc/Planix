@@ -7,12 +7,40 @@ import "slick-carousel/slick/slick-theme.css";
 import { useNavigate, Link } from "react-router-dom";
 import BotonBuscar from "../../components/BotonBuscar"; 
 
+const FilterChip = ({ label, options, selected, onSelect }) => {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div className="filter-chip">
+      <button onClick={() => setOpen(!open)} className="chip-btn">
+        {label}
+      </button>
+      {open && (
+        <div className="dropdown">
+          {options.map((opt) => (
+            <div
+              key={opt}
+              className={`dropdown-item ${selected === opt ? "active" : ""}`}
+              onClick={() => {
+                onSelect(opt);
+                setOpen(false);
+              }}
+            >
+              {opt}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
 
 const Proyectos = () => {
   const [proyectos, setProyectos] = useState([]);
   const [proyectosDestacados, setProyectosDestacados] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedDireccion, setSelectedDireccion] = useState("");
+  const [selectedBarrio, setSelectedBarrio] = useState("");
+  const [selectedValoracion, setSelectedValoracion] = useState("");
   const [uniqueDirecciones, setUniqueDirecciones] = useState([]);
   const navigate = useNavigate();
 
@@ -21,7 +49,6 @@ const Proyectos = () => {
       const { data: Usuario, error } = await supabase
         .from("Proyectos")
         .select("*")
-        
 
       if (error) {
         console.error("Error al obtener proyectos:", error);
@@ -37,7 +64,6 @@ const Proyectos = () => {
         .from("Proyectos")
         .select("*")
         .eq("destacado", true);
-        
 
       if (error) {
         console.error("Error al obtener proyectos:", error);
@@ -54,7 +80,6 @@ const Proyectos = () => {
     navigate(`/proyectos/verPerfil/${id}`)
   }
 
-  // Función para normalizar texto (quitar acentos y convertir a minúsculas)
   const normalize = (text) => {
     return text
       .toLowerCase()
@@ -62,16 +87,18 @@ const Proyectos = () => {
       .replace(/[\u0300-\u036f]/g, "");
   };
 
-  // Función para manejar la búsqueda
   const handleSearch = (searchValue) => {
     setSearchTerm(searchValue);
   };
 
-  // Función para filtrar proyectos
   const filterProyectos = (proyectosList) => {
     let filtered = proyectosList;
-    if (selectedDireccion) {
-      filtered = filtered.filter(proyecto => proyecto.Barrio === selectedDireccion);
+    if (selectedBarrio) {
+      filtered = filtered.filter(proyecto => proyecto.Barrio === selectedBarrio);
+    }
+    if (selectedValoracion) {
+      const minVal = parseInt(selectedValoracion.replace("≥",""));
+      filtered = filtered.filter(proyecto => proyecto.valoracion >= minVal);
     }
     if (!searchTerm.trim()) return filtered;
     
@@ -94,8 +121,8 @@ const Proyectos = () => {
 
   const filteredProyectos = filterProyectos(proyectos);
   const filteredProyectosDestacados = filterProyectos(proyectosDestacados);
-  // When there is a search or filter, show all filtered projects in the search results section
-  const hayBusqueda = searchTerm.trim() !== "" || selectedDireccion !== "";
+  const hayBusqueda = searchTerm.trim() !== "" || selectedBarrio !== "" || selectedValoracion !== "";
+
   const configuracionCarrusel = {
     dots: false,
     infinite: true,
@@ -108,50 +135,53 @@ const Proyectos = () => {
     responsive: [
       {
         breakpoint: 1024,
-        settings: {
-          slidesToShow: 3,
-        },
+        settings: { slidesToShow: 3 },
       },
       {
         breakpoint: 768,
-        settings: {
-          slidesToShow: 2,
-        },
+        settings: { slidesToShow: 2 },
       },
       {
         breakpoint: 480,
-        settings: {
-          slidesToShow: 1,
-        },
+        settings: { slidesToShow: 1 },
       },
     ],
   };
 
   return (
     <div>
-    <div className="proyectos-container">
-    <div className="overlay">
-      <h1>Encontrá proyectos y conectá con ellos</h1>
-      <div className="search-box">
-        <input 
-          type="text" 
-          placeholder="Buscá proyectos" 
-          value={searchTerm}
-          onChange={(e) => handleSearch(e.target.value)}
-        />
-        <BotonBuscar onClick={() => handleSearch(searchTerm)}/>
+      <div className="proyectos-container">
+        <div className="overlay">
+          <h1>Encontrá proyectos y conectá con ellos</h1>
+          <div className="search-box">
+            <input 
+              type="text" 
+              placeholder="Buscá proyectos" 
+              value={searchTerm}
+              onChange={(e) => handleSearch(e.target.value)}
+            />
+            <BotonBuscar onClick={() => handleSearch(searchTerm)}/>
+          </div>
+        </div>
       </div>
-      <div className="filter-direccion">
-        <label>Filtrar por barrio:</label>
-        <select value={selectedDireccion} onChange={(e) => setSelectedDireccion(e.target.value)}>
-          <option value="">Todas los barrios</option>
-          {uniqueDirecciones.map(bar => <option key={bar} value={bar}>{bar}</option>)}
-        </select>
-      </div>
-    </div>
-  </div>
 
-  <div className="seccion-proyectos">
+      {/* NUEVOS FILTROS */}
+      <div className="filters-bar">
+        <FilterChip
+          label="Barrio ▼"
+          options={["Todos", ...uniqueDirecciones]}
+          selected={selectedBarrio}
+          onSelect={(val) => setSelectedBarrio(val === "Todos" ? "" : val)}
+        />
+        <FilterChip
+          label="Valoración ▼"
+          options={["Todos", "≥4", "≥3", "≥2"]}
+          selected={selectedValoracion}
+          onSelect={(val) => setSelectedValoracion(val === "Todos" ? "" : val)}
+        />
+      </div>
+
+      <div className="seccion-proyectos">
         {!hayBusqueda && (
           <>
             <h2 className="titulo-seccion">Proyectos Destacados</h2>
@@ -194,18 +224,18 @@ const Proyectos = () => {
       </div>
 
       <div className="seccion-inversion">
-    <h2 className="titulo-inversion">
-      ¿Queres crear tu propio proyecto? Empeza ahora mismo
-    </h2>
-    <p className="subtitulo-inversion">
-      Subí tu idea y empezá hoy mismo a colaborar <br />
-      con profesionales en el área
-    </p>
-    <Link to="/proyectos/subirProyecto" className="boton-inversion">
-      Ir ya ➤
-    </Link>
-  </div>
-</div>
+        <h2 className="titulo-inversion">
+          ¿Queres crear tu propio proyecto? Empeza ahora mismo
+        </h2>
+        <p className="subtitulo-inversion">
+          Subí tu idea y empezá hoy mismo a colaborar <br />
+          con profesionales en el área
+        </p>
+        <Link to="/proyectos/subirProyecto" className="boton-inversion">
+          Ir ya ➤
+        </Link>
+      </div>
+    </div>
   );
 };
 export default Proyectos;

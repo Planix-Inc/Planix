@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom"; 
+import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "../../../data/supabaseClient.js";
 import "../proveedores.css";
 import "../verPerfil/verPerfil.css";
 import usuario1 from "../../../assets/VerPerfil/usuarioReseñaSim.jpg";
 import usuario2 from "../../../assets/VerPerfil/usuario2ReseñaSim.jpg";
+import ChatRequestButton from "../../../components/ChatRequestButton";
 
 const VerPerfil = () => {
   const { id } = useParams();
@@ -85,14 +86,15 @@ const VerPerfil = () => {
           <small>Marcar como favorito ❤️</small>
         </div>
       </div>
-      {console.log(usuarioActivoId)}
-      {usuarioActivoId.id == id && (
+      {usuarioActivoId == id && (
         <div className="btn-editarPerfil">
           <button className="editarPerfil" onClick={handleClick}>
             Editar perfil
           </button>
         </div>
       )}
+
+      <ChatRequestButton targetUserId={id} currentUserId={usuarioActivoId} />
 
       <div className="proyectos-section">
         <h2>Productos disponibles</h2>

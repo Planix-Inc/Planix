@@ -30,6 +30,7 @@ import Chatbot from "./components/Chatbot";
 
 import VerPerfilInversionista from "./pages/inversionistas/verPerfil/";
 import EditarPerfilInversionista from "./pages/inversionistas/editarPerfil/";
+import Chat from "./pages/chat/";
 
 function App() {
   const [usuarioActivo, setUsuarioActivo] = useState(null);
@@ -97,6 +98,10 @@ function App() {
             element={<LoginPage setUsuarioActivo={setUsuarioActivo} />}
           />
           <Route path="/registro" element={<Registro />} />
+
+          {/* Chat */}
+          <Route path="/chat" element={<Chat currentUser={usuarioActivo} />} />
+          <Route path="/chat/:id" element={<Chat currentUser={usuarioActivo} />} />
 
           {/* Not Found */}
           <Route path="*" element={<Notfound />} />

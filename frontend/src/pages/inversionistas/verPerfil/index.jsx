@@ -4,6 +4,7 @@ import { supabase } from "../../../data/supabaseClient.js";
 import "./verPerfil.css";
 import usuario1 from "../../../assets/VerPerfil/usuarioReseñaSim.jpg";
 import usuario2 from "../../../assets/VerPerfil/usuario2ReseñaSim.jpg";
+import ChatRequestButton from "../../../components/ChatRequestButton";
 
 const VerPerfil = () => {
   const { id } = useParams();
@@ -114,6 +115,8 @@ const VerPerfil = () => {
           </button>
         </div>
       )}
+
+      <ChatRequestButton targetUserId={id} currentUserId={usuarioActivoId} />
 
       <div className="proyectos-section">
         <h2>Mis proyectos</h2>

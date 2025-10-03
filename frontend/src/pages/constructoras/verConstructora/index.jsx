@@ -1,7 +1,8 @@
-  import React, { useState, useEffect } from "react";
-  import { useParams, useNavigate } from "react-router-dom";
-  import { supabase } from "../../../data/supabaseClient";
-  import "./verConstructora.css";
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { supabase } from "../../../data/supabaseClient";
+import "./verConstructora.css";
+import ChatRequestButton from "../../../components/ChatRequestButton";
 
   const VerConstructora = () => {
     const { id } = useParams();
@@ -115,6 +116,8 @@
           </button>
         </div>
       )}
+
+      <ChatRequestButton targetUserId={id} currentUserId={usuarioActivoId} />
 
         <div className="proyectos-section">
           <h2>Proyectos en los que participa</h2>

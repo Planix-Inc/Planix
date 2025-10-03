@@ -154,4 +154,17 @@
     font-size: 30px;
     color: #005f73 !important;
   }
+
+  .grid-proyectos {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 0 40px;
+    justify-items: center;
+  }
+
+  .grid-proyectos .tarjeta-proyectos {
+    max-width: 250px;
+    width: 100%;
+  }
   

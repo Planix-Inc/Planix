@@ -12,6 +12,8 @@ const Proyectos = () => {
   const [proyectos, setProyectos] = useState([]);
   const [proyectosDestacados, setProyectosDestacados] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedDireccion, setSelectedDireccion] = useState("");
+  const [uniqueDirecciones, setUniqueDirecciones] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -25,6 +27,8 @@ const Proyectos = () => {
         console.error("Error al obtener proyectos:", error);
       } else {
         setProyectos(Usuario);
+        const direcciones = [...new Set(Usuario.map(p => p.Barrio).filter(d => d))];
+        setUniqueDirecciones(direcciones);
       }
     };
 
@@ -65,13 +69,17 @@ const Proyectos = () => {
 
   // Función para filtrar proyectos
   const filterProyectos = (proyectosList) => {
-    if (!searchTerm.trim()) return proyectosList;
+    let filtered = proyectosList;
+    if (selectedDireccion) {
+      filtered = filtered.filter(proyecto => proyecto.Barrio === selectedDireccion);
+    }
+    if (!searchTerm.trim()) return filtered;
     
-    return proyectosList.filter((proyecto) => {
+    return filtered.filter((proyecto) => {
       const searchText = normalize(searchTerm);
       const nombre = normalize(proyecto.nombre || "");
       const apellido = normalize(proyecto.apellido || "");
-      const direccion = normalize(proyecto.direccion || "");
+      const direccion = normalize(proyecto.Barrio || "");
       const descripcion = normalize(proyecto.descripcion || "");
       
       return (
@@ -86,7 +94,8 @@ const Proyectos = () => {
 
   const filteredProyectos = filterProyectos(proyectos);
   const filteredProyectosDestacados = filterProyectos(proyectosDestacados);
-  const hayBusqueda = searchTerm.trim() !== "";
+  // When there is a search or filter, show all filtered projects in the search results section
+  const hayBusqueda = searchTerm.trim() !== "" || selectedDireccion !== "";
   const configuracionCarrusel = {
     dots: false,
     infinite: true,
@@ -132,6 +141,13 @@ const Proyectos = () => {
         />
         <BotonBuscar onClick={() => handleSearch(searchTerm)}/>
       </div>
+      <div className="filter-direccion">
+        <label>Filtrar por barrio:</label>
+        <select value={selectedDireccion} onChange={(e) => setSelectedDireccion(e.target.value)}>
+          <option value="">Todas los barrios</option>
+          {uniqueDirecciones.map(bar => <option key={bar} value={bar}>{bar}</option>)}
+        </select>
+      </div>
     </div>
   </div>
 
@@ -156,21 +172,25 @@ const Proyectos = () => {
           </>
         )}
 
-        <h2 className="titulo-seccion">{hayBusqueda ? "Resultados de búsqueda" : "Proyectos"}</h2>
-        <Slider {...configuracionCarrusel} className="carrusel-proyectos">
-          {filteredProyectos.map((prof) => (
-            <div key={prof.id} className="tarjeta-proyectos">
-              <div className="imagen-proyectos">
-                <img src={prof.img} alt={`${prof.nombre} ${prof.apellido}`} />
-              </div>
-              <h3 className="nombre-proyectos">
-                {prof.nombre} {prof.apellido}
-              </h3>
-              <p className="texto-localidad">📍 {prof.direccion} - ⭐ {prof.valoracion}</p>
-              <button className="boton-ver-perfil" onClick={()=>handleClick(prof.id)}>Ver proyecto</button>
+        {hayBusqueda && (
+          <>
+            <h2 className="titulo-seccion">Resultados de búsqueda</h2>
+            <div className="grid-proyectos">
+              {filteredProyectos.map((prof) => (
+                <div key={prof.id} className="tarjeta-proyectos">
+                  <div className="imagen-proyectos">
+                    <img src={prof.img} alt={`${prof.nombre} ${prof.apellido}`} />
+                  </div>
+                  <h3 className="nombre-proyectos">
+                    {prof.nombre} {prof.apellido}
+                  </h3>
+                  <p className="texto-localidad">📍 {prof.direccion} - ⭐ {prof.valoracion}</p>
+                  <button className="boton-ver-perfil" onClick={()=>handleClick(prof.id)}>Ver proyecto</button>
+                </div>
+              ))}
             </div>
-          ))}
-        </Slider>
+          </>
+        )}
       </div>
 
       <div className="seccion-inversion">

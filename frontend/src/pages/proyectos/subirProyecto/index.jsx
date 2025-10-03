@@ -14,6 +14,7 @@ const subirProyecto = () => {
       destacado: false,
       valoracion: 0,
       descripcion: "",
+      Barrio:""
     });
     const [loading, setLoading] = useState(false);
     const [inputValido, setInputValido] = useState({});
@@ -32,7 +33,8 @@ const subirProyecto = () => {
         !form.nombre ||
         !form.direccion ||
         !form.img ||
-        !form.descripcion
+        !form.descripcion ||
+        !form.Barrio
       ) {
         alert("Por favor completa todos los campos.");
         return;
@@ -61,10 +63,11 @@ const subirProyecto = () => {
             destacado: false,
             valoracion: 0,
             descripcion: form.descripcion,
+            Barrio: form.Barrio
           },
         ])
         .select(
-          "id, nombre, direccion, img, destacado, valoracion, descripcion"
+          "id, nombre, direccion, img, destacado, valoracion, descripcion, Barrio"
         )
         .single();
   
@@ -106,6 +109,17 @@ const subirProyecto = () => {
                 name="direccion"
                 placeholder="Ingresa la direccion del proyecto"
                 value={form.direccion}
+                onChange={handleChange}
+              />
+            </div>
+            <div className={`subirProyecto-form-group ${inputValido.Barrio === false ? "input-error" : inputValido.Barrio ? "input-success" : ""}`}>
+              <label htmlFor="Barrio">Barrio</label>
+              <input
+                type="text"
+                id="Barrio"
+                name="Barrio"
+                placeholder="Ingresa el Barrio del proyecto"
+                value={form.Barrio}
                 onChange={handleChange}
               />
             </div>

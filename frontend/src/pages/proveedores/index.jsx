@@ -6,7 +6,35 @@ import "./proveedores.css";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import BotonInversion from "../../components/botonInversion";
-import BotonBuscar from "../../components/BotonBuscar"; 
+import BotonBuscar from "../../components/BotonBuscar";
+
+const FilterChip = ({ label, options, selected, onSelect }) => {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div className="filter-chip">
+      <button onClick={() => setOpen(!open)} className="chip-btn">
+        {label}
+      </button>
+      {open && (
+        <div className="dropdown">
+          {options.map((opt) => (
+            <div
+              key={opt}
+              className={`dropdown-item ${selected === opt ? "active" : ""}`}
+              onClick={() => {
+                onSelect(opt);
+                setOpen(false);
+              }}
+            >
+              {opt}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
 
 const Proveedores = () => {
   const navigate = useNavigate();
@@ -14,7 +42,8 @@ const Proveedores = () => {
   const [todosLosProveedores, setTodosLosProveedores] = useState([]);
   const [productos, setProductos] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-
+  const [selectedDireccion, setSelectedDireccion] = useState("");
+  const [uniqueDirecciones, setUniqueDirecciones] = useState([]);
   useEffect(() => {
     const fetchProveedores = async () => {
       const { data: Usuario, error } = await supabase
@@ -40,6 +69,8 @@ const Proveedores = () => {
         console.error("Error al obtener todos los proveedores:", error);
       } else {
         setTodosLosProveedores(Usuario);
+        const direcciones = [...new Set(Usuario.map(p => p.localidad).filter(d => d))];
+        setUniqueDirecciones(direcciones);
       }
     };
 
@@ -93,12 +124,27 @@ const Proveedores = () => {
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "");
 
-  const filteredProveedores = todosLosProveedores.filter((prov) => {
-    if (!searchTerm) return true;
-    const razonSocial = `${prov.razonSocial}`;
-    return normalize(razonSocial).includes(normalize(searchTerm));
-  });
+  const filterProveedores = (proveedoresList) => {
+    let filtered = proveedoresList;
+    if (selectedDireccion) {
+      filtered = filtered.filter(prov => prov.localidad === selectedDireccion);
+    }
+    if (!searchTerm.trim()) return filtered;
 
+    return filtered.filter((prov) => {
+      const searchText = normalize(searchTerm);
+      const razonSocial = normalize(prov.razonSocial || "");
+      const direcciones = normalize(prov.localidad || "");
+
+      return (
+        razonSocial.includes(searchText) ||
+        direcciones.includes(searchText)
+      );
+    });
+  };
+
+  const filteredProveedores = filterProveedores(todosLosProveedores);
+  const filteredProveedoresDestacados = filterProveedores(proveedores);
   const hayBusqueda = searchTerm.trim() !== "";
 
   const handleClick = (id) => {
@@ -120,25 +166,46 @@ const Proveedores = () => {
   const mostrarProveedores = (titulo, listaProveedores) => (
     <div className="seccion-proveedores">
       <h2 className="titulo-seccion-proveedores">{titulo}</h2>
-      <Slider {...configuracionCarrusel} className="carrusel-proveedores">
-        {listaProveedores.map((prov) => (
-          <div key={prov.id} className="tarjeta-proveedor">
-            <div className="imagen-proveedor">
-              <img src={prov.img} alt={prov.razonSocial} />
+      {titulo === "Resultados" ? (
+        <div className="grid-proveedores">
+          {listaProveedores.map((prov) => (
+            <div key={prov.id} className="tarjeta-proveedor">
+              <div className="imagen-proveedor">
+                <img src={prov.img} alt={prov.razonSocial} />
+              </div>
+              <h3 className="nombre-proveedor">{prov.razonSocial}</h3>
+              <p className="texto-localidad-proveedor">
+                📍 {prov.localidad} - ⭐ {prov.valoracion}
+              </p>
+              <button
+                className="boton-ver-perfil-proveedor"
+                onClick={() => handleClick(prov.id)}>
+                Ver perfil
+              </button>
             </div>
-            <h3 className="nombre-proveedor">{prov.razonSocial}</h3>
-            <p className="texto-localidad-proveedor">
-              📍 {prov.localidad} - ⭐ {prov.valoracion}
-            </p>
-            <button
-              className="boton-ver-perfil-proveedor"
-              onClick={() => handleClick(prov.id)}>
-              Ver perfil
-            </button>
-          </div>
-        ))}
-      </Slider>
-      {!hayBusqueda && <button className="boton-vertodos" onClick={handleClick2}>Ver Todos</button>}
+          ))}
+        </div>
+      ) : (
+        <Slider {...configuracionCarrusel} className="carrusel-proveedores">
+          {listaProveedores.map((prov) => (
+            <div key={prov.id} className="tarjeta-proveedor">
+              <div className="imagen-proveedor">
+                <img src={prov.img} alt={prov.razonSocial} />
+              </div>
+              <h3 className="nombre-proveedor">{prov.razonSocial}</h3>
+              <p className="texto-localidad-proveedor">
+                📍 {prov.localidad} - ⭐ {prov.valoracion}
+              </p>
+              <button
+                className="boton-ver-perfil-proveedor"
+                onClick={() => handleClick(prov.id)}>
+                Ver perfil
+              </button>
+            </div>
+          ))}
+        </Slider>
+      )}
+      {!hayBusqueda && !selectedDireccion && <button className="boton-vertodos" onClick={handleClick2}>Ver Todos</button>}
     </div>
   );
 
@@ -151,7 +218,7 @@ const Proveedores = () => {
             <div className="buscador-proveedores">
               <input
                 type="text"
-                placeholder="Buscar por razón social"
+                placeholder="Buscar por razón social o dirección"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -159,11 +226,21 @@ const Proveedores = () => {
             </div>
           </div>
         </div>
-      
+
+        {/* FILTROS */}
+        <div className="filters-bar">
+          <FilterChip
+            label="Dirección ▼"
+            options={["Todos", ...uniqueDirecciones]}
+            selected={selectedDireccion}
+            onSelect={(val) => setSelectedDireccion(val === "Todos" ? "" : val)}
+          />
+        </div>
+
         {hayBusqueda ? (
           mostrarProveedores("Resultados", filteredProveedores)
         ) : (
-          mostrarProveedores("Proveedores Destacados", proveedores)
+          mostrarProveedores("Proveedores Destacados", filteredProveedoresDestacados)
         )}
       </div>
 

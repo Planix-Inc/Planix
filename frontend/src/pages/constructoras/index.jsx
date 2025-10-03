@@ -6,12 +6,44 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import BotonInversion from "../../components/botonInversion";
 import { useNavigate } from "react-router-dom";
-import BotonBuscar from "../../components/BotonBuscar"; 
+import BotonBuscar from "../../components/BotonBuscar";
+
+// Componente burbuja con dropdown
+const FilterChip = ({ label, options, selected, onSelect }) => {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div className="filter-chip">
+      <button onClick={() => setOpen(!open)} className="chip-btn">
+        {label}
+      </button>
+      {open && (
+        <div className="dropdown">
+          {options.map((opt) => (
+            <div
+              key={opt}
+              className={`dropdown-item ${selected === opt ? "active" : ""}`}
+              onClick={() => {
+                onSelect(opt);
+                setOpen(false);
+              }}
+            >
+              {opt}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
 
 const Constructoras = () => {
   const [constructoras, setConstructoras] = useState([]);
   const [constructorasDestacado, setConstructorasDestacado] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedLocalidad, setSelectedLocalidad] = useState("");
+  const [selectedValoracion, setSelectedValoracion] = useState("");
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -45,12 +77,12 @@ const Constructoras = () => {
     fetchConstructoras();
     fetchConstructorasDestacados();
   }, []);
-  
+
   const handleClick = (id) => {
     navigate(`/constructoras/verPerfil/${id}`);
   };
 
-  // Función para normalizar texto (quitar acentos y convertir a minúsculas)
+  // normalizar texto
   const normalize = (text) => {
     return text
       .toLowerCase()
@@ -58,31 +90,56 @@ const Constructoras = () => {
       .replace(/[\u0300-\u036f]/g, "");
   };
 
-  // Función para manejar la búsqueda
   const handleSearch = (searchValue) => {
     setSearchTerm(searchValue);
   };
 
-  // Función para filtrar constructoras
+  // aplicar filtros
   const filterConstructoras = (constructorasList) => {
-    if (!searchTerm.trim()) return constructorasList;
-    
-    return constructorasList.filter((constructora) => {
+    let filtered = [...constructorasList];
+
+    // búsqueda
+    if (searchTerm.trim()) {
       const searchText = normalize(searchTerm);
-      const razonSocial = normalize(constructora.razonSocial || "");
-      const localidad = normalize(constructora.localidad || "");
-      const descripcion = normalize(constructora.descripcion || "");
-      
-      return (
-        razonSocial.includes(searchText) ||
-        localidad.includes(searchText) ||
-        descripcion.includes(searchText)
+      filtered = filtered.filter((constructora) => {
+        const razonSocial = normalize(constructora.razonSocial || "");
+        const localidad = normalize(constructora.localidad || "");
+        const descripcion = normalize(constructora.descripcion || "");
+        return (
+          razonSocial.includes(searchText) ||
+          localidad.includes(searchText) ||
+          descripcion.includes(searchText)
+        );
+      });
+    }
+
+    // filtro localidad
+    if (selectedLocalidad) {
+      filtered = filtered.filter(
+        (c) => c.localidad === selectedLocalidad
       );
-    });
+    }
+
+    // filtro valoración
+    if (selectedValoracion) {
+      const minVal = parseInt(selectedValoracion.replace("≥", ""));
+      filtered = filtered.filter(
+        (c) => c.valoracion && c.valoracion >= minVal
+      );
+    }
+
+    return filtered;
   };
 
+  // valores únicos de localidad para dropdown
+  const uniqueLocalidades = [
+    ...new Set(constructoras.map((c) => c.localidad).filter(Boolean)),
+  ];
+
   const filteredConstructoras = filterConstructoras(constructoras);
-  const filteredConstructorasDestacados = filterConstructoras(constructorasDestacado);
+  const filteredConstructorasDestacados =
+    filterConstructoras(constructorasDestacado);
+
   const hayBusqueda = searchTerm.trim() !== "";
 
   const configuracionCarrusel = {
@@ -95,24 +152,9 @@ const Constructoras = () => {
     autoplay: true,
     autoplaySpeed: 2000,
     responsive: [
-      {
-        breakpoint: 1024,
-        settings: {
-          slidesToShow: 3,
-        },
-      },
-      {
-        breakpoint: 768,
-        settings: {
-          slidesToShow: 2,
-        },
-      },
-      {
-        breakpoint: 480,
-        settings: {
-          slidesToShow: 1,
-        },
-      },
+      { breakpoint: 1024, settings: { slidesToShow: 3 } },
+      { breakpoint: 768, settings: { slidesToShow: 2 } },
+      { breakpoint: 480, settings: { slidesToShow: 1 } },
     ],
   };
 
@@ -128,9 +170,25 @@ const Constructoras = () => {
               value={searchTerm}
               onChange={(e) => handleSearch(e.target.value)}
             />
-            <BotonBuscar onClick={() => handleSearch(searchTerm)}/>
+            <BotonBuscar onClick={() => handleSearch(searchTerm)} />
           </div>
         </div>
+      </div>
+
+      {/* filtros estilo burbuja */}
+      <div className="filters-bar">
+        <FilterChip
+          label="Localidad ▼"
+          options={["Todos", ...uniqueLocalidades]}
+          selected={selectedLocalidad}
+          onSelect={(val) => setSelectedLocalidad(val === "Todos" ? "" : val)}
+        />
+        <FilterChip
+          label="Valoración ▼"
+          options={["Todos", "≥4", "≥3", "≥2"]}
+          selected={selectedValoracion}
+          onSelect={(val) => setSelectedValoracion(val === "Todos" ? "" : val)}
+        />
       </div>
 
       <div className="seccion-constructoras">
@@ -147,14 +205,21 @@ const Constructoras = () => {
                   <p className="texto-localidad">
                     📍 {prof.localidad} - ⭐ {prof.valoracion}
                   </p>
-                  <button className="boton-ver-perfil" onClick={()=>handleClick(prof.id)}>Ver perfil</button>
+                  <button
+                    className="boton-ver-perfil"
+                    onClick={() => handleClick(prof.id)}
+                  >
+                    Ver perfil
+                  </button>
                 </div>
               ))}
             </Slider>
           </>
         )}
 
-        <h2 className="titulo-seccion">{hayBusqueda ? "Resultados de búsqueda" : "Constructoras"}</h2>
+        <h2 className="titulo-seccion">
+          {hayBusqueda ? "Resultados de búsqueda" : "Constructoras"}
+        </h2>
         <Slider {...configuracionCarrusel} className="carrusel-constructoras">
           {filteredConstructoras.map((prof) => (
             <div key={prof.id} className="tarjeta-constructoras">
@@ -165,7 +230,12 @@ const Constructoras = () => {
               <p className="texto-localidad">
                 📍 {prof.localidad} - ⭐ {prof.valoracion}
               </p>
-              <button className="boton-ver-perfil" onClick={()=>handleClick(prof.id)}>Ver perfil</button>
+              <button
+                className="boton-ver-perfil"
+                onClick={() => handleClick(prof.id)}
+              >
+                Ver perfil
+              </button>
             </div>
           ))}
         </Slider>

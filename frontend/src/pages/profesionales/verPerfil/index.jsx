@@ -5,7 +5,7 @@ import "../profesionales.css";
 import "./verPerfil.css";
 import usuario1 from "../../../assets/VerPerfil/usuarioReseñaSim.jpg";
 import usuario2 from "../../../assets/VerPerfil/usuario2ReseñaSim.jpg";
-import ChatRequestButton from "../../../components/ChatRequestButton";
+
 
 const VerPerfil = () => {
   const { id } = useParams();
@@ -13,6 +13,7 @@ const VerPerfil = () => {
   const [perfil, setPerfil] = useState(null);
   const [proyectos, setProyectos] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [hasRequest, setHasRequest] = useState(false);
   const usuarioActivo = JSON.parse(localStorage.getItem("usuarioLogueado"));
   const usuarioActivoId = usuarioActivo.id;
 
@@ -68,6 +69,22 @@ const VerPerfil = () => {
     fetchData();
   }, [id]);
 
+  useEffect(() => {
+    const checkRequest = async () => {
+      if (!usuarioActivoId || usuarioActivoId == id) return;
+      const { data, error } = await supabase
+        .from("Aceptacion")
+        .select("*")
+        .or(`and(usuario1_id.eq.${usuarioActivoId},usuario2_id.eq.${id}),and(usuario1_id.eq.${id},usuario2_id.eq.${usuarioActivoId})`);
+      if (error) {
+        console.error("Error checking request:", error);
+      } else {
+        setHasRequest(data.length > 0);
+      }
+    };
+    checkRequest();
+  }, [id, usuarioActivoId]);
+
   const renderStars = (rating) => {
     const stars = [];
     for (let i = 1; i <= 5; i++) {
@@ -82,6 +99,24 @@ const VerPerfil = () => {
 
   const handleClick = () => {
     navigate(`/profesionales/editarPerfil/${id}`);
+  };
+
+  const handleSendRequest = async () => {
+    const { error } = await supabase
+      .from("Aceptacion")
+      .insert({
+        usuario1_id: usuarioActivoId,
+        usuario2_id: id,
+        Aceptar: null,
+        Aviso: true,
+        Conversacion_id: null // Assuming null for now
+      });
+    if (error) {
+      console.error("Error sending request:", error);
+    } else {
+      setHasRequest(true);
+      alert("Petición de chat enviada.");
+    }
   };
   
 
@@ -108,6 +143,14 @@ const VerPerfil = () => {
         </div>
       </div>
 
+      {usuarioActivoId != id && !hasRequest && (
+        <div className="btn-chat">
+          <button className="enviar-peticion-chat" onClick={handleSendRequest}>
+            Enviar petición de chat
+          </button>
+        </div>
+      )}
+
       {usuarioActivoId == id && (
         <div className="btn-editarPerfil">
           <button className="editarPerfil" onClick={handleClick}>
@@ -116,7 +159,6 @@ const VerPerfil = () => {
         </div>
       )}
 
-      <ChatRequestButton targetUserId={id} currentUserId={usuarioActivoId} />
 
       <div className="proyectos-section">
         <h2>Mis proyectos</h2>

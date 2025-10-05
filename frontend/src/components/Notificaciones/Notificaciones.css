@@ -1,0 +1,56 @@
+.notificaciones-container {
+  padding: 20px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.notificaciones-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.notificacion-item {
+  display: flex;
+  align-items: center;
+  background-color: #f8f8f8;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.notif-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 15px;
+}
+
+.notif-content {
+  flex: 1;
+}
+
+.notif-buttons {
+  margin-top: 8px;
+}
+
+.btn-accept,
+.btn-reject {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.btn-accept {
+  background-color: #4caf50;
+  color: white;
+}
+
+.btn-reject {
+  background-color: #f44336;
+  color: white;
+}

@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { supabase } from "../../data/supabaseClient.js";
 import logo from "../../assets/Logos/logo.png";
+import campanita from "../../assets/icons/bell.png"; // Using chat.png as bell icon
 import "./header.css";
 
 function Encabezado({ usuarioActivo, setUsuarioActivo }) {
@@ -9,6 +11,7 @@ function Encabezado({ usuarioActivo, setUsuarioActivo }) {
   const referenciaNavegacion = useRef(null);
   const referenciaSubrayado = useRef(null);
   const [indiceActivo, setIndiceActivo] = useState(0);
+  const [notificacionesCount, setNotificacionesCount] = useState(0);
   const navigate = useNavigate();
 
   // Revisar si hay usuario logueado
@@ -42,6 +45,25 @@ function Encabezado({ usuarioActivo, setUsuarioActivo }) {
       subrayado.style.width = "0";
     }
   }, [indiceActivo]);
+
+  // Fetch notifications count
+  useEffect(() => {
+    const fetchNotificacionesCount = async () => {
+      if (!usuarioId) return;
+      const { count, error } = await supabase
+        .from("Aceptacion")
+        .select("*", { count: "exact", head: true })
+        .eq("usuario2_id", usuarioId)
+        .is("Aceptar", null)
+        .eq("Aviso", true);
+      if (error) {
+        console.error("Error fetching notifications:", error);
+      } else {
+        setNotificacionesCount(count);
+      }
+    };
+    fetchNotificacionesCount();
+  }, [usuarioId]);
 
   const cerrarSesion = () => {
     setUsuarioActivo(null);
@@ -109,6 +131,25 @@ function Encabezado({ usuarioActivo, setUsuarioActivo }) {
             <div className="usuario-logueado">
               <div className="fotoPerfil" onClick={handleVerPerfil}>
                 <img src={usuarioImg} alt="Foto de perfil" className="img-avatar" />
+              </div>
+              {/* Notification bell icon */}
+              <div className="campanita-container" style={{ position: "relative", cursor: "pointer", marginRight: "10px" }} onClick={() => navigate("/notificaciones")}>
+                <img src={campanita} alt="Notificaciones" style={{ width: "24px", height: "24px" }} />
+                {notificacionesCount > 0 && (
+                  <span style={{
+                    position: "absolute",
+                    top: "-5px",
+                    right: "-5px",
+                    backgroundColor: "red",
+                    color: "white",
+                    borderRadius: "50%",
+                    padding: "2px 6px",
+                    fontSize: "12px",
+                    fontWeight: "bold"
+                  }}>
+                    {notificacionesCount}
+                  </span>
+                )}
               </div>
               <button className="btn-cerrar-sesion" onClick={cerrarSesion}>
                 Cerrar sesión

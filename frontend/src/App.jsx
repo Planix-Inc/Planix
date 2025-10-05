@@ -27,10 +27,12 @@ import Cancel from "./pages/proyectos/verProyectos/";
 import Submit from "./pages/proyectos/verProyectos/";
 import Postularse from "./pages/profesionales/postularse/";
 import Chatbot from "./components/Chatbot";
-
 import VerPerfilInversionista from "./pages/inversionistas/verPerfil/";
 import EditarPerfilInversionista from "./pages/inversionistas/editarPerfil/";
-import Chat from "./pages/chat/";
+import Notificaciones from "./components/Notificaciones";
+import MisChats from "./components/MisChats";
+import ChatWindow from "./components/ChatWindow";
+
 
 function App() {
   const [usuarioActivo, setUsuarioActivo] = useState(null);
@@ -99,15 +101,17 @@ function App() {
           />
           <Route path="/registro" element={<Registro />} />
 
-          {/* Chat */}
-          <Route path="/chat" element={<Chat currentUser={usuarioActivo} />} />
-          <Route path="/chat/:id" element={<Chat currentUser={usuarioActivo} />} />
+          {/* Notificaciones */}
+          <Route path="/notificaciones" element={<Notificaciones />} />
 
           {/* Not Found */}
           <Route path="*" element={<Notfound />} />
         </Routes>
 
         {!hideHeaderFooter && <Footer />}
+        {!hideHeaderFooter && <MisChats />}
+        {!hideHeaderFooter && <Notificaciones />}
+        {/* ChatWindow should be conditionally rendered when a chat is opened, for now not included here */}
       </>
     );
   };

@@ -2,13 +2,14 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "../../../data/supabaseClient";
 import "./verConstructora.css";
-import ChatRequestButton from "../../../components/ChatRequestButton";
+
 
   const VerConstructora = () => {
     const { id } = useParams();
     const [perfil, setPerfil] = useState(null);
     const [proyectos, setProyectos] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [hasRequest, setHasRequest] = useState(false);
     const navigate = useNavigate();
     const usuarioActivo = JSON.parse(localStorage.getItem("usuarioLogueado"));
     const usuarioActivoId = usuarioActivo.id;
@@ -64,9 +65,43 @@ import ChatRequestButton from "../../../components/ChatRequestButton";
       fetchPerfilYProyectos();
     }, [id]);
 
+    useEffect(() => {
+      const checkRequest = async () => {
+        if (!usuarioActivoId || usuarioActivoId == id) return;
+        const { data, error } = await supabase
+          .from("Aceptacion")
+          .select("*")
+          .or(`and(usuario1_id.eq.${usuarioActivoId},usuario2_id.eq.${id}),and(usuario1_id.eq.${id},usuario2_id.eq.${usuarioActivoId})`);
+        if (error) {
+          console.error("Error checking request:", error);
+        } else {
+          setHasRequest(data.length > 0);
+        }
+      };
+      checkRequest();
+    }, [id, usuarioActivoId]);
+
     const handleClick = () => {
       navigate(`/constructoras/editarPerfil/${id}`);
-    };  
+    };
+
+    const handleSendRequest = async () => {
+      const { error } = await supabase
+        .from("Aceptacion")
+        .insert({
+          usuario1_id: usuarioActivoId,
+          usuario2_id: id,
+          Aceptar: null,
+          Aviso: true,
+          Conversacion_id: null // Assuming null for now
+        });
+      if (error) {
+        console.error("Error sending request:", error);
+      } else {
+        setHasRequest(true);
+        alert("Petición de chat enviada.");
+      }
+    };
 
     const renderStars = (rating) => {
       const stars = [];
@@ -109,6 +144,14 @@ import ChatRequestButton from "../../../components/ChatRequestButton";
           </div>
         </div>
 
+        {usuarioActivoId != id && !hasRequest && (
+          <div className="btn-chat">
+            <button className="enviar-peticion-chat" onClick={handleSendRequest}>
+              Enviar petición de chat
+            </button>
+          </div>
+        )}
+
         {usuarioActivoId == id && (
         <div className="btn-editarPerfil">
           <button className="editarPerfil" onClick={handleClick}>
@@ -117,7 +160,7 @@ import ChatRequestButton from "../../../components/ChatRequestButton";
         </div>
       )}
 
-      <ChatRequestButton targetUserId={id} currentUserId={usuarioActivoId} />
+
 
         <div className="proyectos-section">
           <h2>Proyectos en los que participa</h2>

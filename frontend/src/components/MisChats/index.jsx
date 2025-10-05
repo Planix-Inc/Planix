@@ -30,17 +30,26 @@ const MisChats = () => {
         return;
       }
 
-      // Fetch user data for each chat
+      // Fetch user data and last message for each chat
       const chatsWithUsers = await Promise.all(
         data.map(async (chat) => {
-          const [user1Data, user2Data] = await Promise.all([
-            supabase.from("Usuario").select("id, nombre, apellido, razonSocial, categoriausuarioId, img, logo").eq("id", chat.usuario1_id).single(),
-            supabase.from("Usuario").select("id, nombre, apellido, razonSocial, categoriausuarioId, img, logo").eq("id", chat.usuario2_id).single()
+          const [user1Data, user2Data, lastMessageData] = await Promise.all([
+            supabase.from("Usuario").select("id, nombre, apellido, razonSocial, categoriausuarioId, img").eq("id", chat.usuario1_id).single(),
+            supabase.from("Usuario").select("id, nombre, apellido, razonSocial, categoriausuarioId, img").eq("id", chat.usuario2_id).single(),
+            supabase.from("Conversacion")
+              .select("*")
+              .or(`and(IdUsuario1.eq.${chat.usuario1_id},IdUsuario2.eq.${chat.usuario2_id}),and(IdUsuario1.eq.${chat.usuario2_id},IdUsuario2.eq.${chat.usuario1_id})`)
+              .order("TiempoMensaje", { ascending: false })
+              .limit(1)
           ]);
+          const lastMessage = lastMessageData.data ? lastMessageData.data[0] : null;
+          const hasUnread = lastMessage && lastMessage.IdUsuario1 !== usuarioActivoId;
           return {
             ...chat,
-            usuario1: user1Data.data || { id: chat.usuario1_id, nombre: "Usuario", apellido: "", razonSocial: "", categoriausuarioId: 1, img: "", logo: "" },
-            usuario2: user2Data.data || { id: chat.usuario2_id, nombre: "Usuario", apellido: "", razonSocial: "", categoriausuarioId: 1, img: "", logo: "" }
+            usuario1: user1Data.data || { id: chat.usuario1_id, nombre: "Usuario", apellido: "", razonSocial: "", categoriausuarioId: 1, img: "" },
+            usuario2: user2Data.data || { id: chat.usuario2_id, nombre: "Usuario", apellido: "", razonSocial: "", categoriausuarioId: 1, img: "" },
+            lastMessage: lastMessage ? lastMessage.Mensaje : "",
+            hasUnread
           };
         })
       );
@@ -57,8 +66,30 @@ const MisChats = () => {
     };
     window.addEventListener('chatAccepted', handleChatAccepted);
 
+    // Subscribe to real-time updates for new messages
+    const channel = supabase
+      .channel('chats-updates')
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'Conversacion',
+        },
+        (payload) => {
+          const newMessage = payload.new;
+          // Check if the message involves the current user
+          if (newMessage.IdUsuario1 === usuarioActivoId || newMessage.IdUsuario2 === usuarioActivoId) {
+            // Refresh chats to update unread status
+            fetchChats();
+          }
+        }
+      )
+      .subscribe();
+
     return () => {
       window.removeEventListener('chatAccepted', handleChatAccepted);
+      supabase.removeChannel(channel);
     };
   }, [usuarioActivoId]);
 
@@ -82,12 +113,15 @@ const MisChats = () => {
     }
   };
 
+  const unreadCount = chats.filter(chat => chat.hasUnread).length;
+  const displayCount = unreadCount > 9 ? "9+" : unreadCount > 0 ? unreadCount : "";
+
   if (loading) return <div>Cargando chats...</div>;
 
   return (
     <div className="mis-chats">
       <div className="chats-header" onClick={toggleCollapse}>
-        <h3>Mis Chats ({chats.length})</h3>
+        <h3>Mis Chats {displayCount && `(${displayCount})`}</h3>
         <button className="toggle-btn">{isCollapsed ? "▼" : "▲"}</button>
       </div>
       {!isCollapsed && (
@@ -97,12 +131,19 @@ const MisChats = () => {
               const otherUser = getOtherUser(chat);
               return (
                 <div key={chat.Id} className="chat-item">
-                  <img src={otherUser.img || otherUser.logo} alt={getUserName(otherUser)} className="chat-avatar" />
+                  <div className="avatar-container">
+                    <img src={otherUser.img} alt={getUserName(otherUser)} className="chat-avatar" />
+                    {chat.hasUnread && <span className="unread-dot"></span>}
+                  </div>
                   <div className="chat-info">
                     <p className="chat-name">{getUserName(otherUser)}</p>
                     <p className="chat-last-message">{truncateMessage(chat.lastMessage)}</p>
                   </div>
-                  <button className="chat-btn" onClick={() => setOpenChatUserId(otherUser.id)}>Abrir</button>
+                  <button className="chat-btn" onClick={() => {
+                    setOpenChatUserId(otherUser.id);
+                    // Mark as read
+                    setChats(prevChats => prevChats.map(c => c.Id === chat.Id ? { ...c, hasUnread: false } : c));
+                  }}>Abrir</button>
                 </div>
               );
             })

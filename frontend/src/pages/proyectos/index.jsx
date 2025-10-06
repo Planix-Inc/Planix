@@ -97,7 +97,7 @@ const Proyectos = () => {
       filtered = filtered.filter(proyecto => proyecto.Barrio === selectedBarrio);
     }
     if (selectedValoracion) {
-      const minVal = parseInt(selectedValoracion.replace("≥",""));
+      const minVal = parseInt(selectedValoracion.replace("⭐",""));
       filtered = filtered.filter(proyecto => proyecto.valoracion >= minVal);
     }
     if (!searchTerm.trim()) return filtered;
@@ -175,7 +175,7 @@ const Proyectos = () => {
         />
         <FilterChip
           label="Valoración ▼"
-          options={["Todos", "≥4", "≥3", "≥2"]}
+          options={["Todos", "4⭐", "3⭐", "2⭐"]}
           selected={selectedValoracion}
           onSelect={(val) => setSelectedValoracion(val === "Todos" ? "" : val)}
         />

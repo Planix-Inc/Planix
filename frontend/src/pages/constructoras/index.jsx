@@ -122,7 +122,7 @@ const Constructoras = () => {
 
     // filtro valoración
     if (selectedValoracion) {
-      const minVal = parseInt(selectedValoracion.replace("≥", ""));
+      const minVal = parseInt(selectedValoracion.replace("⭐", ""));
       filtered = filtered.filter(
         (c) => c.valoracion && c.valoracion >= minVal
       );
@@ -185,7 +185,7 @@ const Constructoras = () => {
         />
         <FilterChip
           label="Valoración ▼"
-          options={["Todos", "≥4", "≥3", "≥2"]}
+          options={["Todos", "4⭐", "3⭐", "2⭐"]}
           selected={selectedValoracion}
           onSelect={(val) => setSelectedValoracion(val === "Todos" ? "" : val)}
         />

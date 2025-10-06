@@ -28,6 +28,7 @@
 }
 
 .toggle-btn {
+  color: #666;
   background: none;
   border: none;
   font-size: 14px;
@@ -80,6 +81,7 @@
 
 .chat-name {
   margin: 0;
+  color: #666;
   font-weight: bold;
   font-size: 14px;
 }
@@ -103,3 +105,5 @@
 .chat-btn:hover {
   background-color: #0056b3;
 }
+
+

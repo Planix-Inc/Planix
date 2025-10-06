@@ -43,6 +43,7 @@ const Proveedores = () => {
   const [productos, setProductos] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedDireccion, setSelectedDireccion] = useState("");
+  const [selectedValoracion, setSelectedValoracion] = useState("");
   const [uniqueDirecciones, setUniqueDirecciones] = useState([]);
   useEffect(() => {
     const fetchProveedores = async () => {
@@ -126,26 +127,38 @@ const Proveedores = () => {
 
   const filterProveedores = (proveedoresList) => {
     let filtered = proveedoresList;
+    
+    // Filtro por dirección
     if (selectedDireccion) {
       filtered = filtered.filter(prov => prov.localidad === selectedDireccion);
     }
-    if (!searchTerm.trim()) return filtered;
-
-    return filtered.filter((prov) => {
+    
+    // Filtro por valoración
+    if (selectedValoracion) {
+      const minVal = parseInt(selectedValoracion.replace("≥", ""));
+      filtered = filtered.filter(prov => prov.valoracion && prov.valoracion >= minVal);
+    }
+    
+    // Filtro por búsqueda de texto
+    if (searchTerm.trim()) {
       const searchText = normalize(searchTerm);
-      const razonSocial = normalize(prov.razonSocial || "");
-      const direcciones = normalize(prov.localidad || "");
+      filtered = filtered.filter((prov) => {
+        const razonSocial = normalize(prov.razonSocial || "");
+        const direcciones = normalize(prov.localidad || "");
 
-      return (
-        razonSocial.includes(searchText) ||
-        direcciones.includes(searchText)
-      );
-    });
+        return (
+          razonSocial.includes(searchText) ||
+          direcciones.includes(searchText)
+        );
+      });
+    }
+    
+    return filtered;
   };
 
   const filteredProveedores = filterProveedores(todosLosProveedores);
   const filteredProveedoresDestacados = filterProveedores(proveedores);
-  const hayBusqueda = searchTerm.trim() !== "" || selectedDireccion !== "";
+  const hayBusqueda = searchTerm.trim() !== "" || selectedDireccion !== "" || selectedValoracion !== "";
 
   const handleClick = (id) => {
     navigate(`/proveedores/verPerfil/${id}`);
@@ -205,7 +218,7 @@ const Proveedores = () => {
           ))}
         </Slider>
       )}
-      {!hayBusqueda && !selectedDireccion && <button className="boton-vertodos" onClick={handleClick2}>Ver Todos</button>}
+      {!hayBusqueda && <button className="boton-vertodos" onClick={handleClick2}>Ver Todos</button>}
     </div>
   );
 
@@ -234,6 +247,12 @@ const Proveedores = () => {
             options={["Todos", ...uniqueDirecciones]}
             selected={selectedDireccion}
             onSelect={(val) => setSelectedDireccion(val === "Todos" ? "" : val)}
+          />
+          <FilterChip
+            label="Valoración ▼"
+            options={["Todos", "≥4", "≥3", "≥2"]}
+            selected={selectedValoracion}
+            onSelect={(val) => setSelectedValoracion(val === "Todos" ? "" : val)}
           />
         </div>
 

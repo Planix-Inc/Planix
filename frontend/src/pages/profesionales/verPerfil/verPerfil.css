@@ -105,6 +105,7 @@
 }
 
 .proyecto-card {
+  width: 200px;
   background: #fff;
   padding: 16px;
   border-radius: 12px;

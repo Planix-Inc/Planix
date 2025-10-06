@@ -110,7 +110,7 @@ function App() {
 
         {!hideHeaderFooter && <Footer />}
         {!hideHeaderFooter && <MisChats />}
-        {!hideHeaderFooter && <Notificaciones />}
+       
         {/* ChatWindow should be conditionally rendered when a chat is opened, for now not included here */}
       </>
     );

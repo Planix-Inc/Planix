@@ -8,12 +8,44 @@ import "slick-carousel/slick/slick-theme.css";
 import BotonInversion from "../../components/botonInversion"; 
 import BotonBuscar from "../../components/BotonBuscar"; 
 
+// Componente burbuja con dropdown
+const FilterChip = ({ label, options, selected, onSelect }) => {
+  const [open, setOpen] = useState(false);
 
+  return (
+    <div className="filter-chip">
+      <button onClick={() => setOpen(!open)} className="chip-btn">
+        {label}
+      </button>
+      {open && (
+        <div className="dropdown">
+          {options.map((opt) => (
+            <div
+              key={opt.value || opt}
+              className={`dropdown-item ${selected === (opt.value || opt) ? "active" : ""}`}
+              onClick={() => {
+                onSelect(opt.value || opt);
+                setOpen(false);
+              }}
+            >
+              <p className="dropdown-item-text">{opt.label || opt}</p>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
 
 const Profesionales = () => {
   const navigate = useNavigate();
   const [profesionales, setProfesionales] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedLocalidad, setSelectedLocalidad] = useState("");
+  const [selectedValoracion, setSelectedValoracion] = useState("");
+  const [selectedTipoProfesional, setSelectedTipoProfesional] = useState("");
+  const [uniqueLocalidades, setUniqueLocalidades] = useState([]);
+  const [tiposProfesional, setTiposProfesional] = useState([]);
 
   useEffect(() => {
     const fetchProfesionales = async () => {
@@ -26,6 +58,22 @@ const Profesionales = () => {
         console.error("Error al obtener profesionales:", error);
       } else {
         setProfesionales(Usuario);
+        // Obtener localidades únicas
+        const localidades = [...new Set(Usuario.map(p => p.localidad).filter(l => l))];
+        setUniqueLocalidades(localidades);
+        
+        // Obtener tipos de profesional únicos
+        const tiposMap = new Map();
+        Usuario.forEach(p => {
+          if (p.idTipoProfesional && !tiposMap.has(p.idTipoProfesional)) {
+            tiposMap.set(p.idTipoProfesional, {
+              value: p.idTipoProfesional,
+              label: p.tipoProfesional?.descripcion || `Tipo ${p.idTipoProfesional}`
+            });
+          }
+        });
+        const tipos = Array.from(tiposMap.values());
+        setTiposProfesional(tipos);
       }
     };
 
@@ -55,59 +103,55 @@ const Profesionales = () => {
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "");
 
-  const filteredProfesionales = profesionales.filter((prof) => {
-    if (!searchTerm) return true;
-    const fullName = `${prof.nombre || ""} ${prof.apellido || ""}`;
-    return normalize(fullName).includes(normalize(searchTerm));
-  });
+  const handleSearch = (searchValue) => {
+    setSearchTerm(searchValue);
+  };
 
-  const hayBusqueda = searchTerm.trim() !== "";
+  // Función de filtrado completa
+  const filterProfesionales = (profesionalesList) => {
+    let filtered = [...profesionalesList];
 
-  const arquitectos = filteredProfesionales.filter((p) => p.idTipoProfesional === 1);
-  const ingenieros = filteredProfesionales.filter((p) => p.idTipoProfesional === 2);
-  const disenadores = filteredProfesionales.filter((p) => p.idTipoProfesional === 3);
-  const directoresdeobra = filteredProfesionales.filter((p) => p.idTipoProfesional === 4);
+    // Filtro por búsqueda de texto
+    if (searchTerm.trim()) {
+      const searchText = normalize(searchTerm);
+      filtered = filtered.filter((prof) => {
+        const fullName = `${prof.nombre || ""} ${prof.apellido || ""}`;
+        const localidad = normalize(prof.localidad || "");
+        const tipoProfesional = normalize(prof.tipoProfesional?.descripcion || "");
+        return (
+          normalize(fullName).includes(searchText) ||
+          localidad.includes(searchText) ||
+          tipoProfesional.includes(searchText)
+        );
+      });
+    }
 
-  const mostrarTipoProfesional = (titulo, tipoProfesional, isSearch = false) => (
-    <div className="seccion-profesionales">
-      <h2 className="titulo-seccion">{titulo}</h2>
-      {isSearch ? (
-        <div className="grid-profesionales">
-          {tipoProfesional.map((prof) => (
-            <div key={prof.id} className="tarjeta-profesional">
-              <div className="imagen-profesional">
-                <img src={prof.img} alt={`${prof.nombre} ${prof.apellido}`} />
-              </div>
-              <h3 className="nombre-profesional">
-                {prof.nombre} {prof.apellido}
-              </h3>
-              <p className="texto-localidad">
-                📍 {prof.localidad} - ⭐ {prof.valoracion}
-              </p>
-              <button className="boton-ver-perfil" onClick={() => handleClick(prof.id)}>Ver perfil</button>
-            </div>
-          ))}
-        </div>
-      ) : (
-        <Slider {...configuracionCarrusel} className="carrusel-profesionales">
-          {tipoProfesional.map((prof) => (
-            <div key={prof.id} className="tarjeta-profesional">
-              <div className="imagen-profesional">
-                <img src={prof.img} alt={`${prof.nombre} ${prof.apellido}`} />
-              </div>
-              <h3 className="nombre-profesional">
-                {prof.nombre} {prof.apellido}
-              </h3>
-              <p className="texto-localidad">
-                📍 {prof.localidad} - ⭐ {prof.valoracion}
-              </p>
-              <button className="boton-ver-perfil" onClick={() => handleClick(prof.id)}>Ver perfil</button>
-            </div>
-          ))}
-        </Slider>
-      )}
-    </div>
-  );
+    // Filtro por localidad
+    if (selectedLocalidad) {
+      filtered = filtered.filter(prof => prof.localidad === selectedLocalidad);
+    }
+
+    // Filtro por valoración
+    if (selectedValoracion) {
+      const minVal = parseInt(selectedValoracion.replace("≥", ""));
+      filtered = filtered.filter(prof => prof.valoracion && prof.valoracion >= minVal);
+    }
+
+    // Filtro por tipo de profesional
+    if (selectedTipoProfesional) {
+      filtered = filtered.filter(prof => prof.idTipoProfesional === parseInt(selectedTipoProfesional));
+    }
+
+    return filtered;
+  };
+
+  const filteredProfesionales = filterProfesionales(profesionales);
+  const hayBusqueda = searchTerm.trim() !== "" || selectedLocalidad !== "" || selectedValoracion !== "" || selectedTipoProfesional !== "";
+
+  // Solo profesionales con valoración mayor a 4 para destacados
+  const mejoresValorados = profesionales.filter((p) => p.valoracion && p.valoracion > 4);
+
+
 
     return (
     <div>
@@ -117,24 +161,91 @@ const Profesionales = () => {
           <div className="buscador">
             <input
               type="text"
-              placeholder="Buscar por nombre o apellido"
+              placeholder="Buscar por nombre, apellido o especialidad"
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={(e) => handleSearch(e.target.value)}
             />
-            <BotonBuscar onClick={() => { /* la búsqueda ocurre al tipear */ }} />
+            <BotonBuscar onClick={() => handleSearch(searchTerm)} />
           </div>
         </div>
       </div>
-      {hayBusqueda ? (
-        mostrarTipoProfesional("Resultados", filteredProfesionales, true)
-      ) : (
-        <>
-          {mostrarTipoProfesional("Arquitectos", arquitectos)}
-          {mostrarTipoProfesional("Ingenieros", ingenieros)}
-          {mostrarTipoProfesional("Diseñadores", disenadores)}
-          {mostrarTipoProfesional("Director de Obra", directoresdeobra)}
-        </>
-      )}
+
+      {/* FILTROS */}
+      <div className="filters-bar">
+        <FilterChip
+          label="Localidad ▼"
+          options={["Todos", ...uniqueLocalidades]}
+          selected={selectedLocalidad}
+          onSelect={(val) => setSelectedLocalidad(val === "Todos" ? "" : val)}
+        />
+        <FilterChip
+          label="Valoración ▼"
+          options={["Todos", "≥4", "≥3", "≥2"]}
+          selected={selectedValoracion}
+          onSelect={(val) => setSelectedValoracion(val === "Todos" ? "" : val)}
+        />
+        <FilterChip
+          label="Tipo Profesional ▼"
+          options={[
+            { label: "Todos", value: "" },
+            ...tiposProfesional
+          ]}
+          selected={selectedTipoProfesional}
+          onSelect={(val) => setSelectedTipoProfesional(val === "" ? "" : val)}
+        />
+      </div>
+
+      <div className="seccion-profesionales">
+        {!hayBusqueda && (
+          <>
+            <h2 className="titulo-seccion">Mejores Valorados</h2>
+            <Slider {...configuracionCarrusel} className="carrusel-profesionales">
+              {mejoresValorados.map((prof) => (
+                <div key={prof.id} className="tarjeta-profesional">
+                  <div className="imagen-profesional">
+                    <img src={prof.img} alt={`${prof.nombre} ${prof.apellido}`} />
+                  </div>
+                  <h3 className="nombre-profesional">
+                    {prof.nombre} {prof.apellido}
+                  </h3>
+                  <p className="tipo-profesional">
+                    👨‍💼 {prof.tipoProfesional?.descripcion || 'Profesional'}
+                  </p>
+                  <p className="texto-localidad">
+                    📍 {prof.localidad} - ⭐ {prof.valoracion}
+                  </p>
+                  <button className="boton-ver-perfil" onClick={() => handleClick(prof.id)}>Ver perfil</button>
+                </div>
+              ))}
+            </Slider>
+          </>
+        )}
+
+        {hayBusqueda && (
+          <>
+            <h2 className="titulo-seccion">Resultados de búsqueda</h2>
+            <div className="grid-profesionales">
+              {filteredProfesionales.map((prof) => (
+                <div key={prof.id} className="tarjeta-profesional">
+                  <div className="imagen-profesional">
+                    <img src={prof.img} alt={`${prof.nombre} ${prof.apellido}`} />
+                  </div>
+                  <h3 className="nombre-profesional">
+                    {prof.nombre} {prof.apellido}
+                  </h3>
+                  <p className="tipo-profesional">
+                    👨‍💼 {prof.tipoProfesional?.descripcion || 'Profesional'}
+                  </p>
+                  <p className="texto-localidad">
+                    📍 {prof.localidad} - ⭐ {prof.valoracion}
+                  </p>
+                  <button className="boton-ver-perfil" onClick={() => handleClick(prof.id)}>Ver perfil</button>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+      </div>
 
       <div className="seccion-inversion">
         <h2 className="titulo-inversion">

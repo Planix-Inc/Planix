@@ -221,6 +221,13 @@
   .dropdown-item:hover,
   .dropdown-item.active {
     background: #fcb900;
-    color: white;
+    color: rgb(0, 0, 0);
+  }
+
+  .dropdown-item-text {
+    margin: 0;
+    padding: 8px 12px;
+    font-size: 14px;
+    color: #333;
   }
   

@@ -68,27 +68,44 @@ const Profesionales = () => {
   const disenadores = filteredProfesionales.filter((p) => p.idTipoProfesional === 3);
   const directoresdeobra = filteredProfesionales.filter((p) => p.idTipoProfesional === 4);
 
-  const mostrarTipoProfesional = (titulo, tipoProfesional) => (
+  const mostrarTipoProfesional = (titulo, tipoProfesional, isSearch = false) => (
     <div className="seccion-profesionales">
       <h2 className="titulo-seccion">{titulo}</h2>
-      <Slider {...configuracionCarrusel} className="carrusel-profesionales">
-        {tipoProfesional.map((prof) => (
-          <div key={prof.id} className="tarjeta-profesional">
-            <div className="imagen-profesional">
-              <img src={prof.img} alt={`${prof.nombre} ${prof.apellido}`} />
+      {isSearch ? (
+        <div className="grid-profesionales">
+          {tipoProfesional.map((prof) => (
+            <div key={prof.id} className="tarjeta-profesional">
+              <div className="imagen-profesional">
+                <img src={prof.img} alt={`${prof.nombre} ${prof.apellido}`} />
+              </div>
+              <h3 className="nombre-profesional">
+                {prof.nombre} {prof.apellido}
+              </h3>
+              <p className="texto-localidad">
+                📍 {prof.localidad} - ⭐ {prof.valoracion}
+              </p>
+              <button className="boton-ver-perfil" onClick={() => handleClick(prof.id)}>Ver perfil</button>
             </div>
-            <h3 className="nombre-profesional">
-              {prof.nombre} {prof.apellido}
-            </h3>
-            <p className="texto-localidad">
-              📍 {prof.localidad} - ⭐ {prof.valoracion}
-            </p>
-
-<button className="boton-ver-perfil" onClick={() => handleClick(prof.id)}>Ver perfil</button>
-
-          </div>
-        ))}
-      </Slider>
+          ))}
+        </div>
+      ) : (
+        <Slider {...configuracionCarrusel} className="carrusel-profesionales">
+          {tipoProfesional.map((prof) => (
+            <div key={prof.id} className="tarjeta-profesional">
+              <div className="imagen-profesional">
+                <img src={prof.img} alt={`${prof.nombre} ${prof.apellido}`} />
+              </div>
+              <h3 className="nombre-profesional">
+                {prof.nombre} {prof.apellido}
+              </h3>
+              <p className="texto-localidad">
+                📍 {prof.localidad} - ⭐ {prof.valoracion}
+              </p>
+              <button className="boton-ver-perfil" onClick={() => handleClick(prof.id)}>Ver perfil</button>
+            </div>
+          ))}
+        </Slider>
+      )}
     </div>
   );
 
@@ -109,7 +126,7 @@ const Profesionales = () => {
         </div>
       </div>
       {hayBusqueda ? (
-        mostrarTipoProfesional("Resultados", filteredProfesionales)
+        mostrarTipoProfesional("Resultados", filteredProfesionales, true)
       ) : (
         <>
           {mostrarTipoProfesional("Arquitectos", arquitectos)}

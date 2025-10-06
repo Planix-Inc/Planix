@@ -27,7 +27,7 @@ const FilterChip = ({ label, options, selected, onSelect }) => {
                 setOpen(false);
               }}
             >
-              {opt}
+              <p className="dropdown-item-text">{opt}</p>
             </div>
           ))}
         </div>
@@ -145,7 +145,7 @@ const Proveedores = () => {
 
   const filteredProveedores = filterProveedores(todosLosProveedores);
   const filteredProveedoresDestacados = filterProveedores(proveedores);
-  const hayBusqueda = searchTerm.trim() !== "";
+  const hayBusqueda = searchTerm.trim() !== "" || selectedDireccion !== "";
 
   const handleClick = (id) => {
     navigate(`/proveedores/verPerfil/${id}`);
@@ -163,10 +163,10 @@ const Proveedores = () => {
     navigate('/productos/verTodos');
   }
 
-  const mostrarProveedores = (titulo, listaProveedores) => (
+  const mostrarProveedores = (titulo, listaProveedores, isSearch = false) => (
     <div className="seccion-proveedores">
       <h2 className="titulo-seccion-proveedores">{titulo}</h2>
-      {titulo === "Resultados" ? (
+      {isSearch || titulo === "Resultados" ? (
         <div className="grid-proveedores">
           {listaProveedores.map((prov) => (
             <div key={prov.id} className="tarjeta-proveedor">
@@ -238,7 +238,7 @@ const Proveedores = () => {
         </div>
 
         {hayBusqueda ? (
-          mostrarProveedores("Resultados", filteredProveedores)
+          mostrarProveedores("Resultados", filteredProveedores, true)
         ) : (
           mostrarProveedores("Proveedores Destacados", filteredProveedoresDestacados)
         )}

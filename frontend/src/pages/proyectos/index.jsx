@@ -26,7 +26,7 @@ const FilterChip = ({ label, options, selected, onSelect }) => {
                 setOpen(false);
               }}
             >
-              {opt}
+              <p className="dropdown-item-text">{opt}</p>
             </div>
           ))}
         </div>

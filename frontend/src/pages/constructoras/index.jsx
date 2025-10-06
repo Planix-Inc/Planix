@@ -28,7 +28,7 @@ const FilterChip = ({ label, options, selected, onSelect }) => {
                 setOpen(false);
               }}
             >
-              {opt}
+              <p className="dropdown-item-text">{opt}</p>
             </div>
           ))}
         </div>
@@ -140,7 +140,7 @@ const Constructoras = () => {
   const filteredConstructorasDestacados =
     filterConstructoras(constructorasDestacado);
 
-  const hayBusqueda = searchTerm.trim() !== "";
+  const hayBusqueda = searchTerm.trim() !== "" || selectedLocalidad !== "" || selectedValoracion !== "";
 
   const configuracionCarrusel = {
     dots: false,
@@ -217,28 +217,30 @@ const Constructoras = () => {
           </>
         )}
 
-        <h2 className="titulo-seccion">
-          {hayBusqueda ? "Resultados de búsqueda" : "Constructoras"}
-        </h2>
-        <Slider {...configuracionCarrusel} className="carrusel-constructoras">
-          {filteredConstructoras.map((prof) => (
-            <div key={prof.id} className="tarjeta-constructoras">
-              <div className="imagen-constructoras">
-                <img src={prof.img} />
-              </div>
-              <h3 className="nombre-constructoras">{prof.razonSocial}</h3>
-              <p className="texto-localidad">
-                📍 {prof.localidad} - ⭐ {prof.valoracion}
-              </p>
-              <button
-                className="boton-ver-perfil"
-                onClick={() => handleClick(prof.id)}
-              >
-                Ver perfil
-              </button>
+        {hayBusqueda && (
+          <>
+            <h2 className="titulo-seccion">Resultados de búsqueda</h2>
+            <div className="grid-constructoras">
+              {filteredConstructoras.map((prof) => (
+                <div key={prof.id} className="tarjeta-constructoras">
+                  <div className="imagen-constructoras">
+                    <img src={prof.img} />
+                  </div>
+                  <h3 className="nombre-constructoras">{prof.razonSocial}</h3>
+                  <p className="texto-localidad">
+                    📍 {prof.localidad} - ⭐ {prof.valoracion}
+                  </p>
+                  <button
+                    className="boton-ver-perfil"
+                    onClick={() => handleClick(prof.id)}
+                  >
+                    Ver perfil
+                  </button>
+                </div>
+              ))}
             </div>
-          ))}
-        </Slider>
+          </>
+        )}
       </div>
       <BotonInversion />
     </div>

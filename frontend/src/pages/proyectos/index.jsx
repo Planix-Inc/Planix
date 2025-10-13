@@ -39,9 +39,11 @@ const Proyectos = () => {
   const [proyectos, setProyectos] = useState([]);
   const [proyectosDestacados, setProyectosDestacados] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedBarrio, setSelectedBarrio] = useState("");
+  const [selectedProvincia, setSelectedProvincia] = useState("");
   const [selectedValoracion, setSelectedValoracion] = useState("");
+  const [selectedLocalidad, setSelectedLocalidad]=useState("")
   const [uniqueDirecciones, setUniqueDirecciones] = useState([]);
+  const [UniqueLocalidades, setUniqueLocalidades]=useState([])
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -54,8 +56,12 @@ const Proyectos = () => {
         console.error("Error al obtener proyectos:", error);
       } else {
         setProyectos(Usuario);
-        const direcciones = [...new Set(Usuario.map(p => p.Barrio).filter(d => d))];
+        const direcciones = [...new Set(Usuario.map(p => p.Provincia).filter(d => d))];
         setUniqueDirecciones(direcciones);
+
+        setProyectos(Usuario)
+        const localidades=[...new Set(Usuario.map(p=>p.LocalidadBarrio).filter(d=>d))]
+        setUniqueLocalidades(localidades)
       }
     };
 
@@ -93,8 +99,11 @@ const Proyectos = () => {
 
   const filterProyectos = (proyectosList) => {
     let filtered = proyectosList;
-    if (selectedBarrio) {
-      filtered = filtered.filter(proyecto => proyecto.Barrio === selectedBarrio);
+    if (selectedProvincia) {
+      filtered = filtered.filter(proyecto => proyecto.Provincia === selectedProvincia);
+    }
+    if(selectedLocalidad){
+      filtered=filtered.filter(proyecto=>proyecto.LocalidadBarrio===selectedLocalidad)
     }
     if (selectedValoracion) {
       const minVal = parseInt(selectedValoracion.replace("⭐",""));
@@ -106,22 +115,24 @@ const Proyectos = () => {
       const searchText = normalize(searchTerm);
       const nombre = normalize(proyecto.nombre || "");
       const apellido = normalize(proyecto.apellido || "");
-      const direccion = normalize(proyecto.Barrio || "");
+      const direccion = normalize(proyecto.Provincia || "");
       const descripcion = normalize(proyecto.descripcion || "");
+      const localidad=normalize(proyecto.LocalidadBarrio||"")
       
       return (
         nombre.includes(searchText) ||
         apellido.includes(searchText) ||
         direccion.includes(searchText) ||
         descripcion.includes(searchText) ||
-        `${nombre} ${apellido}`.includes(searchText)
+        `${nombre} ${apellido}`.includes(searchText)||
+        localidad.includes(searchText)
       );
     });
   };
 
   const filteredProyectos = filterProyectos(proyectos);
   const filteredProyectosDestacados = filterProyectos(proyectosDestacados);
-  const hayBusqueda = searchTerm.trim() !== "" || selectedBarrio !== "" || selectedValoracion !== "";
+  const hayBusqueda = searchTerm.trim() !== "" || selectedProvincia !== "" || selectedValoracion !== "" || selectedLocalidad !== "";
 
   const configuracionCarrusel = {
     dots: false,
@@ -168,16 +179,22 @@ const Proyectos = () => {
       {/* NUEVOS FILTROS */}
       <div className="filters-bar">
         <FilterChip
-          label="Barrio ▼"
+          label="Provincia ▼"
           options={["Todos", ...uniqueDirecciones]}
-          selected={selectedBarrio}
-          onSelect={(val) => setSelectedBarrio(val === "Todos" ? "" : val)}
+          selected={selectedProvincia}
+          onSelect={(val) => setSelectedProvincia(val === "Todos" ? "" : val)}
         />
         <FilterChip
           label="Valoración ▼"
           options={["Todos", "4⭐", "3⭐", "2⭐"]}
           selected={selectedValoracion}
           onSelect={(val) => setSelectedValoracion(val === "Todos" ? "" : val)}
+        />
+        <FilterChip
+        label="Localidad-Barrio ▼"
+        options={["Todos", ...UniqueLocalidades]}
+        selected={selectedLocalidad}
+        onSelect={(val)=>setSelectedLocalidad(val==="Todos"?"": val)}
         />
       </div>
 

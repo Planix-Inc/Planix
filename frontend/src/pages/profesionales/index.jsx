@@ -41,10 +41,10 @@ const Profesionales = () => {
   const navigate = useNavigate();
   const [profesionales, setProfesionales] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedLocalidad, setSelectedLocalidad] = useState("");
+  const [selectedProvincia, setSelectedProvincia] = useState("");
   const [selectedValoracion, setSelectedValoracion] = useState("");
   const [selectedTipoProfesional, setSelectedTipoProfesional] = useState("");
-  const [uniqueLocalidades, setUniqueLocalidades] = useState([]);
+  const [UniqueProvincias, setUniqueProvincias] = useState([]);
   const [tiposProfesional, setTiposProfesional] = useState([]);
 
   useEffect(() => {
@@ -59,8 +59,8 @@ const Profesionales = () => {
       } else {
         setProfesionales(Usuario);
         // Obtener localidades únicas
-        const localidades = [...new Set(Usuario.map(p => p.localidad).filter(l => l))];
-        setUniqueLocalidades(localidades);
+        const provincias = [...new Set(Usuario.map(p => p.provincias).filter(l => l))];
+        setUniqueProvincias(provincias);
         
         // Obtener tipos de profesional únicos
         const tiposMap = new Map();
@@ -116,7 +116,7 @@ const Profesionales = () => {
       const searchText = normalize(searchTerm);
       filtered = filtered.filter((prof) => {
         const fullName = `${prof.nombre || ""} ${prof.apellido || ""}`;
-        const localidad = normalize(prof.localidad || "");
+        const localidad = normalize(prof.provincias || "");
         const tipoProfesional = normalize(prof.tipoProfesional?.descripcion || "");
         return (
           normalize(fullName).includes(searchText) ||
@@ -127,8 +127,8 @@ const Profesionales = () => {
     }
 
     // Filtro por localidad
-    if (selectedLocalidad) {
-      filtered = filtered.filter(prof => prof.localidad === selectedLocalidad);
+    if (selectedProvincia) {
+      filtered = filtered.filter(prof => prof.provincias === selectedProvincia);
     }
 
     // Filtro por valoración
@@ -146,7 +146,7 @@ const Profesionales = () => {
   };
 
   const filteredProfesionales = filterProfesionales(profesionales);
-  const hayBusqueda = searchTerm.trim() !== "" || selectedLocalidad !== "" || selectedValoracion !== "" || selectedTipoProfesional !== "";
+  const hayBusqueda = searchTerm.trim() !== "" || selectedProvincia !== "" || selectedValoracion !== "" || selectedTipoProfesional !== "";
 
   // Solo profesionales con valoración mayor a 4 para destacados
   const mejoresValorados = profesionales.filter((p) => p.valoracion && p.valoracion > 4);
@@ -173,10 +173,10 @@ const Profesionales = () => {
       {/* FILTROS */}
       <div className="filters-bar">
         <FilterChip
-          label="Localidad ▼"
-          options={["Todos", ...uniqueLocalidades]}
-          selected={selectedLocalidad}
-          onSelect={(val) => setSelectedLocalidad(val === "Todos" ? "" : val)}
+          label="Provincias ▼"
+          options={["Todos", ...UniqueProvincias]}
+          selected={selectedProvincia}
+          onSelect={(val) => setSelectedProvincia(val === "Todos" ? "" : val)}
         />
         <FilterChip
           label="Valoración ▼"
@@ -212,7 +212,7 @@ const Profesionales = () => {
                     👨‍💼 {prof.tipoProfesional?.descripcion || 'Profesional'}
                   </p>
                   <p className="texto-localidad">
-                    📍 {prof.localidad} - ⭐ {prof.valoracion}
+                    📍 {prof.provincias} - ⭐ {prof.valoracion}
                   </p>
                   <button className="boton-ver-perfil" onClick={() => handleClick(prof.id)}>Ver perfil</button>
                 </div>
@@ -237,7 +237,7 @@ const Profesionales = () => {
                     👨‍💼 {prof.tipoProfesional?.descripcion || 'Profesional'}
                   </p>
                   <p className="texto-localidad">
-                    📍 {prof.localidad} - ⭐ {prof.valoracion}
+                    📍 {prof.provincias} - ⭐ {prof.valoracion}
                   </p>
                   <button className="boton-ver-perfil" onClick={() => handleClick(prof.id)}>Ver perfil</button>
                 </div>

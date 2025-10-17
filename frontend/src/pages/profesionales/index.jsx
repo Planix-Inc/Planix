@@ -44,6 +44,7 @@ const Profesionales = () => {
   const [selectedProvincia, setSelectedProvincia] = useState("");
   const [selectedValoracion, setSelectedValoracion] = useState("");
   const [selectedTipoProfesional, setSelectedTipoProfesional] = useState("");
+  const [selectedAlfabetiacamente,setSelectedAlfabetiacamente]=useState("")
   const [UniqueProvincias, setUniqueProvincias] = useState([]);
   const [tiposProfesional, setTiposProfesional] = useState([]);
 
@@ -142,11 +143,28 @@ const Profesionales = () => {
       filtered = filtered.filter(prof => prof.idTipoProfesional === parseInt(selectedTipoProfesional));
     }
 
+    if (!searchTerm.trim()) {
+      // Apply alphabetical sorting if selected
+      if (selectedAlfabetiacamente === "A-Z") {
+        filtered = filtered.sort((a, b) => (a.nombre || "").localeCompare(b.nombre || ""));
+      } else if (selectedAlfabetiacamente === "Z-A") {
+        filtered = filtered.sort((a, b) => (b.nombre || "").localeCompare(a.nombre || ""));
+      }
+      return filtered;
+    }
+
+    // Apply alphabetical sorting after search filtering
+    if (selectedAlfabetiacamente === "A-Z") {
+      filtered = filtered.sort((a, b) => (a.nombre || "").localeCompare(b.nombre || ""));
+    } else if (selectedAlfabetiacamente === "Z-A") {
+      filtered = filtered.sort((a, b) => (b.nombre || "").localeCompare(a.nombre || ""));
+    }
+
     return filtered;
   };
 
   const filteredProfesionales = filterProfesionales(profesionales);
-  const hayBusqueda = searchTerm.trim() !== "" || selectedProvincia !== "" || selectedValoracion !== "" || selectedTipoProfesional !== "";
+  const hayBusqueda = searchTerm.trim() !== "" || selectedProvincia !== "" || selectedValoracion !== "" || selectedTipoProfesional !== "" || selectedAlfabetiacamente !== "";
 
   // Solo profesionales con valoración mayor a 4 para destacados
   const mejoresValorados = profesionales.filter((p) => p.valoracion && p.valoracion > 4);
@@ -192,6 +210,12 @@ const Profesionales = () => {
           ]}
           selected={selectedTipoProfesional}
           onSelect={(val) => setSelectedTipoProfesional(val === "" ? "" : val)}
+        />
+        <FilterChip
+        label="Alfabéticamente ▼"
+        options={["Todos", "A-Z", "Z-A"]}
+        selected={selectedAlfabetiacamente}
+        onSelect={(val)=>setSelectedAlfabetiacamente(val==="Todos"?"": val)}
         />
       </div>
 

@@ -42,6 +42,7 @@ const Proyectos = () => {
   const [selectedProvincia, setSelectedProvincia] = useState("");
   const [selectedValoracion, setSelectedValoracion] = useState("");
   const [selectedLocalidad, setSelectedLocalidad]=useState("")
+  const [selectedAlfabetiacamente, setSelectedAlfabetiacamente]=useState("")
   const [uniqueDirecciones, setUniqueDirecciones] = useState([]);
   const [UniqueLocalidades, setUniqueLocalidades]=useState([])
   const navigate = useNavigate();
@@ -109,16 +110,24 @@ const Proyectos = () => {
       const minVal = parseInt(selectedValoracion.replace("⭐",""));
       filtered = filtered.filter(proyecto => proyecto.valoracion >= minVal);
     }
-    if (!searchTerm.trim()) return filtered;
-    
-    return filtered.filter((proyecto) => {
+    if (!searchTerm.trim()) {
+      // Apply alphabetical sorting if selected
+      if (selectedAlfabetiacamente === "A-Z") {
+        filtered = filtered.sort((a, b) => (a.nombre || "").localeCompare(b.nombre || ""));
+      } else if (selectedAlfabetiacamente === "Z-A") {
+        filtered = filtered.sort((a, b) => (b.nombre || "").localeCompare(a.nombre || ""));
+      }
+      return filtered;
+    }
+
+    filtered = filtered.filter((proyecto) => {
       const searchText = normalize(searchTerm);
       const nombre = normalize(proyecto.nombre || "");
       const apellido = normalize(proyecto.apellido || "");
       const direccion = normalize(proyecto.Provincia || "");
       const descripcion = normalize(proyecto.descripcion || "");
       const localidad=normalize(proyecto.LocalidadBarrio||"")
-      
+
       return (
         nombre.includes(searchText) ||
         apellido.includes(searchText) ||
@@ -128,11 +137,20 @@ const Proyectos = () => {
         localidad.includes(searchText)
       );
     });
+
+    // Apply alphabetical sorting after search filtering
+    if (selectedAlfabetiacamente === "A-Z") {
+      filtered = filtered.sort((a, b) => (a.nombre || "").localeCompare(b.nombre || ""));
+    } else if (selectedAlfabetiacamente === "Z-A") {
+      filtered = filtered.sort((a, b) => (b.nombre || "").localeCompare(a.nombre || ""));
+    }
+
+    return filtered;
   };
 
   const filteredProyectos = filterProyectos(proyectos);
   const filteredProyectosDestacados = filterProyectos(proyectosDestacados);
-  const hayBusqueda = searchTerm.trim() !== "" || selectedProvincia !== "" || selectedValoracion !== "" || selectedLocalidad !== "";
+  const hayBusqueda = searchTerm.trim() !== "" || selectedProvincia !== "" || selectedValoracion !== "" || selectedLocalidad !== "" || selectedAlfabetiacamente !== "";
 
   const configuracionCarrusel = {
     dots: false,
@@ -195,6 +213,12 @@ const Proyectos = () => {
         options={["Todos", ...UniqueLocalidades]}
         selected={selectedLocalidad}
         onSelect={(val)=>setSelectedLocalidad(val==="Todos"?"": val)}
+        />
+        <FilterChip
+        label="Alfabéticamente ▼"
+        options={["Todos", "A-Z", "Z-A"]}
+        selected={selectedAlfabetiacamente}
+        onSelect={(val)=>setSelectedAlfabetiacamente(val==="Todos"?"": val)}
         />
       </div>
 

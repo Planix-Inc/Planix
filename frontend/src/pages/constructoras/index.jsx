@@ -51,7 +51,8 @@ const Constructoras = () => {
       const { data: Usuario, error } = await supabase
         .from("Usuario")
         .select("*")
-        .eq("categoriausuarioId", 3);
+        .eq("categoriausuarioId", 3)
+        .order("razonSocial", { ascending: true });
 
       if (error) {
         console.error("Error al obtener constructoras:", error);
@@ -65,7 +66,8 @@ const Constructoras = () => {
         .from("Usuario")
         .select("*")
         .eq("categoriausuarioId", 3)
-        .eq("destacado", true);
+        .eq("destacado", true)
+        .order("razonSocial", { ascending: true });
 
       if (error) {
         console.error("Error al obtener constructoras:", error);

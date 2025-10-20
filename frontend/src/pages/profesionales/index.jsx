@@ -5,30 +5,36 @@ import { supabase } from "../../data/supabaseClient";
 import "../profesionales/profesionales.css";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import BotonInversion from "../../components/botonInversion"; 
-import BotonBuscar from "../../components/BotonBuscar"; 
+import BotonInversion from "../../components/botonInversion";
+import BotonBuscar from "../../components/BotonBuscar";
 
 // Componente burbuja con dropdown
 const FilterChip = ({ label, options, selected, onSelect }) => {
   const [open, setOpen] = useState(false);
+  const selectedOption = options.find(opt => opt.value === selected);
+  const displayLabel = selected && selectedOption ? `${label.replace(' ▼', '')}: ${selectedOption.label} ▼` : label;
 
   return (
     <div className="filter-chip">
       <button onClick={() => setOpen(!open)} className="chip-btn">
-        {label}
+        {displayLabel}
       </button>
       {open && (
         <div className="dropdown">
           {options.map((opt) => (
             <div
-              key={opt.value || opt}
-              className={`dropdown-item ${selected === (opt.value || opt) ? "active" : ""}`}
+              key={opt.value}
+              className={`dropdown-item ${selected === opt.value ? "active" : ""}`}
               onClick={() => {
-                onSelect(opt.value || opt);
+                if (opt.value === selected) {
+                  onSelect(""); // Clear selection if the same option is clicked
+                } else {
+                  onSelect(opt.value);
+                }
                 setOpen(false);
               }}
             >
-              <p className="dropdown-item-text">{opt.label || opt}</p>
+              <p className="dropdown-item-text">{opt.label}</p>
             </div>
           ))}
         </div>
@@ -44,8 +50,10 @@ const Profesionales = () => {
   const [selectedProvincia, setSelectedProvincia] = useState("");
   const [selectedValoracion, setSelectedValoracion] = useState("");
   const [selectedTipoProfesional, setSelectedTipoProfesional] = useState("");
-  const [selectedAlfabetiacamente,setSelectedAlfabetiacamente]=useState("")
-  const [UniqueProvincias, setUniqueProvincias] = useState([]);
+  const [selectedAlfabetiacamente, setSelectedAlfabetiacamente] = useState("");
+  const [selectedLocalidad, setSelectedLocalidad] = useState("");
+  const [uniqueProvincias, setUniqueProvincias] = useState([]);
+  const [uniqueLocalidades, setUniqueLocalidades] = useState([]);
   const [tiposProfesional, setTiposProfesional] = useState([]);
 
   useEffect(() => {
@@ -59,10 +67,7 @@ const Profesionales = () => {
         console.error("Error al obtener profesionales:", error);
       } else {
         setProfesionales(Usuario);
-        // Obtener localidades únicas
-        const provincias = [...new Set(Usuario.map(p => p.provincias).filter(l => l))];
-        setUniqueProvincias(provincias);
-        
+
         // Obtener tipos de profesional únicos
         const tiposMap = new Map();
         Usuario.forEach(p => {
@@ -78,13 +83,51 @@ const Profesionales = () => {
       }
     };
 
+    const fetchProvincias = async () => {
+      const { data, error } = await supabase.from("Provincia").select("id, nombre");
+
+      if (error) {
+        console.error("Error al obtener provincias:", error);
+      } else {
+        setUniqueProvincias([{value: "", label: "Todos"}, ...data.map(p => ({value: p.id.toString(), label: p.nombre}))]);  // Add "Todos" option
+      }
+    };
+
     fetchProfesionales();
+    fetchProvincias();
   }, []);
+
+  // Fetch Localidades based on selected Provincia
+  useEffect(() => {
+    const fetchLocalidades = async () => {
+      let query = supabase.from("Localidad").select("id, nombre");
+
+      if (selectedProvincia && selectedProvincia !== "") {
+        query = query.eq("provincia_id", selectedProvincia);  // Filter by selected province ID
+      }
+
+      const { data, error } = await query;
+
+      if (error) {
+        console.error("Error al obtener localidades:", error);
+      } else {
+        setUniqueLocalidades([{value: "", label: "Todos", id: null}, ...data.map(l => ({value: l.id.toString(), label: l.nombre, id: l.id}))]);  // Add "Todos" option as object
+      }
+    };
+
+    fetchLocalidades();
+  }, [selectedProvincia]);
+
+  // Reset selectedLocalidad if it's not in the current uniqueLocalidades
+  useEffect(() => {
+    if (selectedLocalidad && selectedLocalidad !== "" && !uniqueLocalidades.some(l => l.value === selectedLocalidad)) {
+      setSelectedLocalidad("");
+    }
+  }, [uniqueLocalidades, selectedLocalidad]);
 
   const handleClick = (id) => {
     navigate(`/profesionales/verPerfil/${id}`);
   };
-  
 
   const configuracionCarrusel = {
     dots: false,
@@ -127,9 +170,14 @@ const Profesionales = () => {
       });
     }
 
-    // Filtro por localidad
+    // Filtro por provincia
     if (selectedProvincia) {
-      filtered = filtered.filter(prof => prof.provincias === selectedProvincia);
+      filtered = filtered.filter(prof => prof.provincia_id === parseInt(selectedProvincia));
+    }
+
+    // Filtro por localidad
+    if (selectedLocalidad) {
+      filtered = filtered.filter(prof => prof.localidad_id === parseInt(selectedLocalidad));
     }
 
     // Filtro por valoración
@@ -164,14 +212,12 @@ const Profesionales = () => {
   };
 
   const filteredProfesionales = filterProfesionales(profesionales);
-  const hayBusqueda = searchTerm.trim() !== "" || selectedProvincia !== "" || selectedValoracion !== "" || selectedTipoProfesional !== "" || selectedAlfabetiacamente !== "";
+  const hayBusqueda = searchTerm.trim() !== "" || selectedProvincia !== "" || selectedValoracion !== "" || selectedTipoProfesional !== "" || selectedAlfabetiacamente !== "" || selectedLocalidad !== "";
 
   // Solo profesionales con valoración mayor a 4 para destacados
   const mejoresValorados = profesionales.filter((p) => p.valoracion && p.valoracion > 4);
 
-
-
-    return (
+  return (
     <div>
       <div className="contenedor-portada">
         <div className="capa-oscura">
@@ -191,31 +237,34 @@ const Profesionales = () => {
       {/* FILTROS */}
       <div className="filters-bar">
         <FilterChip
-          label="Provincias ▼"
-          options={["Todos", ...UniqueProvincias]}
+          label="Provincia ▼"
+          options={uniqueProvincias}
           selected={selectedProvincia}
-          onSelect={(val) => setSelectedProvincia(val === "Todos" ? "" : val)}
+          onSelect={(val) => setSelectedProvincia(val)}
+        />
+        <FilterChip
+          label="Localidad-Barrio ▼"
+          options={uniqueLocalidades}
+          selected={selectedLocalidad}
+          onSelect={(val) => setSelectedLocalidad(val)}
         />
         <FilterChip
           label="Valoración ▼"
-          options={["Todos", "4⭐", "3⭐", "2⭐"]}
+          options={[{ value: "", label: "Todos" }, { value: "4⭐", label: "4⭐" }, { value: "3⭐", label: "3⭐" }, { value: "2⭐", label: "2⭐" }]}
           selected={selectedValoracion}
-          onSelect={(val) => setSelectedValoracion(val === "Todos" ? "" : val)}
+          onSelect={(val) => setSelectedValoracion(val)}
         />
         <FilterChip
           label="Tipo Profesional ▼"
-          options={[
-            { label: "Todos", value: "" },
-            ...tiposProfesional
-          ]}
+          options={[{ label: "Todos", value: "" }, ...tiposProfesional]}
           selected={selectedTipoProfesional}
-          onSelect={(val) => setSelectedTipoProfesional(val === "" ? "" : val)}
+          onSelect={(val) => setSelectedTipoProfesional(val)}
         />
         <FilterChip
-        label="Alfabéticamente ▼"
-        options={["Todos", "A-Z", "Z-A"]}
-        selected={selectedAlfabetiacamente}
-        onSelect={(val)=>setSelectedAlfabetiacamente(val==="Todos"?"": val)}
+          label="Alfabéticamente ▼"
+          options={[{ value: "", label: "Todos" }, { value: "A-Z", label: "A-Z" }, { value: "Z-A", label: "Z-A" }]}
+          selected={selectedAlfabetiacamente}
+          onSelect={(val) => setSelectedAlfabetiacamente(val)}
         />
       </div>
 
@@ -232,12 +281,8 @@ const Profesionales = () => {
                   <h3 className="nombre-profesional">
                     {prof.nombre} {prof.apellido}
                   </h3>
-                  <p className="tipo-profesional">
-                    👨‍💼 {prof.tipoProfesional?.descripcion || 'Profesional'}
-                  </p>
-                  <p className="texto-localidad">
-                    📍 {prof.provincias} - ⭐ {prof.valoracion}
-                  </p>
+                  <p className="tipo-profesional"> 👨‍💼 {prof.tipoProfesional?.descripcion || 'Profesional'} </p>
+                  <p className="texto-localidad"> 📍 {prof.provincias} - ⭐ {prof.valoracion} </p>
                   <button className="boton-ver-perfil" onClick={() => handleClick(prof.id)}>Ver perfil</button>
                 </div>
               ))}
@@ -257,12 +302,8 @@ const Profesionales = () => {
                   <h3 className="nombre-profesional">
                     {prof.nombre} {prof.apellido}
                   </h3>
-                  <p className="tipo-profesional">
-                    👨‍💼 {prof.tipoProfesional?.descripcion || 'Profesional'}
-                  </p>
-                  <p className="texto-localidad">
-                    📍 {prof.provincias} - ⭐ {prof.valoracion}
-                  </p>
+                  <p className="tipo-profesional"> 👨‍💼 {prof.tipoProfesional?.descripcion || 'Profesional'} </p>
+                  <p className="texto-localidad"> 📍 {prof.provincias} - ⭐ {prof.valoracion} </p>
                   <button className="boton-ver-perfil" onClick={() => handleClick(prof.id)}>Ver perfil</button>
                 </div>
               ))}
@@ -272,20 +313,12 @@ const Profesionales = () => {
       </div>
 
       <div className="seccion-inversion">
-        <h2 className="titulo-inversion">
-          ¿Queres ser parte de un proyecto? Postulate ahora mismo
-        </h2>
-        <p className="subtitulo-inversion">
-          Sumate y empezá hoy mismo a colaborar <br />
-          con profesionales en el área
-        </p>
-        <Link to="/profesionales/postularse" className="boton-inversion">
-          Ir ya ➤
-        </Link>
+        <h2 className="titulo-inversion"> ¿Queres ser parte de un proyecto? Postulate ahora mismo </h2>
+        <p className="subtitulo-inversion"> Sumate y empezá hoy mismo a colaborar <br /> con profesionales en el área </p>
+        <Link to="/profesionales/postularse" className="boton-inversion"> Ir ya ➤ </Link>
       </div>
     </div>
   );
 };
 
 export default Profesionales;
-

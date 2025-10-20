@@ -5,28 +5,35 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { useNavigate, Link } from "react-router-dom";
-import BotonBuscar from "../../components/BotonBuscar"; 
+import BotonBuscar from "../../components/BotonBuscar";
 
 const FilterChip = ({ label, options, selected, onSelect }) => {
   const [open, setOpen] = useState(false);
 
+  const selectedOption = options.find(opt => opt.value === selected);
+  const displayLabel = selected && selectedOption ? `${label.replace(' ▼', '')}: ${selectedOption.label} ▼` : label;
+
   return (
     <div className="filter-chip">
       <button onClick={() => setOpen(!open)} className="chip-btn">
-        {label}
+        {displayLabel}
       </button>
       {open && (
         <div className="dropdown">
           {options.map((opt) => (
             <div
-              key={opt}
-              className={`dropdown-item ${selected === opt ? "active" : ""}`}
+              key={opt.value}
+              className={`dropdown-item ${selected === opt.value ? "active" : ""}`}
               onClick={() => {
-                onSelect(opt);
+                if (opt.value === selected) {
+                  onSelect("");  // Clear selection if the same option is clicked
+                } else {
+                  onSelect(opt.value);
+                }
                 setOpen(false);
               }}
             >
-              <p className="dropdown-item-text">{opt}</p>
+              <p className="dropdown-item-text">{opt.label}</p>
             </div>
           ))}
         </div>
@@ -41,51 +48,83 @@ const Proyectos = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedProvincia, setSelectedProvincia] = useState("");
   const [selectedValoracion, setSelectedValoracion] = useState("");
-  const [selectedLocalidad, setSelectedLocalidad]=useState("")
-  const [selectedAlfabetiacamente, setSelectedAlfabetiacamente]=useState("")
-  const [uniqueDirecciones, setUniqueDirecciones] = useState([]);
-  const [UniqueLocalidades, setUniqueLocalidades]=useState([])
+  const [selectedLocalidad, setSelectedLocalidad] = useState("");
+  const [selectedAlfabetiacamente, setSelectedAlfabetiacamente] = useState("");
+  const [uniqueProvincias, setUniqueProvincias] = useState([]);
+  const [uniqueLocalidades, setUniqueLocalidades] = useState([]);
   const navigate = useNavigate();
 
+  // Fetch Proyectos, Provincias and Localidades
   useEffect(() => {
     const fetchProyectos = async () => {
-      const { data: Usuario, error } = await supabase
-        .from("Proyectos")
-        .select("*")
+      const { data, error } = await supabase.from("Proyectos").select("*");
 
       if (error) {
         console.error("Error al obtener proyectos:", error);
       } else {
-        setProyectos(Usuario);
-        const direcciones = [...new Set(Usuario.map(p => p.Provincia).filter(d => d))];
-        setUniqueDirecciones(direcciones);
+        setProyectos(data);
+      }
+    };
 
-        setProyectos(Usuario)
-        const localidades=[...new Set(Usuario.map(p=>p.LocalidadBarrio).filter(d=>d))]
-        setUniqueLocalidades(localidades)
+    const fetchProvincias = async () => {
+      const { data, error } = await supabase.from("Provincia").select("id, nombre");
+
+      if (error) {
+        console.error("Error al obtener provincias:", error);
+      } else {
+        setUniqueProvincias([{value: "", label: "Todos"}, ...data.map(p => ({value: p.id.toString(), label: p.nombre}))]);  // Add "Todos" option
       }
     };
 
     const fetchProyectosDestacados = async () => {
-      const { data: Usuario, error } = await supabase
+      const { data, error } = await supabase
         .from("Proyectos")
         .select("*")
         .eq("destacado", true);
 
       if (error) {
-        console.error("Error al obtener proyectos:", error);
+        console.error("Error al obtener proyectos destacados:", error);
       } else {
-        setProyectosDestacados(Usuario);
+        setProyectosDestacados(data);
       }
     };
 
     fetchProyectos();
+    fetchProvincias();
     fetchProyectosDestacados();
   }, []);
 
-  const handleClick=(id)=>{
-    navigate(`/proyectos/verPerfil/${id}`)
-  }
+  // Fetch Localidades based on selected Provincia
+  useEffect(() => {
+    const fetchLocalidades = async () => {
+      let query = supabase.from("Localidad").select("id, nombre");
+
+      if (selectedProvincia && selectedProvincia !== "") {
+        query = query.eq("provincia_id", selectedProvincia);  // Filter by selected province ID
+      }
+
+      const { data, error } = await query;
+
+      if (error) {
+        console.error("Error al obtener localidades:", error);
+      } else {
+        setUniqueLocalidades([{value: "", label: "Todos", id: null}, ...data.map(l => ({value: l.id.toString(), label: l.nombre, id: l.id}))]);  // Add "Todos" option as object
+      }
+    };
+
+    fetchLocalidades();
+  }, [selectedProvincia]);
+
+  // Reset selectedLocalidad if it's not in the current uniqueLocalidades
+  useEffect(() => {
+    if (selectedLocalidad && selectedLocalidad !== "" && !uniqueLocalidades.some(l => l.value === selectedLocalidad)) {
+      setSelectedLocalidad("");
+    }
+  }, [uniqueLocalidades, selectedLocalidad]);
+
+  const handleClick = (id) => {
+    navigate(`/proyectos/verPerfil/${id}`);
+  };
 
   const normalize = (text) => {
     return text
@@ -100,16 +139,23 @@ const Proyectos = () => {
 
   const filterProyectos = (proyectosList) => {
     let filtered = proyectosList;
-    if (selectedProvincia) {
-      filtered = filtered.filter(proyecto => proyecto.Provincia === selectedProvincia);
+
+    // Filtrar por provincia si está seleccionada
+    if (selectedProvincia && selectedProvincia !== "") {
+      filtered = filtered.filter(proyecto => proyecto.idProvincia === parseInt(selectedProvincia));
     }
-    if(selectedLocalidad){
-      filtered=filtered.filter(proyecto=>proyecto.LocalidadBarrio===selectedLocalidad)
+
+    // Filtrar por localidad si está seleccionada
+    if (selectedLocalidad && selectedLocalidad !== "") {
+      filtered = filtered.filter(proyecto => proyecto.idLocalidad === parseInt(selectedLocalidad));
     }
+
+    // Filtrar por valoración
     if (selectedValoracion) {
-      const minVal = parseInt(selectedValoracion.replace("⭐",""));
+      const minVal = parseInt(selectedValoracion.replace("⭐", ""));
       filtered = filtered.filter(proyecto => proyecto.valoracion >= minVal);
     }
+
     if (!searchTerm.trim()) {
       // Apply alphabetical sorting if selected
       if (selectedAlfabetiacamente === "A-Z") {
@@ -124,17 +170,15 @@ const Proyectos = () => {
       const searchText = normalize(searchTerm);
       const nombre = normalize(proyecto.nombre || "");
       const apellido = normalize(proyecto.apellido || "");
-      const direccion = normalize(proyecto.Provincia || "");
+      const direccion = normalize(proyecto.direccion || "");
       const descripcion = normalize(proyecto.descripcion || "");
-      const localidad=normalize(proyecto.LocalidadBarrio||"")
 
       return (
         nombre.includes(searchText) ||
         apellido.includes(searchText) ||
         direccion.includes(searchText) ||
         descripcion.includes(searchText) ||
-        `${nombre} ${apellido}`.includes(searchText)||
-        localidad.includes(searchText)
+        `${nombre} ${apellido}`.includes(searchText)
       );
     });
 
@@ -189,7 +233,7 @@ const Proyectos = () => {
               value={searchTerm}
               onChange={(e) => handleSearch(e.target.value)}
             />
-            <BotonBuscar onClick={() => handleSearch(searchTerm)}/>
+            <BotonBuscar onClick={() => handleSearch(searchTerm)} />
           </div>
         </div>
       </div>
@@ -198,27 +242,27 @@ const Proyectos = () => {
       <div className="filters-bar">
         <FilterChip
           label="Provincia ▼"
-          options={["Todos", ...uniqueDirecciones]}
+          options={uniqueProvincias}  // Show all provinces
           selected={selectedProvincia}
-          onSelect={(val) => setSelectedProvincia(val === "Todos" ? "" : val)}
+          onSelect={(val) => setSelectedProvincia(val)}
         />
         <FilterChip
           label="Valoración ▼"
-          options={["Todos", "4⭐", "3⭐", "2⭐"]}
+          options={[{value: "", label: "Todos"}, {value: "4⭐", label: "4⭐"}, {value: "3⭐", label: "3⭐"}, {value: "2⭐", label: "2⭐"}]}
           selected={selectedValoracion}
-          onSelect={(val) => setSelectedValoracion(val === "Todos" ? "" : val)}
+          onSelect={(val) => setSelectedValoracion(val)}
         />
         <FilterChip
-        label="Localidad-Barrio ▼"
-        options={["Todos", ...UniqueLocalidades]}
-        selected={selectedLocalidad}
-        onSelect={(val)=>setSelectedLocalidad(val==="Todos"?"": val)}
+          label="Localidad-Barrio ▼"
+          options={uniqueLocalidades}  // Show all localities based on selected province
+          selected={selectedLocalidad}
+          onSelect={(val) => setSelectedLocalidad(val)}
         />
         <FilterChip
-        label="Alfabéticamente ▼"
-        options={["Todos", "A-Z", "Z-A"]}
-        selected={selectedAlfabetiacamente}
-        onSelect={(val)=>setSelectedAlfabetiacamente(val==="Todos"?"": val)}
+          label="Alfabéticamente ▼"
+          options={[{value: "", label: "Todos"}, {value: "A-Z", label: "A-Z"}, {value: "Z-A", label: "Z-A"}]}
+          selected={selectedAlfabetiacamente}
+          onSelect={(val) => setSelectedAlfabetiacamente(val)}
         />
       </div>
 
@@ -236,7 +280,7 @@ const Proyectos = () => {
                     {prof.nombre} {prof.apellido}
                   </h3>
                   <p className="texto-localidad">📍 {prof.direccion} - ⭐ {prof.valoracion}</p>
-                  <button className="boton-ver-perfil" onClick={()=>handleClick(prof.id)}>Ver proyecto</button>
+                  <button className="boton-ver-perfil" onClick={() => handleClick(prof.id)}>Ver proyecto</button>
                 </div>
               ))}
             </Slider>
@@ -256,7 +300,7 @@ const Proyectos = () => {
                     {prof.nombre} {prof.apellido}
                   </h3>
                   <p className="texto-localidad">📍 {prof.direccion} - ⭐ {prof.valoracion}</p>
-                  <button className="boton-ver-perfil" onClick={()=>handleClick(prof.id)}>Ver proyecto</button>
+                  <button className="boton-ver-perfil" onClick={() => handleClick(prof.id)}>Ver proyecto</button>
                 </div>
               ))}
             </div>
@@ -279,4 +323,5 @@ const Proyectos = () => {
     </div>
   );
 };
+
 export default Proyectos;

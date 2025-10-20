@@ -12,23 +12,30 @@ import BotonBuscar from "../../components/BotonBuscar";
 const FilterChip = ({ label, options, selected, onSelect }) => {
   const [open, setOpen] = useState(false);
 
+  const selectedOption = options.find(opt => opt.value === selected);
+  const displayLabel = selected && selectedOption ? `${label.replace(' ▼', '')}: ${selectedOption.label} ▼` : label;
+
   return (
     <div className="filter-chip">
       <button onClick={() => setOpen(!open)} className="chip-btn">
-        {label}
+        {displayLabel}
       </button>
       {open && (
         <div className="dropdown">
           {options.map((opt) => (
             <div
-              key={opt}
-              className={`dropdown-item ${selected === opt ? "active" : ""}`}
+              key={opt.value}
+              className={`dropdown-item ${selected === opt.value ? "active" : ""}`}
               onClick={() => {
-                onSelect(opt);
+                if (opt.value === selected) {
+                  onSelect("");  // Clear selection if the same option is clicked
+                } else {
+                  onSelect(opt.value);
+                }
                 setOpen(false);
               }}
             >
-              <p className="dropdown-item-text">{opt}</p>
+              <p className="dropdown-item-text">{opt.label}</p>
             </div>
           ))}
         </div>
@@ -43,6 +50,7 @@ const Constructoras = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedLocalidad, setSelectedLocalidad] = useState("");
   const [selectedValoracion, setSelectedValoracion] = useState("");
+  const [selectedAlfabetiacamente, setSelectedAlfabetiacamente] = useState("");
 
   const navigate = useNavigate();
 
@@ -130,6 +138,23 @@ const Constructoras = () => {
       );
     }
 
+    if (!searchTerm.trim()) {
+      // Apply alphabetical sorting if selected
+      if (selectedAlfabetiacamente === "A-Z") {
+        filtered = filtered.sort((a, b) => (a.razonSocial || "").localeCompare(b.razonSocial || ""));
+      } else if (selectedAlfabetiacamente === "Z-A") {
+        filtered = filtered.sort((a, b) => (b.razonSocial || "").localeCompare(a.razonSocial || ""));
+      }
+      return filtered;
+    }
+
+    // Apply alphabetical sorting after search filtering
+    if (selectedAlfabetiacamente === "A-Z") {
+      filtered = filtered.sort((a, b) => (a.razonSocial || "").localeCompare(b.razonSocial || ""));
+    } else if (selectedAlfabetiacamente === "Z-A") {
+      filtered = filtered.sort((a, b) => (b.razonSocial || "").localeCompare(a.razonSocial || ""));
+    }
+
     return filtered;
   };
 
@@ -142,7 +167,7 @@ const Constructoras = () => {
   const filteredConstructorasDestacados =
     filterConstructoras(constructorasDestacado);
 
-  const hayBusqueda = searchTerm.trim() !== "" || selectedLocalidad !== "" || selectedValoracion !== "";
+  const hayBusqueda = searchTerm.trim() !== "" || selectedLocalidad !== "" || selectedValoracion !== "" || selectedAlfabetiacamente !== "";
 
   const configuracionCarrusel = {
     dots: false,
@@ -181,15 +206,21 @@ const Constructoras = () => {
       <div className="filters-bar">
         <FilterChip
           label="Localidad ▼"
-          options={["Todos", ...uniqueLocalidades]}
+          options={[{value: "", label: "Todos"}, ...uniqueLocalidades.map(l => ({value: l, label: l}))]}
           selected={selectedLocalidad}
-          onSelect={(val) => setSelectedLocalidad(val === "Todos" ? "" : val)}
+          onSelect={(val) => setSelectedLocalidad(val)}
         />
         <FilterChip
           label="Valoración ▼"
-          options={["Todos", "4⭐", "3⭐", "2⭐"]}
+          options={[{value: "", label: "Todos"}, {value: "4⭐", label: "4⭐"}, {value: "3⭐", label: "3⭐"}, {value: "2⭐", label: "2⭐"}]}
           selected={selectedValoracion}
-          onSelect={(val) => setSelectedValoracion(val === "Todos" ? "" : val)}
+          onSelect={(val) => setSelectedValoracion(val)}
+        />
+        <FilterChip
+          label="Alfabéticamente ▼"
+          options={[{value: "", label: "Todos"}, {value: "A-Z", label: "A-Z"}, {value: "Z-A", label: "Z-A"}]}
+          selected={selectedAlfabetiacamente}
+          onSelect={(val)=>setSelectedAlfabetiacamente(val)}
         />
       </div>
 

@@ -8,12 +8,13 @@ import BotonInversion from "../../components/botonInversion";
 import { useNavigate } from "react-router-dom";
 import BotonBuscar from "../../components/BotonBuscar";
 
-// Componente burbuja con dropdown
+// Componente reutilizable para filtros
 const FilterChip = ({ label, options, selected, onSelect }) => {
   const [open, setOpen] = useState(false);
-
   const selectedOption = options.find(opt => opt.value === selected);
-  const displayLabel = selected && selectedOption ? `${label.replace(' ▼', '')}: ${selectedOption.label} ▼` : label;
+  const displayLabel = selected && selectedOption
+    ? `${label.replace(" ▼", "")}: ${selectedOption.label} ▼`
+    : label;
 
   return (
     <div className="filter-chip">
@@ -27,11 +28,8 @@ const FilterChip = ({ label, options, selected, onSelect }) => {
               key={opt.value}
               className={`dropdown-item ${selected === opt.value ? "active" : ""}`}
               onClick={() => {
-                if (opt.value === selected) {
-                  onSelect("");  // Clear selection if the same option is clicked
-                } else {
-                  onSelect(opt.value);
-                }
+                if (opt.value === selected) onSelect("");
+                else onSelect(opt.value);
                 setOpen(false);
               }}
             >
@@ -46,91 +44,124 @@ const FilterChip = ({ label, options, selected, onSelect }) => {
 
 const Constructoras = () => {
   const [constructoras, setConstructoras] = useState([]);
-  const [constructorasDestacado, setConstructorasDestacado] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedProvincia, setSelectedProvincia] = useState("");
   const [selectedLocalidad, setSelectedLocalidad] = useState("");
   const [selectedValoracion, setSelectedValoracion] = useState("");
-  const [selectedAlfabetiacamente, setSelectedAlfabetiacamente] = useState("");
+  const [selectedAlfabeticamente, setSelectedAlfabeticamente] = useState("");
+  const [uniqueProvincias, setUniqueProvincias] = useState([]);
+  const [uniqueLocalidades, setUniqueLocalidades] = useState([]);
 
   const navigate = useNavigate();
 
+  // ✅ Obtener constructoras (categoriausuarioId = 3)
   useEffect(() => {
     const fetchConstructoras = async () => {
-      const { data: Usuario, error } = await supabase
+      const { data, error } = await supabase
         .from("Usuario")
-        .select("*")
-        .eq("categoriausuarioId", 3)
-        .order("razonSocial", { ascending: true });
+        .select("*, provincia: idProvincias (nombre), localidad: idLocalidad (nombre)")
+        .eq("categoriausuarioId", 3);
 
       if (error) {
         console.error("Error al obtener constructoras:", error);
       } else {
-        setConstructoras(Usuario);
+        setConstructoras(data);
       }
     };
 
-    const fetchConstructorasDestacados = async () => {
-      const { data: Usuario, error } = await supabase
-        .from("Usuario")
-        .select("*")
-        .eq("categoriausuarioId", 3)
-        .eq("destacado", true)
-        .order("razonSocial", { ascending: true });
-
+    const fetchProvincias = async () => {
+      const { data, error } = await supabase.from("Provincia").select("id, nombre");
       if (error) {
-        console.error("Error al obtener constructoras:", error);
+        console.error("Error al obtener provincias:", error);
       } else {
-        setConstructorasDestacado(Usuario);
+        setUniqueProvincias([
+          { value: "", label: "Todos" },
+          ...data.map((p) => ({ value: p.id.toString(), label: p.nombre })),
+        ]);
       }
     };
 
     fetchConstructoras();
-    fetchConstructorasDestacados();
+    fetchProvincias();
   }, []);
+
+  // ✅ Obtener localidades según provincia seleccionada
+  useEffect(() => {
+    const fetchLocalidades = async () => {
+      let query = supabase.from("Localidad").select("id, nombre");
+      if (selectedProvincia && selectedProvincia !== "") {
+        query = query.eq("provincia_id", selectedProvincia);
+      }
+      const { data, error } = await query;
+      if (error) {
+        console.error("Error al obtener localidades:", error);
+      } else {
+        setUniqueLocalidades([
+          { value: "", label: "Todos" },
+          ...data.map((l) => ({ value: l.id.toString(), label: l.nombre })),
+        ]);
+      }
+    };
+    fetchLocalidades();
+  }, [selectedProvincia]);
+
+  // ✅ Si la localidad actual no pertenece a la provincia seleccionada, la resetea
+  useEffect(() => {
+    if (
+      selectedLocalidad &&
+      selectedLocalidad !== "" &&
+      !uniqueLocalidades.some((l) => l.value === selectedLocalidad)
+    ) {
+      setSelectedLocalidad("");
+    }
+  }, [uniqueLocalidades, selectedLocalidad]);
 
   const handleClick = (id) => {
     navigate(`/constructoras/verPerfil/${id}`);
   };
 
-  // normalizar texto
-  const normalize = (text) => {
-    return text
+  const normalize = (text) =>
+    (text || "")
+      .toString()
       .toLowerCase()
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "");
-  };
 
-  const handleSearch = (searchValue) => {
-    setSearchTerm(searchValue);
-  };
-
-  // aplicar filtros
   const filterConstructoras = (constructorasList) => {
     let filtered = [...constructorasList];
 
-    // búsqueda
+    // Filtro por búsqueda
     if (searchTerm.trim()) {
       const searchText = normalize(searchTerm);
-      filtered = filtered.filter((constructora) => {
-        const razonSocial = normalize(constructora.razonSocial || "");
-        const localidad = normalize(constructora.localidad || "");
-        const descripcion = normalize(constructora.descripcion || "");
+      filtered = filtered.filter((c) => {
+        const razonSocial = normalize(c.razonSocial || "");
+        const provincia = normalize(c.provincia?.nombre || "");
+        const localidad = normalize(c.localidad?.nombre || "");
+        const descripcion = normalize(c.descripcionpersonal || "");
         return (
           razonSocial.includes(searchText) ||
+          provincia.includes(searchText) ||
           localidad.includes(searchText) ||
           descripcion.includes(searchText)
         );
       });
     }
 
-    // filtro localidad
-    if (selectedLocalidad) {
+    // Filtro por provincia
+    if (selectedProvincia && selectedProvincia !== "") {
       filtered = filtered.filter(
-        (c) => c.localidad === selectedLocalidad
+        (c) => c.idProvincias === parseInt(selectedProvincia)
       );
     }
 
-    // filtro valoración
+    // Filtro por localidad
+    if (selectedLocalidad && selectedLocalidad !== "") {
+      filtered = filtered.filter(
+        (c) => c.idLocalidad === parseInt(selectedLocalidad)
+      );
+    }
+
+    // Filtro por valoración
     if (selectedValoracion) {
       const minVal = parseInt(selectedValoracion.replace("⭐", ""));
       filtered = filtered.filter(
@@ -138,36 +169,27 @@ const Constructoras = () => {
       );
     }
 
-    if (!searchTerm.trim()) {
-      // Apply alphabetical sorting if selected
-      if (selectedAlfabetiacamente === "A-Z") {
-        filtered = filtered.sort((a, b) => (a.razonSocial || "").localeCompare(b.razonSocial || ""));
-      } else if (selectedAlfabetiacamente === "Z-A") {
-        filtered = filtered.sort((a, b) => (b.razonSocial || "").localeCompare(a.razonSocial || ""));
-      }
-      return filtered;
-    }
-
-    // Apply alphabetical sorting after search filtering
-    if (selectedAlfabetiacamente === "A-Z") {
-      filtered = filtered.sort((a, b) => (a.razonSocial || "").localeCompare(b.razonSocial || ""));
-    } else if (selectedAlfabetiacamente === "Z-A") {
-      filtered = filtered.sort((a, b) => (b.razonSocial || "").localeCompare(a.razonSocial || ""));
+    // Orden alfabético
+    if (selectedAlfabeticamente === "A-Z") {
+      filtered = filtered.sort((a, b) =>
+        (a.razonSocial || "").localeCompare(b.razonSocial || "")
+      );
+    } else if (selectedAlfabeticamente === "Z-A") {
+      filtered = filtered.sort((a, b) =>
+        (b.razonSocial || "").localeCompare(a.razonSocial || "")
+      );
     }
 
     return filtered;
   };
 
-  // valores únicos de localidad para dropdown
-  const uniqueLocalidades = [
-    ...new Set(constructoras.map((c) => c.localidad).filter(Boolean)),
-  ];
-
   const filteredConstructoras = filterConstructoras(constructoras);
-  const filteredConstructorasDestacados =
-    filterConstructoras(constructorasDestacado);
-
-  const hayBusqueda = searchTerm.trim() !== "" || selectedLocalidad !== "" || selectedValoracion !== "" || selectedAlfabetiacamente !== "";
+  const hayBusqueda =
+    searchTerm.trim() !== "" ||
+    selectedProvincia !== "" ||
+    selectedLocalidad !== "" ||
+    selectedValoracion !== "" ||
+    selectedAlfabeticamente !== "";
 
   const configuracionCarrusel = {
     dots: false,
@@ -185,62 +207,81 @@ const Constructoras = () => {
     ],
   };
 
+  const mejoresValoradas = constructoras.filter(
+    (c) => c.valoracion && c.valoracion > 4
+  );
+
   return (
     <div>
       <div className="constructoras-container">
         <div className="overlay">
-          <h1>Encontrá constructoras y conectá con ellos</h1>
+          <h1>Encontrá constructoras y conectá con ellas</h1>
           <div className="search-box">
             <input
               type="text"
-              placeholder="Buscar constructoras para tus proyectos"
+              placeholder="Buscar por razón social, provincia o localidad"
               value={searchTerm}
-              onChange={(e) => handleSearch(e.target.value)}
+              onChange={(e) => setSearchTerm(e.target.value)}
             />
-            <BotonBuscar onClick={() => handleSearch(searchTerm)} />
+            <BotonBuscar onClick={() => {}} />
           </div>
         </div>
       </div>
 
-      {/* filtros estilo burbuja */}
+      {/* FILTROS */}
       <div className="filters-bar">
         <FilterChip
-          label="Localidad ▼"
-          options={[{value: "", label: "Todos"}, ...uniqueLocalidades.map(l => ({value: l, label: l}))]}
+          label="Provincia ▼"
+          options={uniqueProvincias}
+          selected={selectedProvincia}
+          onSelect={(val) => setSelectedProvincia(val)}
+        />
+        <FilterChip
+          label="Localidad-Barrio ▼"
+          options={uniqueLocalidades}
           selected={selectedLocalidad}
           onSelect={(val) => setSelectedLocalidad(val)}
         />
         <FilterChip
           label="Valoración ▼"
-          options={[{value: "", label: "Todos"}, {value: "4⭐", label: "4⭐"}, {value: "3⭐", label: "3⭐"}, {value: "2⭐", label: "2⭐"}]}
+          options={[
+            { value: "", label: "Todos" },
+            { value: "4⭐", label: "4⭐" },
+            { value: "3⭐", label: "3⭐" },
+            { value: "2⭐", label: "2⭐" },
+          ]}
           selected={selectedValoracion}
           onSelect={(val) => setSelectedValoracion(val)}
         />
         <FilterChip
           label="Alfabéticamente ▼"
-          options={[{value: "", label: "Todos"}, {value: "A-Z", label: "A-Z"}, {value: "Z-A", label: "Z-A"}]}
-          selected={selectedAlfabetiacamente}
-          onSelect={(val)=>setSelectedAlfabetiacamente(val)}
+          options={[
+            { value: "", label: "Todos" },
+            { value: "A-Z", label: "A-Z" },
+            { value: "Z-A", label: "Z-A" },
+          ]}
+          selected={selectedAlfabeticamente}
+          onSelect={(val) => setSelectedAlfabeticamente(val)}
         />
       </div>
 
       <div className="seccion-constructoras">
         {!hayBusqueda && (
           <>
-            <h2 className="titulo-seccion">Constructoras Destacados</h2>
+            <h2 className="titulo-seccion">Constructoras mejor valoradas</h2>
             <Slider {...configuracionCarrusel} className="carrusel-constructoras">
-              {filteredConstructorasDestacados.map((prof) => (
-                <div key={prof.id} className="tarjeta-constructoras">
+              {mejoresValoradas.map((c) => (
+                <div key={c.id} className="tarjeta-constructoras">
                   <div className="imagen-constructoras">
-                    <img src={prof.img} />
+                    <img src={c.img} alt={c.razonSocial} />
                   </div>
-                  <h3 className="nombre-constructoras">{prof.razonSocial}</h3>
+                  <h3 className="nombre-constructoras">{c.razonSocial}</h3>
                   <p className="texto-localidad">
-                    📍 {prof.localidad} - ⭐ {prof.valoracion}
+                    📍 {c.localidad?.nombre || "-"} - ⭐ {c.valoracion || "0"}
                   </p>
                   <button
                     className="boton-ver-perfil"
-                    onClick={() => handleClick(prof.id)}
+                    onClick={() => handleClick(c.id)}
                   >
                     Ver perfil
                   </button>
@@ -254,18 +295,18 @@ const Constructoras = () => {
           <>
             <h2 className="titulo-seccion">Resultados de búsqueda</h2>
             <div className="grid-constructoras">
-              {filteredConstructoras.map((prof) => (
-                <div key={prof.id} className="tarjeta-constructoras">
+              {filteredConstructoras.map((c) => (
+                <div key={c.id} className="tarjeta-constructoras">
                   <div className="imagen-constructoras">
-                    <img src={prof.img} />
+                    <img src={c.img} alt={c.razonSocial} />
                   </div>
-                  <h3 className="nombre-constructoras">{prof.razonSocial}</h3>
+                  <h3 className="nombre-constructoras">{c.razonSocial}</h3>
                   <p className="texto-localidad">
-                    📍 {prof.localidad} - ⭐ {prof.valoracion}
+                    📍 {c.localidad?.nombre || "-"} - ⭐ {c.valoracion || "0"}
                   </p>
                   <button
                     className="boton-ver-perfil"
-                    onClick={() => handleClick(prof.id)}
+                    onClick={() => handleClick(c.id)}
                   >
                     Ver perfil
                   </button>
@@ -275,6 +316,7 @@ const Constructoras = () => {
           </>
         )}
       </div>
+
       <BotonInversion />
     </div>
   );

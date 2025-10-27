@@ -171,13 +171,13 @@ const Profesionales = () => {
     }
 
     // Filtro por provincia
-    if (selectedProvincia) {
-      filtered = filtered.filter(prof => prof.provincia_id === parseInt(selectedProvincia));
+    if (selectedProvincia && selectedProvincia !== "") {
+      filtered = filtered.filter(prof => prof.idProvincias === parseInt(selectedProvincia));
     }
 
     // Filtro por localidad
-    if (selectedLocalidad) {
-      filtered = filtered.filter(prof => prof.localidad_id === parseInt(selectedLocalidad));
+    if (selectedLocalidad && selectedLocalidad !== "") {
+      filtered = filtered.filter(prof => prof.idLocalidad === parseInt(selectedLocalidad));
     }
 
     // Filtro por valoración

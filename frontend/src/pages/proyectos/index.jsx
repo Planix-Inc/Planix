@@ -246,18 +246,20 @@ const Proyectos = () => {
           selected={selectedProvincia}
           onSelect={(val) => setSelectedProvincia(val)}
         />
+ <FilterChip
+          label="Localidad-Barrio ▼"
+          options={uniqueLocalidades}  // Show all localities based on selected province
+          selected={selectedLocalidad}
+          onSelect={(val) => setSelectedLocalidad(val)}
+        />
+
         <FilterChip
           label="Valoración ▼"
           options={[{value: "", label: "Todos"}, {value: "4⭐", label: "4⭐"}, {value: "3⭐", label: "3⭐"}, {value: "2⭐", label: "2⭐"}]}
           selected={selectedValoracion}
           onSelect={(val) => setSelectedValoracion(val)}
         />
-        <FilterChip
-          label="Localidad-Barrio ▼"
-          options={uniqueLocalidades}  // Show all localities based on selected province
-          selected={selectedLocalidad}
-          onSelect={(val) => setSelectedLocalidad(val)}
-        />
+       
         <FilterChip
           label="Alfabéticamente ▼"
           options={[{value: "", label: "Todos"}, {value: "A-Z", label: "A-Z"}, {value: "Z-A", label: "Z-A"}]}
